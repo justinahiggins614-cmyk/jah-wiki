@@ -72,6 +72,21 @@ footer.site a{color:#e8d98a}
 .note{font-size:.8em;color:var(--mut);font-family:Arial,sans-serif;border-top:1px solid var(--line);margin-top:24px;padding-top:10px}
 .feat{border:2px solid var(--gold);border-radius:8px;padding:16px;background:#fffdf4;margin:14px 0}
 .feat h3{margin-top:0;font-family:Arial,sans-serif;color:#7a5c00}
+.wikitabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin:8px 0 0;font-family:Arial,sans-serif}
+.wikitabs a{padding:8px 20px;color:var(--accent);font-size:.92em;border:1px solid transparent;border-bottom:none}
+.wikitabs a.on{background:#fff;border-color:var(--line);font-weight:bold;color:var(--ink);border-radius:6px 6px 0 0;position:relative;top:1px}
+.iconrow{display:flex;gap:20px;align-items:center;padding:8px 2px;font-family:Arial,sans-serif;border-bottom:1px solid var(--line)}
+.iconrow a{font-size:1.3em;color:#33415e;text-decoration:none}
+.iconrow a:hover{color:var(--accent)}
+.hatnote{font-style:italic;color:#33415e;font-size:.88em;padding:8px 0 8px 24px;font-family:Arial,sans-serif}
+.sisterbox{border:1px solid var(--line);background:var(--soft);padding:10px 14px;margin:10px 0;font-family:Arial,sans-serif;font-size:.88em;border-radius:4px}
+.ovbox{border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:12px 0;background:#fff;font-family:Arial,sans-serif}
+.ovbox h3{margin:.1em 0 .5em;font-size:1.15em}
+.ovbox ul{margin:6px 0;padding-left:20px}.ovbox li{margin:6px 0;font-size:.92em}
+.ovbox li b{color:var(--accent)}
+p.lead{font-size:1.07em}
+h2.sec .sectog{font-size:.7em;color:#5b6472;margin-right:8px}
+.stamp{display:inline-block;font-family:Arial,sans-serif;font-size:.72em;font-weight:bold;letter-spacing:1px;color:#fff;background:#1a4d2e;border-radius:4px;padding:4px 10px;vertical-align:middle}
 @media(max-width:700px){.ibox{float:none;margin:0 0 14px;width:100%}}
 </style>
 </head>
@@ -80,6 +95,7 @@ footer.site a{color:#e8d98a}
   <a href="?" style="text-decoration:none"><div class="brand">JAH WIKI<small>THE ENCYCLOPEDIA OF THE JAH SYSTEM</small></div></a>
   <div class="navlinks">
     <a href="?">Home</a><a href="?all=SPEC">All pages</a><a href="#" id="randlink">Random article</a>
+    <a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/" target="_blank" rel="noopener">Dictionary &#10697;</a>
     <a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/" target="_blank" rel="noopener">Wiki Leaks &#10697;</a>
     <a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html" target="_blank" rel="noopener">Spec Catalog &#10697;</a>
     <a href="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/" target="_blank" rel="noopener">Patent Catalog &#10697;</a>
@@ -206,7 +222,7 @@ function homeHTML(){
  h+='<h2 class="sec">About this wiki</h2><p>Just like a normal encyclopedia, each article carries a <b>definition</b>, <b>history</b>, how-it-works, data tables, and references. On top of that, every JAH Wiki article carries the system\'s own instruments: <b>eleven analysis lenses</b> (deterministic, probabilistic, geometric, hash, neural, evolutionary, fuzzy, swarm, decision-tree, cellular-automata, and a hybrid of them all), a <b>patent draft</b>, a downloadable <b>working program</b> with an in-browser demo, and a <b>personal AI persona</b> of the item that answers questions. Use <b>Copy article</b> to paste anywhere, or <b>Read aloud</b> to listen.</p>';
  return h;
 }
-function doSearch(q){q=q.trim();if(!q)return nav(homeHTML());
+async function doSearch(q){q=q.trim();if(!q)return nav(homeHTML());
  q=q.toLowerCase();var rs=[],rp=[],rb=[];
  for(var i=0;i<DB.specIdx.length&&rs.length<40;i++){var r=DB.specIdx[i];if(r[1].toLowerCase().indexOf(q)>=0||String(r[0]).toLowerCase().indexOf(q)>=0)rs.push(r)}
  for(var j=0;j<DB.patIdx.length&&rp.length<40;j++){var p=DB.patIdx[j];if(p[1].toLowerCase().indexOf(q)>=0||String(p[0]).toLowerCase().indexOf(q)>=0)rp.push(p)}
@@ -216,7 +232,20 @@ function doSearch(q){q=q.trim();if(!q)return nav(homeHTML());
  h+=sec("Spec articles",rs,function(r){return '<li><a href="?page='+r[0]+'">'+esc(r[1])+'</a> <span style="color:#888">'+esc(r[0])+'</span></li>'});
  h+=sec("Patent articles",rp,function(p){return '<li><a href="?page=PAT:'+encodeURIComponent(p[0])+'">'+esc(p[1])+'</a> <span style="color:#888">'+esc(p[0])+'</span></li>'});
  h+=sec("Subject files",rb,function(d){return '<li><a href="?page='+subjSlug(d)+'">'+esc(d.subject)+'</a></li>'});
- if(!rs.length&&!rp.length&&!rb.length)h+="<p>No articles matched. Try fewer words.</p>";
+ /* dictionary answers single words too */
+ try{
+  await dictIdx();
+  var di=dictFind(q);
+  if(di>=0){var de=await dictEntry(q);
+   if(de&&de.k==="w"){var senses=(Array.isArray(de.d)?de.d:[]).slice(0,2).map(function(s){return esc(String(s).replace(/^\d+\.\s*/,"").slice(0,300))});
+    h+='<h2 class="sec">From the JAH Dictionary</h2><div class="feat"><h3 style="margin:0 0 6px">'+esc(de.w)+' <span class="stamp">'+esc(de.st)+'</span></h3><p style="font-family:Arial;font-size:.9em">'+senses.join("<br><br>")+'</p><p style="font-family:Arial"><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Open the full dictionary entry &rarr;</a></p></div>'}
+  }else{
+   var pm=[],li=dictLower(q);
+   while(li<DICT.idx.length&&pm.length<8){var k2=DICT.idx[li][0];if(k2.indexOf(q)!==0)break;pm.push(k2);li++}
+   if(pm.length)h+='<h2 class="sec">From the JAH Dictionary</h2><ul class="pgln">'+pm.map(function(kx){return '<li><a href="'+DICT_SITE+'/?w='+encodeURIComponent(kx)+'" target="_blank" rel="noopener">'+esc(kx)+'</a></li>'}).join("")+'</ul>';
+  }
+ }catch(e){}
+ if(!rs.length&&!rp.length&&!rb.length&&h.indexOf("JAH Dictionary")<0)h+="<p>No articles matched. Try fewer words.</p>";
  nav(h);
 }
 function allPages(){
@@ -503,7 +532,7 @@ function seeAlsoBlock(items){if(!items.length)return"";return '<h2 class="sec" i
 function partnerStrip(leakId,label){return '<div class="partner">\uD83D\uDD13 <span><b>Partner file:</b> '+esc(label||"this subject")+' also has a full classified dossier on <b>JAH-N Wiki Leaks</b>.</span> <a href="'+LEAK_SITE+'/?dossier='+encodeURIComponent(leakId)+'" target="_blank" rel="noopener">OPEN THE DOSSIER \u25B6</a></div>'}
 
 /* ---- spec article ---- */
-function specArticle(d){
+function specArticle(d,tab){
  var a=d.abstract||"",ax=d.ai_explainer||{},mfg=d.manufacture||{},pd=d.patent_draft||{};
  var how=[ax.what||"",ax.bottom_line||""].filter(Boolean).join(" ");
  var steps=(d.algorithm_steps||[]).concat((ax.how_it_works||[])).slice(0,14);
@@ -516,7 +545,14 @@ function specArticle(d){
  var lz=buildLenses(L);L.hybrid=lz.hybrid;L.verdict=lz.verdict;
  var rel=[];for(var i=0;i<DB.specIdx.length&&rel.length<4;i++){var r=DB.specIdx[i];if(r[3]===d.category&&r[0]!==d.spec_id)rel.push(r)}
  var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=SPEC">Spec articles</a> &rsaquo; '+esc(d.spec_id)+'</div>';
- h+='<h1 class="at">'+esc(d.title)+'</h1><div class="sub">From JAH Wiki, the encyclopedia of the JAH system</div>';
+ if(tab==="talk")return talkArticle(L,d.spec_id,h);
+ h+=tabsHTML(d.spec_id,tab);
+ h+=iconRowHTML();
+ h+='<h1 class="at">'+esc(d.title)+'</h1>';
+ h+=hatnoteHTML('This article is about the draft specification <b>'+esc(d.spec_id)+'</b>. For the classified dossier, see <a href="'+LEAK_SITE+'/?dossier='+encodeURIComponent(d.spec_id)+'" target="_blank" rel="noopener">JAH-N Wiki Leaks</a>.');
+ h+=sisterDictHTML(d.title);
+ h+=overviewHTML(d.title,firstPara(a,170),firstPara(L.history,140),"Hybrid lens consensus "+lz.hybrid+"% — "+lz.verdict);
+ h+='<p class="lead"><b>'+esc(d.title)+'</b> is a draft specification by Justin Addam Higgins (JAH)'+(d.category?" in "+esc(d.category):"")+'. '+esc(firstPara(a,280))+'</p>';
  h+=toolbarHTML();
  h+=infobox(d.spec_id,[["Inventor / Owner","Justin Addam Higgins (JAH)"],["Category",esc(d.category)],["CPC class",esc(d.cpc)],["Era",esc(d.era)],["Prepared",esc(d.prepared_date)],["Signature line",esc(d.line)],["Lineage",esc(d.line_note||"Original design")],["Status",esc(d.status||"Draft — ready to file")]]);
  h+='<div id="articlebody">';
@@ -541,12 +577,13 @@ function specArticle(d){
  nav(h);wireToolbar(L);wirePersona(L);
  document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
  document.getElementById("copydemo").onclick=function(e){copyText(makeProgram(L),e.target)};
- try{history.replaceState(null,"","?page="+encodeURIComponent(d.spec_id))}catch(e){}
+ wireIcons(d.spec_id);makeCollapsible();
+ try{history.replaceState(null,"","?page="+encodeURIComponent(d.spec_id)+(tab==="talk"?"&tab=talk":""))}catch(e){}
  document.title=d.title+" — JAH Wiki";
 }
 
 /* ---- patent article ---- */
-function patArticle(pub,rec){
+function patArticle(pub,rec,tab){
  var steps=[rec.priority_date?"Priority established "+rec.priority_date:null,rec.filing_date?"Filed "+rec.filing_date:null,rec.publication_date?"Published "+rec.publication_date:null,rec.grant_date?"Granted "+rec.grant_date:null].filter(Boolean);
  var L=lensCommon({title:rec.title,id:"PAT:"+pub,kind:"pat",params:[{name:"CPC class",value:rec.cpc||"—",unit:""}],measures:[],steps:steps,
   blurb:(rec.abstract_snippet||"").replace(/&hellip;/g,"..."),
@@ -557,7 +594,14 @@ function patArticle(pub,rec){
  var lz=buildLenses(L);L.hybrid=lz.hybrid;L.verdict=lz.verdict;
  var sig=null;for(var i=0;i<DB.specIdx.length;i++){var ln=DB.specIdx[i][13]||"";if(pub&&ln.indexOf(pub)>=0){sig=DB.specIdx[i];break}}
  var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=PAT">Patent articles</a> &rsaquo; '+esc(pub)+'</div>';
- h+='<h1 class="at">'+esc(rec.title)+'</h1><div class="sub">From JAH Wiki, the encyclopedia of the JAH system — public patent record</div>';
+ if(tab==="talk")return talkArticle(L,"PAT:"+pub,h);
+ h+=tabsHTML("PAT:"+pub,tab);
+ h+=iconRowHTML();
+ h+='<h1 class="at">'+esc(rec.title)+'</h1>';
+ h+=hatnoteHTML('This article is about the public patent record <b>'+esc(pub)+'</b>. For JAH&rsquo;s original Signature-line version, if one exists, see <b>See also</b> below.');
+ h+=sisterDictHTML(rec.title);
+ h+=overviewHTML(rec.title,firstPara(L.blurb,170),firstPara(L.history,140),"Public patent record "+pub+(rec.grant_date?", granted "+rec.grant_date:""));
+ h+='<p class="lead"><b>'+esc(rec.title)+'</b> is a public patent record ('+esc(pub)+'). '+esc(firstPara(L.blurb,280))+'</p>';
  h+=toolbarHTML();
  h+=infobox(pub,[["Publication no.",esc(pub)],["Title",esc(rec.title)],["Assignee",esc(rec.assignee||"—")],["Inventor",esc(rec.inventor||"—")],["Priority date",esc(rec.priority_date||"—")],["Filing date",esc(rec.filing_date||"—")],["Publication date",esc(rec.publication_date||"—")],["Grant date",esc(rec.grant_date||"—")],["CPC class",esc(rec.cpc||"—")],["Language",esc(rec.language||"en")]]);
  h+='<div id="articlebody">';
@@ -575,12 +619,13 @@ function patArticle(pub,rec){
  h+='<div class="note">Public patent record — not a JAH draft. Descriptions here reflect the public filing.</div></div>';
  nav(h);wireToolbar(L);wirePersona(L);
  document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
- try{history.replaceState(null,"","?page="+encodeURIComponent("PAT:"+pub))}catch(e){}
+ wireIcons("PAT:"+pub);makeCollapsible();
+ try{history.replaceState(null,"","?page="+encodeURIComponent("PAT:"+pub)+(tab==="talk"?"&tab=talk":""))}catch(e){}
  document.title=rec.title+" — JAH Wiki";
 }
 
 /* ---- subject article ---- */
-function subArticle(d){
+function subArticle(d,tab){
  var paras=String(d.sources||"").split(/\n\s*\n/).slice(0,4).map(function(p){return "<p>"+esc(p.slice(0,900))+"</p>"}).join("");
  var steps=[d.science_proof,d.math_proof,d.assessment].filter(Boolean).map(function(s){return String(s).slice(0,160)});
  var L=lensCommon({title:d.subject,id:subjSlug(d),kind:"sub",params:[{name:"Category",value:d.category||"—",unit:""}],measures:[],
@@ -591,7 +636,14 @@ function subArticle(d){
   raw:d,seealso:[LEAK_SITE+"/?dossier="+encodeURIComponent(d.id||d.subject)+" (Wiki Leaks dossier)"]});
  var lz=buildLenses(L);L.hybrid=lz.hybrid;L.verdict=lz.verdict;
  var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=SUB">Subject files</a> &rsaquo; '+esc(d.subject)+'</div>';
- h+='<h1 class="at">'+esc(d.subject)+'</h1><div class="sub">From JAH Wiki, the encyclopedia of the JAH system — subject file</div>';
+ if(tab==="talk")return talkArticle(L,subjSlug(d),h);
+ h+=tabsHTML(subjSlug(d),tab);
+ h+=iconRowHTML();
+ h+='<h1 class="at">'+esc(d.subject)+'</h1>';
+ h+=hatnoteHTML('This article is about the subject file. For the full classified dossier, see <a href="'+LEAK_SITE+'/?dossier='+encodeURIComponent(d.id||d.subject)+'" target="_blank" rel="noopener">JAH-N Wiki Leaks</a>.');
+ h+=sisterDictHTML(d.subject);
+ h+=overviewHTML(d.subject,firstPara(d.overview||"",170),firstPara(L.history,140),"Hybrid lens consensus "+lz.hybrid+"% — "+lz.verdict);
+ h+='<p class="lead"><b>'+esc(d.subject)+'</b> is a subject file in the JAH system'+(d.category?" ("+esc(d.category)+")":"")+'. '+esc(firstPara(d.overview||"",280))+'</p>';
  h+=toolbarHTML();
  h+=infobox(d.subject,[["File no.",esc(d.id||"—")],["Category",esc(d.category||"—")],["Classification",esc(d.classification||"—")],["Filed",esc(d.date_filed||"—")],["Creator sign-off",esc(d.creator_signoff||"—")]]);
  h+='<div id="articlebody">';
@@ -612,18 +664,99 @@ function subArticle(d){
  h+='<div class="note">Subject file — public-record material plus the JAH system\'s marked simulation layer.</div></div>';
  nav(h);wireToolbar(L);wirePersona(L);
  document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
- try{history.replaceState(null,"","?page="+encodeURIComponent(subjSlug(d)))}catch(e){}
+ wireIcons(subjSlug(d));makeCollapsible();
+ try{history.replaceState(null,"","?page="+encodeURIComponent(subjSlug(d))+(tab==="talk"?"&tab=talk":""))}catch(e){}
  document.title=d.subject+" — JAH Wiki";
 }
 function notFound(p){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Article not found</h1><p>No article for &ldquo;'+esc(p||"")+'&rdquo;. Try the <a href="?">search</a> or <a href="?all=SPEC">all pages</a>.</p>')}
+/* ================= dictionary integration (Project 5) ================= */
+var DICT_SITE="https://justinahiggins614-cmyk.github.io/jah-dictionary";
+var DICT={idx:null};
+async function dictIdx(){if(DICT.idx)return DICT.idx;var t=await fetchGz(DICT_SITE+"/data/index/dict.idx.json.gz");DICT.idx=JSON.parse(t);return DICT.idx}
+function dictFind(key){var a=DICT.idx,lo=0,hi=a.length-1;while(lo<=hi){var m=(lo+hi)>>1,c=a[m][0];if(c===key)return m;if(c<key)lo=m+1;else hi=m-1}return -1}
+function dictLower(key){var a=DICT.idx,lo=0,hi=a.length;while(lo<hi){var m=(lo+hi)>>1;if(a[m][0]<key)lo=m+1;else hi=m}return lo}
+async function dictEntry(key){var i=dictFind(key);if(i<0)return null;var row=DICT.idx[i];var txt=await fetchGz(DICT_SITE+"/data/dict/"+row[1]);return JSON.parse(txt.split("\n")[row[2]])}
+async function dictPage(q){
+ var key=String(q||"").toLowerCase().trim();
+ nav('<div class="crumb"><a href="?">Home</a> &rsaquo; Dictionary</div><h1 class="at">'+esc(q)+'</h1><p style="font-family:Arial">Looking up the JAH Dictionary...</p>');
+ try{
+  await dictIdx();var de=await dictEntry(key);
+  if(!de||de.k!=="w"){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Not in the dictionary</h1><p style="font-family:Arial">No word &ldquo;'+esc(q)+'&rdquo;. <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">Browse the full JAH Dictionary &rarr;</a></p>');return}
+  var senses=(Array.isArray(de.d)?de.d:[de.d]).slice(0,5);
+  var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">JAH Dictionary</a> &rsaquo; '+esc(de.w)+'</div>';
+  h+='<h1 class="at">'+esc(de.w)+'</h1><div class="sub">From the JAH Dictionary <span class="stamp">'+esc(de.st)+'</span></div>';
+  h+='<div class="hatnote">Dictionary entry. For the encyclopedia article, use the search above.</div>';
+  h+='<h2 class="sec">Webster&rsquo;s 1913</h2><ol>'+senses.map(function(s){return '<li>'+esc(String(s).replace(/^\d+\.\s*/,"").slice(0,400))+'</li>'}).join("")+'</ol>';
+  h+='<p style="font-family:Arial"><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener" style="display:inline-block;padding:8px 16px;background:#1a4d2e;color:#fff;border-radius:4px;font-weight:bold;text-decoration:none">Open the full entry in the JAH Dictionary &rarr;</a></p>';
+  h+='<p class="note">The full entry adds the JAH deterministic definition, the official deterministic stamp, the program of the word, and a personal AI teacher.</p>';
+  nav(h);document.title=de.w+" — JAH Dictionary (via JAH Wiki)";
+ }catch(e){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Dictionary unreachable</h1><p style="font-family:Arial">Couldn\'t reach the dictionary index. <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">Open the JAH Dictionary directly &rarr;</a></p>')}
+}
+/* ================= real-wiki article chrome ================= */
+function tabsHTML(pageId,tab){
+ var a=tab==="talk"?"":" class=\"on\"",t=tab==="talk"?" class=\"on\"":"";
+ return '<div class="wikitabs"><a href="?page='+encodeURIComponent(pageId)+'"'+a+'>Article</a><a href="?page='+encodeURIComponent(pageId)+'&tab=talk"'+t+'>Talk</a></div>';
+}
+function iconRowHTML(){
+ return '<div class="iconrow"><span style="font-size:.8em;color:#5b6472;font-family:Arial">文A</span>'+
+ '<a href="#" id="icon-dict" title="Look up in the JAH Dictionary" style="font-size:1em">\uD83D\uDCD6 Dictionary</a>'+
+ '<a href="#" id="icon-dl" title="Download article (.txt)">\u2B07</a>'+
+ '<a href="#" id="icon-star" title="Watch this article">\u2606</a>'+
+ '<a href="#" id="icon-talk" title="Discuss / suggest edits">\u270E</a></div>';
+}
+function hatnoteHTML(inner){return '<div class="hatnote">'+inner+'</div>'}
+function dictWordFor(title){var m=String(title||"").toLowerCase().match(/[a-z]{3,}/);return m?m[0]:""}
+function sisterDictHTML(title){var w=dictWordFor(title);if(!w)return"";
+ return '<div class="sisterbox">\uD83D\uDCD6 Look up <b><a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">'+esc(w)+'</a></b> in the JAH Dictionary, the JAH lexicon.</div>'}
+function firstPara(s,n){s=String(s||"").replace(/\s+/g," ").trim();if(s.length<=(n||200))return s;var c=s.slice(0,n||200);var p=c.lastIndexOf(". ");return (p>40?c.slice(0,p+1):c)+"..."}
+function shortTitle(t){return String(t||"").split(/\s+/).slice(0,6).join(" ")}
+function overviewHTML(title,def,origin,core){
+ return '<div class="ovbox"><h3>What is '+esc(shortTitle(title))+'?</h3><ul>'+
+ '<li><b>Definition:</b> '+esc(def||"—")+'</li>'+
+ '<li><b>Origin:</b> '+esc(origin||"—")+'</li>'+
+ '<li><b>Core feature:</b> '+esc(core||"—")+'</li></ul></div>';
+}
+function talkArticle(L,pageId,crumb){
+ var h=crumb||"";
+ h+=tabsHTML(pageId,"talk");
+ h+='<h1 class="at">Talk:'+esc(L.title)+'</h1><div class="sub">Discussion about this article</div>';
+ h+='<div class="hatnote">This article is generated from its own data. Discuss improvements, ask questions, or suggest edits below — the article&rsquo;s personal AI answers as the subject itself.</div>';
+ h+=personaHTML(L);
+ h+='<p class="note">Talk pages on JAH Wiki are conversations with the article&rsquo;s AI persona. Nothing here edits the generated article directly.</p>';
+ nav(h);wirePersona(L);
+ document.title="Talk:"+L.title+" — JAH Wiki";
+}
+function getWatch(){try{return JSON.parse(localStorage.getItem("jahwiki-watch")||"[]")}catch(e){return[]}}
+function toggleWatch(id){var w=getWatch(),i=w.indexOf(id);if(i>=0)w.splice(i,1);else w.push(id);try{localStorage.setItem("jahwiki-watch",JSON.stringify(w))}catch(e){}}
+function wireIcons(pageId){
+ var dl=document.getElementById("icon-dl");if(dl)dl.onclick=function(e){e.preventDefault();var b=document.getElementById("dlart");if(b)b.click()};
+ var dc=document.getElementById("icon-dict");if(dc)dc.onclick=function(e){e.preventDefault();setQ("dict",dictWordFor(document.title.replace(/ — JAH Wiki$/,""))||"")};
+ var tk=document.getElementById("icon-talk");if(tk)tk.onclick=function(e){e.preventDefault();setQ("tab","talk")};
+ var st=document.getElementById("icon-star");
+ function paint(){var w=getWatch(),on=w.indexOf(pageId)>=0;st.textContent=on?"\u2605":"\u2606";st.style.color=on?"#b8860b":"#33415e";st.title=on?"Watched — tap to unwatch":"Watch this article"}
+ if(st){paint();st.onclick=function(e){e.preventDefault();toggleWatch(pageId);paint()}}
+}
+function makeCollapsible(){
+ var body=document.getElementById("articlebody");if(!body)return;
+ Array.prototype.forEach.call(body.querySelectorAll("h2.sec"),function(h){
+  var wrap=document.createElement("div");wrap.className="secbody";wrap.style.display="none";
+  var n=h.nextSibling;
+  while(n&&!(n.nodeType===1&&n.tagName==="H2")){var nx=n.nextSibling;wrap.appendChild(n);n=nx}
+  h.parentNode.insertBefore(wrap,h.nextSibling);
+  h.style.cursor="pointer";
+  h.innerHTML='<span class="sectog">\u25B6</span> '+h.innerHTML;
+  h.onclick=function(){var open=wrap.style.display!=="none";wrap.style.display=open?"none":"block";h.querySelector(".sectog").textContent=open?"\u25B6":"\u25BC"};
+ });
+}
 /* ================= init ================= */
 async function openPage(p){
  var par=parsePage(p);if(!par)return notFound(p);
+ var tab=qp("tab")==="talk"?"talk":"";
  nav('<div class="wrap"><p style="font-family:Arial">Opening article...</p></div>');
  try{
-  if(par.kind==="spec"){var row=findSpec(par.id);if(!row)return notFound(p);var d=await fullSpec(row);if(!d)return notFound(p);return specArticle(d)}
-  if(par.kind==="pat"){var pr=findPat(par.id);if(!pr)return notFound(p);var rec=await fullPat(pr);return patArticle(par.id,rec)}
-  var sd=findSubject(par.id);if(!sd)return notFound(p);return subArticle(sd);
+  if(par.kind==="spec"){var row=findSpec(par.id);if(!row)return notFound(p);var d=await fullSpec(row);if(!d)return notFound(p);return specArticle(d,tab)}
+  if(par.kind==="pat"){var pr=findPat(par.id);if(!pr)return notFound(p);var rec=await fullPat(pr);return patArticle(par.id,rec,tab)}
+  var sd=findSubject(par.id);if(!sd)return notFound(p);return subArticle(sd,tab);
  }catch(e){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Couldn\'t load</h1><p style="font-family:Arial">The article data didn\'t load ('+esc(e.message)+'). Check your connection and retry.</p>')}
 }
 async function init(){
@@ -639,7 +772,8 @@ async function init(){
  await loadDB();
  if(sp.has("page"))openPage(qp("page"));
  else if(sp.has("all"))allPages();
- else if(sp.has("q"))doSearch(qp("q"));
+ else if(sp.has("q"))await doSearch(qp("q"));
+ else if(sp.has("dict"))dictPage(qp("dict"));
  else nav(homeHTML());
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
