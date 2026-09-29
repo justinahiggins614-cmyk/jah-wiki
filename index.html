@@ -155,14 +155,17 @@ var PAT_SITE="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog";
 var LEAK_SITE="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks";
 var WIKI_HOME="https://justinahiggins614-cmyk.github.io/jah-wiki/";
 var DB={specIdx:[],patIdx:[],subjects:[],shards:[],ready:false};
+function shardBase(s){var b=(s&&s.base)||"";return b?b.replace(/\/?$/,""):SPEC_SITE}
 async function loadDB(){
  if(DB.ready)return DB;
  var jobs=[];
- jobs.push(fetch(SPEC_SITE+"/data/index/shards.json").then(function(r){return r.json()}).then(async function(sh){
+ jobs.push(fetch(SPEC_SITE+"/data/index/shards.json").then(function(r){return r.json()}).then(async function(j){
+   var sh=Array.isArray(j)?j:((j&&j.shards)||[]);
    DB.shards=sh;
    for(var k=0;k<sh.length;k++){var s=sh[k];try{
-     var txt=await fetchGz(s.base+s.index);var rows=txt.trim().split("\n").map(function(l){return JSON.parse(l)});
-     rows.forEach(function(r){r.push(s.base)});DB.specIdx=DB.specIdx.concat(rows);
+     var base=shardBase(s);
+     var txt=await fetchGz(base+"/"+s.index);var rows=txt.trim().split("\n").map(function(l){return JSON.parse(l)});
+     rows.forEach(function(r){r.push(base)});DB.specIdx=DB.specIdx.concat(rows);
    }catch(e){}}
  }).catch(function(){}));
  jobs.push(fetchGz(PAT_SITE+"/data/patents.idx.json.gz").then(function(t){DB.patIdx=JSON.parse(t)}).catch(function(){}));
@@ -170,7 +173,7 @@ async function loadDB(){
  await Promise.all(jobs);DB.ready=true;return DB;
 }
 function findSpec(id){id=String(id).toUpperCase();for(var i=0;i<DB.specIdx.length;i++)if(String(DB.specIdx[i][0]).toUpperCase()===id)return DB.specIdx[i];return null}
-async function fullSpec(row){var url=row[21]+"/"+row[20];var txt=await fetchGz(url);var lines=txt.trim().split("\n");
+async function fullSpec(row){var url=row[21]+"/data/"+row[20];var txt=await fetchGz(url);var lines=txt.trim().split("\n");
  for(var i=0;i<lines.length;i++){try{var d=JSON.parse(lines[i]);if(d.spec_id===row[0])return d}catch(e){}}return null}
 function findPat(pub){pub=String(pub).toUpperCase();for(var i=0;i<DB.patIdx.length;i++)if(String(DB.patIdx[i][0]).toUpperCase()===pub)return DB.patIdx[i];return null}
 async function fullPat(row){var off=row[4],len=row[5];var r=await fetch(PAT_SITE+"/data/patents.jsonl",{headers:{Range:"bytes="+off+"-"+(off+len+4)}});
