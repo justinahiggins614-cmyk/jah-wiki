@@ -234,7 +234,7 @@ async function doSearch(q){q=q.trim();if(!q)return nav(homeHTML());
  h+=sec("Subject files",rb,function(d){return '<li><a href="?page='+subjSlug(d)+'">'+esc(d.subject)+'</a></li>'});
  /* dictionary answers single words too — loaded after the main results so search stays instant */
  var hasOther=rs.length||rp.length||rb.length;
- if(!hasOther)h+='<div id="dictsec"><p style="font-family:Arial;color:#888">Checking the JAH Dictionary...</p></div>';
+ if(!hasOther)h+='<div id="dictsec"><p style="font-family:Arial;color:#888">Checking the IWB Dictionary...</p></div>';
  else h+='<div id="dictsec"></div>';
  nav(h);
  dictSec(q).then(function(dh){var el=document.getElementById("dictsec");if(el&&dh)el.innerHTML=dh;
@@ -246,11 +246,11 @@ async function dictSec(q){
   var di=dictFind(q),dh="";
   if(di>=0){var de=await dictEntry(q);
    if(de&&de.k==="w"){var senses=(Array.isArray(de.d)?de.d:[]).slice(0,2).map(function(s){return esc(String(s).replace(/^\d+\.\s*/,"").slice(0,300))});
-    dh='<h2 class="sec">From the JAH Dictionary</h2><div class="feat"><h3 style="margin:0 0 6px">'+esc(de.w)+' <span class="stamp">'+esc(de.st)+'</span></h3><p style="font-family:Arial;font-size:.9em">'+senses.join("<br><br>")+'</p><p style="font-family:Arial"><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Open the full dictionary entry &rarr;</a></p></div>'}
+    dh='<h2 class="sec">From the IWB Dictionary</h2><div class="feat"><h3 style="margin:0 0 6px">'+esc(de.w)+' <span class="stamp">'+esc(de.st)+'</span></h3><p style="font-family:Arial;font-size:.9em">'+senses.join("<br><br>")+'</p><p style="font-family:Arial"><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Open the full dictionary entry &rarr;</a></p></div>'}
   }else{
    var pm=[],li=dictLower(q);
    while(li<DICT.idx.length&&pm.length<8){var k2=DICT.idx[li][0];if(k2.indexOf(q)!==0)break;pm.push(k2);li++}
-   if(pm.length)dh='<h2 class="sec">From the JAH Dictionary</h2><ul class="pgln">'+pm.map(function(kx){return '<li><a href="'+DICT_SITE+'/?w='+encodeURIComponent(kx)+'" target="_blank" rel="noopener">'+esc(kx)+'</a></li>'}).join("")+'</ul>';
+   if(pm.length)dh='<h2 class="sec">From the IWB Dictionary</h2><ul class="pgln">'+pm.map(function(kx){return '<li><a href="'+DICT_SITE+'/?w='+encodeURIComponent(kx)+'" target="_blank" rel="noopener">'+esc(kx)+'</a></li>'}).join("")+'</ul>';
   }
   return dh;
  }catch(e){return ""}
@@ -685,19 +685,19 @@ function dictLower(key){var a=DICT.idx,lo=0,hi=a.length;while(lo<hi){var m=(lo+h
 async function dictEntry(key){var i=dictFind(key);if(i<0)return null;var row=DICT.idx[i];var txt=await fetchGz(DICT_SITE+"/data/dict/"+row[1]);return JSON.parse(txt.split("\n")[row[2]])}
 async function dictPage(q){
  var key=String(q||"").toLowerCase().trim();
- nav('<div class="crumb"><a href="?">Home</a> &rsaquo; Dictionary</div><h1 class="at">'+esc(q)+'</h1><p style="font-family:Arial">Looking up the JAH Dictionary...</p>');
+ nav('<div class="crumb"><a href="?">Home</a> &rsaquo; Dictionary</div><h1 class="at">'+esc(q)+'</h1><p style="font-family:Arial">Looking up the IWB Dictionary...</p>');
  try{
   await dictIdx();var de=await dictEntry(key);
-  if(!de||de.k!=="w"){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Not in the dictionary</h1><p style="font-family:Arial">No word &ldquo;'+esc(q)+'&rdquo;. <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">Browse the full JAH Dictionary &rarr;</a></p>');return}
+  if(!de||de.k!=="w"){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Not in the dictionary</h1><p style="font-family:Arial">No word &ldquo;'+esc(q)+'&rdquo;. <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">Browse the full IWB Dictionary &rarr;</a></p>');return}
   var senses=(Array.isArray(de.d)?de.d:[de.d]).slice(0,5);
-  var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">JAH Dictionary</a> &rsaquo; '+esc(de.w)+'</div>';
-  h+='<h1 class="at">'+esc(de.w)+'</h1><div class="sub">From the JAH Dictionary <span class="stamp">'+esc(de.st)+'</span></div>';
+  var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">IWB Dictionary</a> &rsaquo; '+esc(de.w)+'</div>';
+  h+='<h1 class="at">'+esc(de.w)+'</h1><div class="sub">From the IWB Dictionary <span class="stamp">'+esc(de.st)+'</span></div>';
   h+='<div class="hatnote">Dictionary entry. For the encyclopedia article, use the search above.</div>';
-  h+='<h2 class="sec">Webster&rsquo;s 1913</h2><ol>'+senses.map(function(s){return '<li>'+esc(String(s).replace(/^\d+\.\s*/,"").slice(0,400))+'</li>'}).join("")+'</ol>';
-  h+='<p style="font-family:Arial"><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener" style="display:inline-block;padding:8px 16px;background:#1a4d2e;color:#fff;border-radius:4px;font-weight:bold;text-decoration:none">Open the full entry in the JAH Dictionary &rarr;</a></p>';
+  h+='<h2 class="sec">IWB definition</h2><ol>'+senses.map(function(s){return '<li>'+esc(String(s).replace(/^\d+\.\s*/,"").slice(0,400))+'</li>'}).join("")+'</ol>';
+  h+='<p style="font-family:Arial"><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener" style="display:inline-block;padding:8px 16px;background:#1a4d2e;color:#fff;border-radius:4px;font-weight:bold;text-decoration:none">Open the full entry in the IWB Dictionary &rarr;</a></p>';
   h+='<p class="note">The full entry adds the JAH deterministic definition, the official deterministic stamp, the program of the word, and a personal AI teacher.</p>';
-  nav(h);document.title=de.w+" — JAH Dictionary (via JAH Wiki)";
- }catch(e){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Dictionary unreachable</h1><p style="font-family:Arial">Couldn\'t reach the dictionary index. <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">Open the JAH Dictionary directly &rarr;</a></p>')}
+  nav(h);document.title=de.w+" — IWB Dictionary (via JAH Wiki)";
+ }catch(e){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Dictionary unreachable</h1><p style="font-family:Arial">Couldn\'t reach the dictionary index. <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">Open the IWB Dictionary directly &rarr;</a></p>')}
 }
 /* ================= real-wiki article chrome ================= */
 function tabsHTML(pageId,tab){
@@ -706,7 +706,7 @@ function tabsHTML(pageId,tab){
 }
 function iconRowHTML(){
  return '<div class="iconrow"><span style="font-size:.8em;color:#5b6472;font-family:Arial">文A</span>'+
- '<a href="#" id="icon-dict" title="Look up in the JAH Dictionary" style="font-size:1em">\uD83D\uDCD6 Dictionary</a>'+
+ '<a href="#" id="icon-dict" title="Look up in the IWB Dictionary" style="font-size:1em" >\uD83D\uDCD6 Dictionary</a>'+
  '<a href="#" id="icon-dl" title="Download article (.txt)">\u2B07</a>'+
  '<a href="#" id="icon-star" title="Watch this article">\u2606</a>'+
  '<a href="#" id="icon-talk" title="Discuss / suggest edits">\u270E</a></div>';
