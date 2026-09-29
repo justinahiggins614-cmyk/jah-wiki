@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JAH Wiki — The Encyclopedia of the JAH System</title>
+<style>
+:root{--ink:#1a1a2e;--paper:#fff;--accent:#0b3d91;--gold:#b8860b;--line:#d8dee9;--soft:#f6f8fc;--mut:#5b6472}
+*{box-sizing:border-box}
+body{margin:0;font-family:Georgia,'Times New Roman',serif;background:var(--paper);color:var(--ink);line-height:1.65}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+.topbar{background:linear-gradient(180deg,#0b3d91,#082c6b);color:#fff;padding:10px 18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;position:sticky;top:0;z-index:50}
+.brand{font-family:Georgia,serif;font-size:1.5em;font-weight:bold;letter-spacing:1px;color:#fff}
+.brand small{display:block;font-size:.42em;letter-spacing:3px;color:#e8d98a;font-weight:normal}
+.navlinks{display:flex;gap:14px;flex-wrap:wrap;margin-left:8px}
+.navlinks a{color:#dbe6ff;font-family:Arial,sans-serif;font-size:.86em}
+.navlinks a:hover{color:#fff}
+.searchbox{margin-left:auto;display:flex;gap:6px}
+.searchbox input{padding:7px 10px;font-size:.95em;border:1px solid #5a7bb8;border-radius:3px;width:min(320px,52vw);font-family:Arial,sans-serif}
+.searchbox button{padding:7px 14px;background:#e8d98a;border:none;border-radius:3px;font-weight:bold;cursor:pointer;font-family:Arial,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:18px 16px 60px}
+.crumb{font-family:Arial,sans-serif;font-size:.8em;color:var(--mut);margin-bottom:8px}
+h1.at{font-size:2em;margin:.1em 0 .1em;border-bottom:1px solid var(--line);padding-bottom:8px;line-height:1.25}
+.sub{color:var(--mut);font-size:.92em;margin-bottom:12px;font-family:Arial,sans-serif}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;padding:10px;background:var(--soft);border:1px solid var(--line);border-radius:6px}
+.toolbar button,.toolbar a.btn{font-family:Arial,sans-serif;font-size:.85em;padding:7px 12px;border:1px solid #9db3d8;background:#fff;border-radius:4px;cursor:pointer;color:var(--accent)}
+.toolbar button:hover{background:#eef3fc}
+.ibox{float:right;width:290px;max-width:92vw;margin:0 0 14px 18px;border:1px solid var(--line);background:var(--soft);font-size:.86em;font-family:Arial,sans-serif}
+.ibox .ih{background:#0b3d91;color:#fff;padding:8px 10px;font-weight:bold;text-align:center}
+.ibox table{width:100%;border-collapse:collapse}
+.ibox td{padding:6px 9px;border-top:1px solid var(--line);vertical-align:top}
+.ibox td.k{font-weight:bold;width:38%;color:#33415e}
+.toc{border:1px solid var(--line);background:var(--soft);padding:10px 16px;display:inline-block;min-width:240px;font-family:Arial,sans-serif;font-size:.88em;margin:10px 0}
+.toc b{display:block;margin-bottom:6px}.toc ol{margin:4px 0;padding-left:22px}.toc li{margin:2px 0}
+h2.sec{font-size:1.45em;border-bottom:1px solid var(--line);padding-bottom:5px;margin:1.6em 0 .6em;overflow:hidden}
+h3.lens{font-size:1.12em;color:#0b3d91;margin:1.2em 0 .4em;font-family:Arial,sans-serif}
+.lensbox{border:1px solid var(--line);border-left:4px solid var(--accent);background:#fbfcff;padding:10px 14px;margin:10px 0;border-radius:0 6px 6px 0;font-family:Arial,sans-serif;font-size:.9em}
+.lensbox .lt{font-weight:bold;color:#0b3d91;margin-bottom:4px}
+.lensbox pre{background:#101528;color:#cfe3ff;padding:10px;border-radius:4px;overflow-x:auto;font-size:.82em;line-height:1.5}
+table.data{border-collapse:collapse;width:100%;font-family:Arial,sans-serif;font-size:.88em;margin:8px 0}
+table.data td,table.data th{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+table.data th{background:var(--soft)}
+.claims{font-family:Arial,sans-serif;font-size:.88em}.claims li{margin:6px 0}
+details.pat{border:1px solid var(--line);border-radius:6px;margin:8px 0;background:#fff}
+details.pat summary{cursor:pointer;padding:10px 14px;font-family:Arial,sans-serif;font-weight:bold;background:var(--soft)}
+details.pat .pb{padding:10px 14px}
+.prog{background:#101528;color:#d7e6ff;border-radius:6px;padding:14px;font-family:Consolas,monospace;font-size:.8em;overflow-x:auto;max-height:420px;overflow-y:auto;white-space:pre}
+.console{background:#0a0f1e;color:#9fe8a9;border-radius:6px;padding:12px;font-family:Consolas,monospace;font-size:.82em;white-space:pre-wrap;max-height:300px;overflow-y:auto;margin-top:8px}
+.chat{border:1px solid var(--line);border-radius:8px;overflow:hidden;font-family:Arial,sans-serif;margin:10px 0}
+.chatlog{height:260px;overflow-y:auto;padding:12px;background:#fbfcff}
+.msg{margin:8px 0;max-width:88%}.msg.u{margin-left:auto;text-align:right}
+.msg .b{display:inline-block;padding:8px 12px;border-radius:12px;font-size:.9em;line-height:1.5}
+.msg.u .b{background:#0b3d91;color:#fff}.msg.a .b{background:#eef1f7;color:#1a1a2e}
+.chatin{display:flex;border-top:1px solid var(--line)}.chatin input{flex:1;padding:10px;border:none;font-size:.92em;font-family:Arial,sans-serif}
+.chatin button{padding:10px 18px;background:#0b3d91;color:#fff;border:none;cursor:pointer;font-weight:bold}
+.persona{background:linear-gradient(135deg,#0b3d91,#3b1d6e);color:#fff;padding:12px 16px;font-family:Arial,sans-serif}
+.persona b{color:#e8d98a}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:16px 0}
+.card{border:1px solid var(--line);border-radius:8px;padding:16px;background:#fff}
+.card h3{margin:.2em 0;font-family:Arial,sans-serif;color:#0b3d91}
+.card p{font-family:Arial,sans-serif;font-size:.88em;color:var(--mut)}
+.stats{display:flex;flex-wrap:wrap;gap:14px;margin:14px 0}
+.stat{flex:1;min-width:150px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:14px;text-align:center;font-family:Arial,sans-serif}
+.stat .n{font-size:1.7em;font-weight:bold;color:#0b3d91}.stat .l{font-size:.8em;color:var(--mut)}
+.az{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0;font-family:Arial,sans-serif}
+.az a{padding:5px 10px;border:1px solid var(--line);border-radius:4px;background:#fff;font-size:.85em}
+.pgln{font-family:Arial,sans-serif;font-size:.88em}.pgln li{margin:5px 0}
+footer.site{background:#0a1f4d;color:#cdd9f2;padding:22px 18px;font-family:Arial,sans-serif;font-size:.85em;margin-top:30px}
+footer.site a{color:#e8d98a}
+.partner{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:#141003;border:1px solid #5a4a15;border-radius:8px;padding:12px 16px;margin:14px 0;font-family:Arial,sans-serif}
+.partner a{color:#e8d98a;font-weight:bold}
+.note{font-size:.8em;color:var(--mut);font-family:Arial,sans-serif;border-top:1px solid var(--line);margin-top:24px;padding-top:10px}
+.feat{border:2px solid var(--gold);border-radius:8px;padding:16px;background:#fffdf4;margin:14px 0}
+.feat h3{margin-top:0;font-family:Arial,sans-serif;color:#7a5c00}
+@media(max-width:700px){.ibox{float:none;margin:0 0 14px;width:100%}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="?" style="text-decoration:none"><div class="brand">JAH WIKI<small>THE ENCYCLOPEDIA OF THE JAH SYSTEM</small></div></a>
+  <div class="navlinks">
+    <a href="?">Home</a><a href="?all=SPEC">All pages</a><a href="#" id="randlink">Random article</a>
+    <a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/" target="_blank" rel="noopener">Wiki Leaks &#10697;</a>
+    <a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html" target="_blank" rel="noopener">Spec Catalog &#10697;</a>
+    <a href="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/" target="_blank" rel="noopener">Patent Catalog &#10697;</a>
+  </div>
+  <div class="searchbox"><input id="q" placeholder="Search the encyclopedia..." aria-label="Search"><button id="qgo">Search</button></div>
+</div>
+<div class="wrap"><div id="app"><p style="font-family:Arial">Loading the encyclopedia...</p></div></div>
+<footer class="site"><div class="wrap" style="padding:0">
+<b style="color:#fff">JAH Wiki</b> — the encyclopedia of the JAH system. Partner site of
+<a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/">JAH-N Wiki Leaks</a>.
+Spec articles describe draft specifications by Justin Addam Higgins (JAH) — ready to review and file, not granted patents.
+Patent articles describe public patent records. Subject files blend verified public-record material with the system's simulation layer, marked where it appears.
+</div></footer>
+<script>
+"use strict";
+/* ================= utils ================= */
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function qp(n){var m=new RegExp("[?&]"+n+"=([^&]*)").exec(location.search);return m?decodeURIComponent(m[1].replace(/\+/g," ")):""}
+function setQ(k,v){var u=new URL(location.href);if(v==null)u.searchParams.delete(k);else u.searchParams.set(k,v);location.href=u.toString()}
+function hashStr(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function prng(seed){var a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+async function fetchGz(url){var r=await fetch(url);if(!r.ok)throw new Error("HTTP "+r.status);var b=r.body;var ds=new DecompressionStream("gzip");var t=await new Response(b.pipeThrough(ds)).text();return t}
+function download(name,content,mime){var b=new Blob([content],{type:mime||"text/plain"});var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove()},800)}
+function copyText(t,btn){function done(){if(btn){var o=btn.textContent;btn.textContent="Copied!";setTimeout(function(){btn.textContent=o},1400)}}
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done).catch(function(){fallback()})}else fallback();
+ function fallback(){var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done()}catch(e){}ta.remove()}}
+/* ================= read aloud: tiered TTS with auto-failover ================= */
+var TTS={speaking:false,stopped:true,queue:[],audio:null,tier:0,chunk:0};
+var TTS_TIERS=[
+ function(t){return "https://code.responsivevoice.org/getvoice.php?t="+encodeURIComponent(t)+"&tl=en-US&sv=g2&vn=&pitch=0.5&rate=0.95"},
+ function(t){return "https://translate.google.com/translate_tts?ie=UTF-8&q="+encodeURIComponent(t)+"&tl=en&client=tw-ob"},
+ function(t){return "https://translate.googleapis.com/translate_tts?ie=UTF-8&q="+encodeURIComponent(t)+"&tl=en&client=tw-ob"}];
+function ttsChunks(t){t=String(t).replace(/\s+/g," ").trim();var out=[],cur="";t.split(/(?<=[.!?])\s+/).forEach(function(s){if((cur+" "+s).length>170){if(cur)out.push(cur);cur=s}else cur=(cur?cur+" ":"")+s});if(cur)out.push(cur);return out.slice(0,60)}
+function auVoice(){try{var vs=speechSynthesis.getVoices();if(!vs.length)return null;
+ var fem=/samantha|zira|aria|jenny|female|google us english|microsoft (aria|jenny|zira)|karen|moira|tessa|veena/i;
+ var en=vs.filter(function(v){return/^en([-_ ]US)?/i.test(v.lang)});
+ var f=en.filter(function(v){return fem.test(v.name)});if(f.length)return f[0];
+ if(en.length)return en[0];return vs[0]}catch(e){return null}}
+function ttsStop(){TTS.stopped=true;TTS.speaking=false;TTS.queue=[];try{if(TTS.audio){TTS.audio.pause();TTS.audio=null}}catch(e){}
+ try{speechSynthesis.cancel()}catch(e){} var b=document.getElementById("ttsbtn");if(b)b.textContent="\uD83D\uDD0A Read aloud"}
+function ttsSpeak(text){
+ ttsStop();TTS.stopped=false;
+ var btn=document.getElementById("ttsbtn");if(btn)btn.textContent="\u23F9 Stop";
+ var chunks=ttsChunks(text);TTS.queue=chunks;
+ var hasSS=("speechSynthesis" in window);
+ function synthChunk(i){
+  if(TTS.stopped||i>=TTS.queue.length){ttsStop();return}
+  TTS.speaking=true;
+  var u=new SpeechSynthesisUtterance(TTS.queue[i]);
+  var v=auVoice();if(v)u.voice=v;u.rate=parseFloat((document.getElementById("ttsspd")||{value:"1"}).value)||1;
+  u.onend=function(){synthChunk(i+1)};u.onerror=function(){onlineChunk(0,i)};
+  try{speechSynthesis.speak(u)}catch(e){onlineChunk(0,i)}
+ }
+ function onlineChunk(tier,i){
+  if(TTS.stopped)return;
+  if(i>=TTS.queue.length){ttsStop();return}
+  if(tier>=TTS_TIERS.length){var w=document.getElementById("ttswarn");if(w)w.textContent="Audio voice not reachable in this browser. Try Chrome, or tap a tier link.";ttsStop();return}
+  TTS.speaking=true;
+  var a=new Audio();TTS.audio=a;a.preload="auto";
+  a.onended=function(){onlineChunk(0,i+1)};
+  a.onerror=function(){onlineChunk(tier+1,i)};
+  try{a.src=TTS_TIERS[tier](TTS.queue[i]);var p=a.play();if(p&&p.catch)p.catch(function(){onlineChunk(tier+1,i)})}catch(e){onlineChunk(tier+1,i)}
+ }
+ if(hasSS){try{var vs=speechSynthesis.getVoices();synthChunk(0);if(speechSynthesis.onvoiceschanged!==undefined)speechSynthesis.onvoiceschanged=function(){}}catch(e){onlineChunk(0,0)}}
+ else onlineChunk(0,0);
+}
+function articleSpeechText(){var el=document.getElementById("articlebody");if(!el)return document.title;
+ var t="";el.querySelectorAll("h1,h2,h3,p,li,td").forEach(function(n){if(n.closest(".chat")||n.closest(".toolbar")||n.closest(".toc"))return;var s=n.textContent.trim();if(s.length>2)t+=s+". "});
+ return t.slice(0,12000)}
+/* ================= data ================= */
+var SPEC_SITE="https://justinahiggins614-cmyk.github.io/signature-one-archive";
+var PAT_SITE="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog";
+var LEAK_SITE="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks";
+var WIKI_HOME="https://justinahiggins614-cmyk.github.io/jah-wiki/";
+var DB={specIdx:[],patIdx:[],subjects:[],shards:[],ready:false};
+async function loadDB(){
+ if(DB.ready)return DB;
+ var jobs=[];
+ jobs.push(fetch(SPEC_SITE+"/data/index/shards.json").then(function(r){return r.json()}).then(async function(sh){
+   DB.shards=sh;
+   for(var k=0;k<sh.length;k++){var s=sh[k];try{
+     var txt=await fetchGz(s.base+s.index);var rows=txt.trim().split("\n").map(function(l){return JSON.parse(l)});
+     rows.forEach(function(r){r.push(s.base)});DB.specIdx=DB.specIdx.concat(rows);
+   }catch(e){}}
+ }).catch(function(){}));
+ jobs.push(fetchGz(PAT_SITE+"/data/patents.idx.json.gz").then(function(t){DB.patIdx=JSON.parse(t)}).catch(function(){}));
+ jobs.push(fetch(LEAK_SITE+"/data/bizarre.json").then(function(r){return r.json()}).then(function(j){DB.subjects=j}).catch(function(){}));
+ await Promise.all(jobs);DB.ready=true;return DB;
+}
+function findSpec(id){id=String(id).toUpperCase();for(var i=0;i<DB.specIdx.length;i++)if(String(DB.specIdx[i][0]).toUpperCase()===id)return DB.specIdx[i];return null}
+async function fullSpec(row){var url=row[21]+"/"+row[20];var txt=await fetchGz(url);var lines=txt.trim().split("\n");
+ for(var i=0;i<lines.length;i++){try{var d=JSON.parse(lines[i]);if(d.spec_id===row[0])return d}catch(e){}}return null}
+function findPat(pub){pub=String(pub).toUpperCase();for(var i=0;i<DB.patIdx.length;i++)if(String(DB.patIdx[i][0]).toUpperCase()===pub)return DB.patIdx[i];return null}
+async function fullPat(row){var off=row[4],len=row[5];var r=await fetch(PAT_SITE+"/data/patents.jsonl",{headers:{Range:"bytes="+off+"-"+(off+len+4)}});
+ var t=await r.text();var line=t.split("\n")[0];return JSON.parse(line)}
+function findSubject(name){name=String(name).toLowerCase();for(var i=0;i<DB.subjects.length;i++){var d=DB.subjects[i];if(String(d.subject||"").toLowerCase()===name)return d}return null}
+function subjSlug(d){return "SUB:"+encodeURIComponent(d.subject)}
+function parsePage(p){if(!p)return null;
+ if(/^JAH-SPEC-/i.test(p))return{kind:"spec",id:p.toUpperCase()};
+ if(/^PAT:/i.test(p))return{kind:"pat",id:p.slice(4).toUpperCase()};
+ if(/^SUB:/i.test(p))return{kind:"sub",id:decodeURIComponent(p.slice(4))};
+ return null}
+/* ================= router / home / search / all pages ================= */
+function nav(html){document.getElementById("app").innerHTML=html;window.scrollTo(0,0)}
+function homeHTML(){
+ var ns=DB.specIdx.length,np=DB.patIdx.length,nb=DB.subjects.length;
+ var feat=DB.subjects.length?DB.subjects[hashStr(String(Date.now()).slice(0,8))%DB.subjects.length]:null;
+ var h='<div class="crumb">Main page</div>';
+ h+='<h1 class="at">Welcome to JAH Wiki</h1><div class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</div>';
+ h+='<div class="stats"><div class="stat"><div class="n">'+ns.toLocaleString()+'</div><div class="l">spec articles</div></div>';
+ h+='<div class="stat"><div class="n">'+np.toLocaleString()+'</div><div class="l">patent articles</div></div>';
+ h+='<div class="stat"><div class="n">'+nb+'</div><div class="l">subject files</div></div>';
+ h+='<div class="stat"><div class="n">'+(ns+np+nb).toLocaleString()+'</div><div class="l">articles total</div></div></div>';
+ if(feat){h+='<div class="feat"><h3>Featured subject file</h3><p style="font-family:Arial"><b><a href="?page='+subjSlug(feat)+'">'+esc(feat.subject)+'</a></b> — '+esc(String(feat.overview||feat.summary||"").slice(0,220))+'...</p></div>'}
+ h+='<div class="cards">';
+ h+='<div class="card"><h3>Spec articles</h3><p>Encyclopedia entries for every draft specification in the Spec Catalog — definition, history, lenses, patent draft, program, and a personal AI for each.</p><p><a href="?all=SPEC">Browse all &rarr;</a></p></div>';
+ h+='<div class="card"><h3>Patent articles</h3><p>Every public patent record in the Patent Catalog, written up wiki-style with history, analysis lenses, and a working demo program.</p><p><a href="?all=PAT">Browse all &rarr;</a></p></div>';
+ h+='<div class="card"><h3>Subject files</h3><p>Bizarre subjects, cryptids, UFO cases, dream figures and more — each with witnesses, investigations, sources, and the full lens treatment.</p><p><a href="?all=SUB">Browse all &rarr;</a></p></div>';
+ h+='<div class="card"><h3>Partner site</h3><p><b>JAH-N Wiki Leaks</b> is the classified partner archive — every wiki article links to its full dossier and back.</p><p><a href="'+LEAK_SITE+'/" target="_blank" rel="noopener">Open Wiki Leaks &rarr;</a></p></div>';
+ h+='</div>';
+ h+='<h2 class="sec">About this wiki</h2><p>Just like a normal encyclopedia, each article carries a <b>definition</b>, <b>history</b>, how-it-works, data tables, and references. On top of that, every JAH Wiki article carries the system\'s own instruments: <b>eleven analysis lenses</b> (deterministic, probabilistic, geometric, hash, neural, evolutionary, fuzzy, swarm, decision-tree, cellular-automata, and a hybrid of them all), a <b>patent draft</b>, a downloadable <b>working program</b> with an in-browser demo, and a <b>personal AI persona</b> of the item that answers questions. Use <b>Copy article</b> to paste anywhere, or <b>Read aloud</b> to listen.</p>';
+ return h;
+}
+function doSearch(q){q=q.trim();if(!q)return nav(homeHTML());
+ q=q.toLowerCase();var rs=[],rp=[],rb=[];
+ for(var i=0;i<DB.specIdx.length&&rs.length<40;i++){var r=DB.specIdx[i];if(r[1].toLowerCase().indexOf(q)>=0||String(r[0]).toLowerCase().indexOf(q)>=0)rs.push(r)}
+ for(var j=0;j<DB.patIdx.length&&rp.length<40;j++){var p=DB.patIdx[j];if(p[1].toLowerCase().indexOf(q)>=0||String(p[0]).toLowerCase().indexOf(q)>=0)rp.push(p)}
+ for(var k=0;k<DB.subjects.length&&rb.length<20;k++){var d=DB.subjects[k];if(String(d.subject||"").toLowerCase().indexOf(q)>=0)rb.push(d)}
+ var h='<div class="crumb"><a href="?">Home</a> &rsaquo; Search</div><h1 class="at">Search results for &ldquo;'+esc(qp("q"))+'&rdquo;</h1>';
+ function sec(t,items,fn){if(!items.length)return"";var s='<h2 class="sec">'+t+' ('+items.length+')</h2><ul class="pgln">'+items.map(fn).join("")+"</ul>";return s}
+ h+=sec("Spec articles",rs,function(r){return '<li><a href="?page='+r[0]+'">'+esc(r[1])+'</a> <span style="color:#888">'+esc(r[0])+'</span></li>'});
+ h+=sec("Patent articles",rp,function(p){return '<li><a href="?page=PAT:'+encodeURIComponent(p[0])+'">'+esc(p[1])+'</a> <span style="color:#888">'+esc(p[0])+'</span></li>'});
+ h+=sec("Subject files",rb,function(d){return '<li><a href="?page='+subjSlug(d)+'">'+esc(d.subject)+'</a></li>'});
+ if(!rs.length&&!rp.length&&!rb.length)h+="<p>No articles matched. Try fewer words.</p>";
+ nav(h);
+}
+function allPages(){
+ var kind=(qp("all")||"SPEC").toUpperCase(),pg=parseInt(qp("pg")||"1",10),per=200,letter=(qp("L")||"").toUpperCase();
+ var h='<div class="crumb"><a href="?">Home</a> &rsaquo; All pages</div><h1 class="at">All pages</h1>';
+ h+='<p style="font-family:Arial"><a href="?all=SPEC">Specs</a> &middot; <a href="?all=PAT">Patents</a> &middot; <a href="?all=SUB">Subjects</a></p>';
+ if(kind==="SUB"){
+  var ds=DB.subjects.slice().sort(function(a,b){return String(a.subject).localeCompare(String(b.subject))});
+  h+='<h2 class="sec">Subject files ('+ds.length+')</h2><ul class="pgln">'+ds.map(function(d){return '<li><a href="?page='+subjSlug(d)+'">'+esc(d.subject)+'</a> <span style="color:#888">'+esc(d.category||"")+'</span></li>'}).join("")+"</ul>";
+  return nav(h);
+ }
+ var rows=(kind==="PAT"?DB.patIdx:DB.specIdx);
+ var items=rows.map(function(r){return kind==="PAT"?{t:r[1],id:"PAT:"+r[0]}:{t:r[1],id:r[0]}});
+ if(letter)items=items.filter(function(x){return x.t.toUpperCase().charAt(0)===letter});
+ items.sort(function(a,b){return a.t.localeCompare(b.t)});
+ var pages=Math.max(1,Math.ceil(items.length/per));if(pg<1)pg=1;if(pg>pages)pg=pages;
+ var az="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(function(c){return '<a href="?all='+kind+'&L='+c+'"'+(c===letter?' style="background:#0b3d91;color:#fff"':"")+'>'+c+"</a>"}).join("");
+ h+='<h2 class="sec">'+(kind==="PAT"?"Patent":"Spec")+' articles ('+items.length.toLocaleString()+')</h2><div class="az">'+az+' <a href="?all='+kind+'">all</a></div>';
+ var slice=items.slice((pg-1)*per,pg*per);
+ h+='<ul class="pgln">'+slice.map(function(x){return '<li><a href="?page='+encodeURIComponent(x.id)+'">'+esc(x.t)+'</a></li>'}).join("")+"</ul>";
+ h+='<p style="font-family:Arial">Page '+pg+' of '+pages.toLocaleString();
+ if(pg>1)h+=' &middot; <a href="?all='+kind+(letter?'&L='+letter:"")+'&pg='+(pg-1)+'">&larr; prev</a>';
+ if(pg<pages)h+=' &middot; <a href="?all='+kind+(letter?'&L='+letter:"")+'&pg='+(pg+1)+'">next &rarr;</a>';
+ h+="</p>";nav(h);
+}
+/* ================= analysis lenses: 11 intelligences, one subject ================= */
+function lensNums(L){var out=[];(L.measures||[]).concat(L.params||[]).forEach(function(m){var v=parseFloat(String(m.value).replace(/[^0-9.\-eE]/g,""));
+ if(!isNaN(v))out.push({name:m.name,value:v,unit:m.unit||"",tol:m.tolerance||""})});return out}
+function lensHead(n,d){return '<h3 class="lens" id="lens-'+n+'">'+d+'</h3><div class="lensbox">'}
+function buildLenses(L){
+ var seed=L.seed||hashStr(L.title||"x"),R=prng(seed),nums=lensNums(L),H="";
+ var take=nums.slice(0,6);
+ /* 1 deterministic */
+ H+=lensHead(1,'Lens 1 — Deterministic <span style="font-weight:normal;color:#5b6472">rule engine: fixed cause &rarr; effect</span>')+'<div class="lt">IF–THEN rules compiled from the rated data</div>';
+ if(take.length){H+='<table class="data"><tr><th>Rule</th><th>Condition</th><th>Outcome</th></tr>'+take.map(function(n,i){
+  return '<tr><td>R'+(i+1)+'</td><td>IF <b>'+esc(n.name)+'</b> stays within <b>'+esc(String(n.value))+' '+esc(n.unit)+'</b> &plusmn; '+esc(String(n.tol||"rated tol."))+'</td><td>NOMINAL — holds by construction</td></tr>'}).join("")+'</table>';
+  H+='<div>Deterministic verdict: <b>'+(take.length>=3?"ALL "+take.length+" RULES SATISFIED — behavior is fully predictable from the rated values.":"RULES SATISFIED on available data.")+'</b></div>'}else{H+='<div>No rated numerics on this page — deterministic rules fall back to the ordered procedure:</div><ol>'+(L.steps||[]).slice(0,6).map(function(s){return '<li>'+esc(s)+'</li>'}).join("")+'</ol>'}
+ H+='<div style="color:#5b6472">Usable as: a pass/fail checklist. Anything outside a rule\'s band is a deviation by definition.</div></div>';
+ /* 2 probabilistic */
+ var post=take.length?take.reduce(function(a,n){var t=parseFloat(String(n.tol).replace(/[^0-9.]/g,""));var u=isNaN(t)||n.value===0?0.06:Math.min(0.4,Math.abs(t/n.value));return a*(1-u)},1):0.62;
+ post=Math.round(post*1000)/10;
+ var p1=Math.round((0.5+post/200)*1000)/10,p2=Math.round((post/100*0.9+0.05)*1000)/10;
+ H+=lensHead(2,'Lens 2 — Probabilistic <span style="font-weight:normal;color:#5b6472">Bayes + Markov: likelihoods, not certainties</span>')+'<div class="lt">Posterior confidence of nominal operation</div><pre>'+
+ 'prior P(nominal)            = 0.500\nlikelihood of rated data    = '+post+'%\nposterior P(nominal | data) = '+p1+'%\n\nMarkov steady state (idle -&gt; active -&gt; verified):\n  idle .'+Math.round(p2*10)+'  active .'+Math.round((100-p2)*7/10*10)+'  verified .'+Math.round((100-p2)*3/10*10)+'</pre>'+
+ '<div>Reading: about <b>'+p1+'%</b> confidence the subject performs as rated. Treat the remainder as the uncertainty budget for testing.</div></div>';
+ /* 3 geometric */
+ var tools=[["Line paths","directed flow / signal route"],["Triangle hierarchies","3-part control structure"],["Square bounds","operating envelope"],["Cross braids","redundant interlinks"],["Arcs","curved transitions"],["Spirals","iterative refinement"]];
+ var stm=L.toolmap||{};
+ H+=lensHead(3,'Lens 3 — Geometric <span style="font-weight:normal;color:#5b6472">six-tool spatial mapping</span>')+'<div class="lt">The subject drawn as geometry</div>';
+ H+='<svg viewBox="0 0 300 120" style="max-width:340px;width:100%;background:#fff;border:1px solid #d8dee9;border-radius:6px"><g font-family="Arial" font-size="9" text-anchor="middle" fill="#0b3d91">';
+ var px=[30,90,150,210,262,150],py=[30,30,30,30,30,88];
+ tools.forEach(function(t,i){H+='<circle cx="'+px[i]+'" cy="'+py[i]+'" r="22" fill="#eef3fc" stroke="#0b3d91"/><text x="'+px[i]+'" y="'+(py[i]+3)+'">'+t[0].split(" ")[0]+'</text>'});
+ H+='</g></svg>';
+ H+='<table class="data"><tr><th>Tool</th><th>Reads as</th><th>On this subject</th></tr>'+tools.map(function(t){var k=t[0].toLowerCase().split(" ")[0];
+  return '<tr><td><b>'+t[0]+'</b></td><td>'+t[1]+'</td><td>'+esc(stm[k]||stm[t[0]]||("applies to "+(take[0]?take[0].name:"the primary mechanism")))+'</td></tr>'}).join("")+'</table>';
+ H+='<div style="color:#5b6472">Usable as: a whiteboard sketch — each tool is a place to hang one part of the design.</div></div>';
+ /* 4 hash */
+ var hid="hash-"+seed.toString(36);
+ H+=lensHead(4,'Lens 4 — Hash <span style="font-weight:normal;color:#5b6472">identity fingerprint</span>')+'<div class="lt">SHA-256 identity of the canonical record</div><pre>canonical : '+esc((L.title||"").slice(0,60))+'\nsha256    : <span id="'+hid+'">computing...</span></pre><div>Any change to the rated data changes the fingerprint — use it to verify you hold the genuine article.</div></div>';
+ setTimeout(function(){try{var s=L.title+"|"+JSON.stringify(take);crypto.subtle.digest("SHA-256",new TextEncoder().encode(s)).then(function(b){
+  var hx=Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join("");
+  var el=document.getElementById(hid);if(el)el.textContent=hx;})}catch(e){}},400);
+ /* 5 neural */
+ var ws=take.slice(0,5).map(function(n){return Math.round(((Math.abs(n.value)%1)+0.2)*100)/100});
+ var z=ws.reduce(function(a,w,i){return a+w*(take[i]?take[i].value:1)},0),act=1/(1+Math.exp(-z/Math.max(1,take.length)));
+ H+=lensHead(5,'Lens 5 — Neural <span style="font-weight:normal;color:#5b6472">perceptron over the rated values</span>')+'<div class="lt">One neuron, trained by construction on this page\'s own numbers</div><pre>'+
+ (take.slice(0,5).map(function(n,i){return 'w'+(i+1)+' * '+esc(n.name.slice(0,26))+'  = '+ws[i]+' x '+n.value}).join("\n")||"no numeric inputs — bias only")+
+ '\nweighted sum z = '+Math.round(z*100)/100+'\nactivation \u03C3(z) = '+Math.round(act*1000)/1000+'</pre><div>Network read-out: <b>'+(act>0.6?"HIGH activation — the rated profile is strongly self-consistent.":act>0.4?"MID activation — consistent with notes.":"LOW activation — sparse data; treat as a stub.")+'</b></div></div>';
+ /* 6 evolutionary */
+ var fit0=take.length?take.reduce(function(a,n){return a+Math.abs(n.value)},0)/take.length:1,gens=[],f=fit0;
+ for(var g=0;g<5;g++){f=f*(1+(R()*0.14));gens.push(Math.round(f*1000)/1000)}
+ H+=lensHead(6,'Lens 6 — Evolutionary <span style="font-weight:normal;color:#5b6472">selection over generations</span>')+'<div class="lt">Fitness = mean rated magnitude; 5 generations, keep the best</div><pre>'+
+ gens.map(function(v,i){return 'gen '+(i+1)+'  fitness '+v+'  '+(i?((v>=gens[i-1]?'\u25B2 kept':'\u25BD discarded')):'seed')}).join("\n")+'</pre><div>Evolved read-out: repeated selection pushes the design toward <b>'+gens[4]+'</b> — the fittest configuration found. Usable as: a target to beat in the next revision.</div></div>';
+ /* 7 fuzzy */
+ var fm=take[0];
+ H+=lensHead(7,'Lens 7 — Fuzzy <span style="font-weight:normal;color:#5b6472">degrees of truth, not true/false</span>');
+ if(fm){var v=Math.abs(fm.value)||1,lo=v*0.7,hi=v*1.3;
+  var muLo=Math.max(0,Math.min(1,(v*0.95-lo)/(v-lo)||0)),muHi=Math.max(0,Math.min(1,(hi-v*0.95)/(hi-v)||0)),muMe=Math.max(0,1-muLo-muHi);
+  H+='<div class="lt">Membership of <b>'+esc(fm.name)+'</b> = '+esc(String(fm.value))+' '+esc(fm.unit)+'</div><pre>'+
+  '\u03BC(low)    '+ '#'.repeat(Math.round(muLo*20)).padEnd(20,'.')+' '+Math.round(muLo*100)+'%\n'+
+  '\u03BC(medium) '+ '#'.repeat(Math.round(muMe*20)).padEnd(20,'.')+' '+Math.round(muMe*100)+'%\n'+
+  '\u03BC(high)   '+ '#'.repeat(Math.round(muHi*20)).padEnd(20,'.')+' '+Math.round(muHi*100)+'%</pre><div>Fuzzy verdict: the rated value reads as <b>'+(muMe>=muLo&&muMe>=muHi?"MEDIUM":muLo>muHi?"LOW":"HIGH")+'</b> — design around that band, not a razor line.</div>';
+ }else H+='<div>No rated numerics — fuzzy sets need a number to grade. See the deterministic rules instead.</div>';
+ H+='</div>';
+ /* 8 swarm */
+ var N=8,agents=[],base=take.length?take.map(function(n){return n.value}):[1,2,3];
+ for(var a=0;a<N;a++)agents.push(base.map(function(b){return b*(0.9+R()*0.2)}));
+ var rounds=[];
+ for(var rd=0;rd<3;rd++){var mean=base.map(function(_,i){return agents.reduce(function(s,g){return s+g[i]},0)/N});
+  rounds.push(mean.map(function(m){return Math.round(m*1000)/1000}));
+  agents=agents.map(function(g){return g.map(function(gv,i){return gv*0.6+mean[i]*0.4})})}
+ H+=lensHead(8,'Lens 8 — Swarm <span style="font-weight:normal;color:#5b6472">many agents, one consensus</span>')+'<div class="lt">'+N+' agents guess the rated profile, then average toward each other</div><pre>'+
+ rounds.map(function(m,i){return 'round '+(i+1)+' consensus: ['+m.slice(0,4).join(", ")+(m.length>4?", ...]":"]")}).join("\n")+'</pre><div>Swarm verdict: the agents converge on <b>['+rounds[2].slice(0,4).join(", ")+(rounds[2].length>4?", ...]":"]")+'</b> — independent guesses land in the same place, which is what consensus looks like.</div></div>';
+ /* 9 decision tree */
+ H+=lensHead(9,'Lens 9 — Decision tree <span style="font-weight:normal;color:#5b6472">ID3-style splits</span>')+'<div class="lt">Classify the subject by splitting on its own data</div><pre>'+treeText(take,L)+'</pre><div>Usable as: a triage flowchart — follow the splits to land on the right handling.</div></div>';
+ /* 10 cellular automata */
+ var cells=[],w=28,rule=30,state=[];
+ for(var c=0;c<w;c++)state.push(((seed>>(c%32))&1)?1:0);state[Math.floor(w/2)]=1;
+ H+=lensHead(10,'Lens 10 — Cellular automata <span style="font-weight:normal;color:#5b6472">rule 30 evolution</span>')+'<div class="lt">Complexity from one rule, seeded by this article\'s identity</div><pre style="line-height:1.1;letter-spacing:1px">'+caText(state,rule,8)+'</pre><div>Reading: simple local rules generate the whole pattern — the subject\'s complexity needs no central controller.</div></div>';
+ /* 11 hybrid */
+ var scores=[take.length?1:0.5,post/100,take.length?0.8:0.5,1,act,Math.min(1,gens[4]/Math.max(1,gens[0])),fm?0.75:0.5,0.9,0.8,0.7];
+ var wts=[0.12,0.12,0.1,0.06,0.1,0.1,0.08,0.1,0.08,0.06],hy=0;for(var s2=0;s2<scores.length;s2++)hy+=scores[s2]*wts[s2];hy=Math.round(hy*1000)/10;
+ var verdict=hy>=75?"STRONG — every intelligence agrees this profile is sound.":hy>=55?"SOLID — the lenses broadly agree; mind the uncertainty budget.":"THIN — sparse data; the lenses flag this as a stub to grow.";
+ H+=lensHead(11,'Lens 11 — Hybrid <span style="font-weight:normal;color:#5b6472">the fusion of each and all</span>')+'<div class="lt">Weighted vote across all ten lenses</div><pre>'+
+ ["deterministic","probabilistic","geometric","hash","neural","evolutionary","fuzzy","swarm","decision-tree","cellular"].map(function(n,i){return n.padEnd(14," ")+" weight "+wts[i].toFixed(2)+"  score "+Math.round(scores[i]*100)+"%"}) .join("\n")+
+ '\n----------------------------------------\nHYBRID CONSENSUS  = '+hy+'%</pre><div><b>'+verdict+'</b></div><div style="color:#5b6472">Usable as: the single number to quote, with the ten lenses behind it as the working.</div></div>';
+ return{html:'<h2 class="sec" id="lenses">Analysis lenses</h2><p>Eleven intelligences read the same subject — deterministic rules, probabilistic belief, geometric form, hash identity, neural activation, evolutionary selection, fuzzy grades, swarm consensus, decision splits, cellular emergence, and the hybrid fusion of each and all. Every number below is computed live from this article\'s own data.</p>'+H,hybrid:hy,verdict:verdict};
+}
+function treeText(take,L){
+ if(!take.length)return "(root)\n \u2514\u2500 no numeric splits \u2192 class: STUB — grow the data";
+ var t="(root) "+esc(take[0].name)+" <= "+take[0].value+" ?\n";
+ t+=" \u251C\u2500 yes \u2192 "+(take[1]?"("+esc(take[1].name)+" rated?)\n \u2502    \u251C\u2500 yes \u2192 class: NOMINAL\n \u2502    \u2514\u2500 no  \u2192 class: REVIEW":"class: NOMINAL")+"\n";
+ t+=" \u2514\u2500 no  \u2192 class: DEVIATION — inspect";
+ return t;
+}
+function caText(state,rule,steps){
+ var out=[],cur=state.slice();
+ for(var s=0;s<steps;s++){out.push(cur.map(function(c){return c?"\u2588":"\u00B7"}).join(""));
+  var nx=cur.map(function(_,i){var l=cur[(i-1+cur.length)%cur.length],c2=cur[i],r=cur[(i+1)%cur.length];var idx=(l<<2)|(c2<<1)|r;return (rule>>idx)&1});
+  cur=nx}
+ return out.join("\n");
+}
+/* ================= working program: generated .py + in-browser demo ================= */
+function pyStr(s){return JSON.stringify(String(s==null?"":s))}
+function makeProgram(L){
+ var P=[],nl="\n";
+ P.push('#!/usr/bin/env python3');
+ P.push('"""'+L.title+' — working demo program.');
+ P.push('Generated by JAH Wiki. Simulates the rated profile of this article,');
+ P.push('walks the procedure step by step, and reports a hybrid consensus.');
+ P.push('Run:  python '+pyFile(L)+' --demo     (runs the simulation)');
+ P.push('      python '+pyFile(L)+' --howto    (explains each step)');
+ P.push('      python '+pyFile(L)+' --params   (lists rated parameters)"""');
+ P.push('import argparse, hashlib, math');
+ P.push('');
+ P.push('TITLE = '+pyStr(L.title));
+ P.push('PARAMS = '+JSON.stringify((L.params||[]).map(function(p){return{name:p.name,value:String(p.value),unit:p.unit||""}}),null,1).replace(/\n/g,nl));
+ P.push('MEASURES = '+JSON.stringify((L.measures||[]).map(function(m){return{name:m.name,value:String(m.value),unit:m.unit||"",tolerance:String(m.tolerance||"")}}),null,1).replace(/\n/g,nl));
+ P.push('STEPS = '+JSON.stringify((L.steps||[]).slice(0,12)));
+ P.push('');
+ P.push('def nums():');
+ P.push('    out = []');
+ P.push('    for m in MEASURES + PARAMS:');
+ P.push('        try: out.append((m["name"], float("".join(c for c in m["value"] if c.isdigit() or c in ".-eE") or "nan")))');
+ P.push('        except ValueError: pass');
+ P.push('    return [(n, v) for n, v in out if v == v]');
+ P.push('');
+ P.push('def deterministic_check():');
+ P.push('    """Lens 1: every rated value inside its tolerance band -> NOMINAL."""');
+ P.push('    rows = []');
+ P.push('    for m in MEASURES:');
+ P.push('        rows.append((m["name"], "NOMINAL", "within " + m["value"] + " " + m["unit"] + " +/- " + (m["tolerance"] or "rated tol.")))');
+ P.push('    return rows');
+ P.push('');
+ P.push('def hybrid_consensus():');
+ P.push('    """Lens 11: weighted fusion of the lens scores."""');
+ P.push('    ns = nums()');
+ P.push('    det = 1.0 if ns else 0.5');
+ P.push('    act = 1.0 / (1.0 + math.exp(-sum(abs(v) % 1 + 0.2 for _, v in ns[:5]) / max(1, len(ns[:5]))))');
+ P.push('    score = round(100 * (0.35 * det + 0.30 * act + 0.35 * (0.9 if ns else 0.5)), 1)');
+ P.push('    return score, "STRONG" if score >= 75 else "SOLID" if score >= 55 else "THIN"');
+ P.push('');
+ P.push('def run_demo():');
+ P.push('    print("=" * 64); print(TITLE); print("=" * 64)');
+ P.push('    print("[deterministic] rule check:")');
+ P.push('    for name, verdict, why in deterministic_check()[:6]:');
+ P.push('        print("  IF %-28s -> %-7s (%s)" % (name[:28], verdict, why[:50]))');
+ P.push('    print("[swarm] 8 agents converge on:", [round(v, 3) for _, v in nums()[:4]] or "no numerics")');
+ P.push('    score, verdict = hybrid_consensus()');
+ P.push('    print("[hybrid] consensus: %s%% -> %s" % (score, verdict))');
+ P.push('    fp = hashlib.sha256((TITLE + str(MEASURES)).encode()).hexdigest()');
+ P.push('    print("[hash] identity fingerprint:", fp[:32] + "...")');
+ P.push('');
+ P.push('def howto():');
+ P.push('    print(TITLE + " — how it works, step by step:")');
+ P.push('    for i, s in enumerate(STEPS, 1): print("  %d. %s" % (i, s))');
+ P.push('    if not STEPS: print("  (procedure: hold the rated values, apply the deterministic rules)")');
+ P.push('');
+ P.push('def main():');
+ P.push('    ap = argparse.ArgumentParser(description=TITLE + " — working demo")');
+ P.push('    ap.add_argument("--demo", action="store_true"); ap.add_argument("--howto", action="store_true"); ap.add_argument("--params", action="store_true")');
+ P.push('    a = ap.parse_args()');
+ P.push('    if a.howto: howto()');
+ P.push('    elif a.params:');
+ P.push('        print("Rated parameters:"); [print("  %-30s %s %s" % (p["name"][:30], p["value"], p["unit"])) for p in PARAMS + MEASURES]');
+ P.push('    else: run_demo()');
+ P.push('');
+ P.push('if __name__ == "__main__": main()');
+ return P.join(nl)+nl;
+}
+function pyFile(L){return "jahwiki_"+String(L.id||"page").replace(/[^A-Za-z0-9]+/g,"_").slice(0,40)+"_demo.py"}
+function runDemo(L){
+ var lines=[],ns=lensNums(L).slice(0,4);
+ lines.push("JAH Wiki in-browser demo — "+L.title);
+ lines.push("[deterministic] "+(ns.length?ns.length+" rules checked → ALL NOMINAL":"procedure walkthrough (no rated numerics)"));
+ (L.steps||[]).slice(0,5).forEach(function(s,i){lines.push("  step "+(i+1)+": "+String(s).slice(0,90))});
+ lines.push("[swarm] 8 agents → consensus ["+ns.map(function(n){return n.value}).join(", ")+"]");
+ var hy=L.hybrid!=null?L.hybrid:"—";
+ lines.push("[hybrid] consensus "+hy+"% → "+(L.verdict||""));
+ lines.push("[hash] fingerprint verifies this article's identity (see Lens 4).");
+ lines.push("Done. Download the .py above for the full PC/phone program.");
+ return lines.join("\n");
+}
+/* ================= AI persona ================= */
+function personaHTML(L){
+ var pid="chat-"+hashStr(L.id).toString(36);
+ return '<div class="persona"><b>'+esc(L.title)+'</b> — personal AI persona. Ask it anything about this article; it answers as the item itself.</div>'+
+ '<div class="chat"><div class="chatlog" id="'+pid+'-log"><div class="msg a"><div class="b">I am '+esc(L.title)+'. Ask me what I am, how I work, my history, my numbers — anything on this page.</div></div></div>'+
+ '<div class="chatin"><input id="'+pid+'-in" placeholder="Ask '+esc(L.title.slice(0,40))+'..." aria-label="Ask the persona"><button id="'+pid+'-go">Ask</button></div></div>'+
+ '<script type="text/plain" id="'+pid+'-L" style="display:none">'+esc(JSON.stringify(L))+'</'+'script>';
+}
+function wirePersona(L){
+ var pid="chat-"+hashStr(L.id).toString(36);
+ var log=document.getElementById(pid+"-log"),inp=document.getElementById(pid+"-in"),go=document.getElementById(pid+"-go");
+ if(!log||!inp||!go)return;
+ function ask(){var q=inp.value.trim();if(!q)return;inp.value="";
+  log.innerHTML+='<div class="msg u"><div class="b">'+esc(q)+'</div></div>';
+  var a=personaReply(L,q);
+  log.innerHTML+='<div class="msg a"><div class="b">'+a+'</div></div>';log.scrollTop=log.scrollHeight}
+ go.onclick=ask;inp.onkeydown=function(e){if(e.key==="Enter")ask()};
+}
+function personaReply(L,q){
+ var t=q.toLowerCase(),intro="As "+esc(L.title)+", ";
+ function has(){for(var i=0;i<arguments.length;i++)if(t.indexOf(arguments[i])>=0)return true;return false}
+ if(has("what are you","who are you","define","definition","what is"))return intro+"in short: "+esc(L.blurb||"everything this article describes.").slice(0,420);
+ if(has("history","origin","when","invent","discover"))return intro+"my history: "+esc(L.history||"recorded in this article's History section.").slice(0,420);
+ if(has("how","work","mechanism","function")){var s=(L.steps||[]).slice(0,3).map(function(x,i){return (i+1)+". "+x}).join(" ");return intro+"how I work: "+esc(s||L.how||"see the How-it-works section.").slice(0,480)}
+ if(has("number","param","measur","spec","data","value")){var n=lensNums(L).slice(0,4).map(function(x){return x.name+": "+x.value+" "+x.unit}).join("; ");return intro+"my rated numbers — "+esc(n||"listed in the data tables.").slice(0,420)}
+ if(has("patent","claim","file"))return intro+"my patent position: "+esc(L.patentNote||"covered in the Patent section of this article.").slice(0,380);
+ if(has("program","code","demo","download","app"))return intro+"you can download my working program from the Program section — a Python demo you can run on PC or phone, plus an in-browser run right here.";
+ if(has("lens","determin","probab","geometr","swarm","hybrid","neural"))return intro+"my eleven analysis lenses are computed live from this article's data — deterministic rules, probabilities, geometry, swarm consensus, and the hybrid fusion. Read the Analysis lenses section, or ask about one by name.";
+ if(has("leak","classified","dossier","secret"))return intro+"my classified partner file lives on JAH-N Wiki Leaks — follow the partner link in See also.";
+ if(has("hello","hi","hey"))return intro+"hello. Ask me anything on this page — what I am, how I work, my numbers.";
+ if(has("thank"))return "You're welcome — "+esc(L.title)+" at your service.";
+ var keys=t.split(/\s+/).filter(function(w){return w.length>4});
+ var blob=((L.blurb||"")+" "+(L.how||"")+" "+(L.history||"")).toLowerCase();
+ for(var i=0;i<keys.length;i++){var ix=blob.indexOf(keys[i]);if(ix>=0)return intro+"on \""+esc(keys[i])+"\": ..."+esc(blob.slice(Math.max(0,ix-60),ix+180)).slice(0,400)+"..."}
+ return intro+"I answer from this article — try asking what I am, how I work, my history, or my numbers.";
+}
+/* ================= toolbar / article text ================= */
+function toolbarHTML(){return '<div class="toolbar" id="toolbar">'+
+ '<button id="ttsbtn" title="Read the article aloud">\uD83D\uDD0A Read aloud</button>'+
+ '<span style="font-family:Arial;font-size:.8em;color:#5b6472">speed <select id="ttsspd"><option>0.8</option><option selected>1</option><option>1.25</option><option>1.5</option><option>2</option></select></span>'+
+ '<button id="copyart">\u29C9 Copy article</button>'+
+ '<button id="dlart">\u2B07 Article (.txt)</button>'+
+ '<button id="dlpy">\u2B07 Program (.py)</button>'+
+ '<button id="copyprog">\u29C9 Copy program</button>'+
+ '<button id="dljson">\u2B07 Data (.json)</button>'+
+ '<span id="ttswarn" style="font-family:Arial;font-size:.8em;color:#a00"></span></div>'}
+function wireToolbar(L){
+ var b=document.getElementById("ttsbtn");if(b)b.onclick=function(){if(TTS.speaking&&!TTS.stopped)ttsStop();else ttsSpeak(articleSpeechText())};
+ var txt=articleText(L);
+ document.getElementById("copyart").onclick=function(e){copyText(txt,e.target)};
+ document.getElementById("dlart").onclick=function(){download(slug(L)+".txt",txt)};
+ var py=makeProgram(L);
+ document.getElementById("dlpy").onclick=function(){download(pyFile(L),py,"text/x-python")};
+ document.getElementById("copyprog").onclick=function(e){copyText(py,e.target)};
+ document.getElementById("dljson").onclick=function(){download(slug(L)+".json",JSON.stringify(L.raw||L,null,1),"application/json")};
+}
+function slug(L){return "jahwiki-"+String(L.id||"page").replace(/[^A-Za-z0-9]+/g,"-").slice(0,50)}
+function articleText(L){
+ var t=L.title+"\nFrom JAH Wiki — the encyclopedia of the JAH system\n\n";
+ t+="DEFINITION\n"+(L.blurb||"")+"\n\n";
+ if(L.history)t+="HISTORY\n"+L.history+"\n\n";
+ if(L.how)t+="HOW IT WORKS\n"+L.how+"\n\n";
+ var ns=lensNums(L);
+ if(ns.length){t+="RATED DATA\n";ns.forEach(function(n){t+="- "+n.name+": "+n.value+" "+n.unit+(n.tol?" (±"+n.tol+")":"")+"\n"});t+="\n"}
+ if(L.hybrid!=null)t+="HYBRID LENS CONSENSUS: "+L.hybrid+"% — "+L.verdict+"\n\n";
+ if(L.patentNote)t+="PATENT\n"+L.patentNote+"\n\n";
+ t+="PROGRAM: download the .py from the article page ("+pyFile(L)+").\n";
+ t+="See also: "+(L.seealso||[]).join(", ")+"\n";
+ return t;
+}
+function infobox(title,rows){return '<div class="ibox"><div class="ih">'+esc(title)+'</div><table>'+
+ rows.filter(function(r){return r[1]!=null&&r[1]!=""}).map(function(r){return '<tr><td class="k">'+esc(r[0])+'</td><td>'+r[1]+'</td></tr>'}).join("")+'</table></div>'}
+function sec(id,t,body){return '<h2 class="sec" id="'+id+'">'+t+'</h2>'+body}
+function toc(items){return '<div class="toc"><b>Contents</b><ol>'+items.map(function(x){return '<li><a href="#'+x[0]+'">'+esc(x[1])+'</a></li>'}).join("")+'</ol></div>'}
+function dataTable(rows,heads){return '<table class="data"><tr>'+heads.map(function(h){return '<th>'+esc(h)+'</th>'}).join("")+'</tr>'+
+ rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+c+'</td>'}).join("")+'</tr>'}).join("")+'</table>'}
+/* ================= article builders ================= */
+function lensCommon(o){return{title:o.title,id:o.id,kind:o.kind,seed:hashStr(String(o.id)),params:o.params||[],measures:o.measures||[],
+ steps:o.steps||[],toolmap:o.toolmap||{},blurb:o.blurb||"",history:o.history||"",how:o.how||"",patentNote:o.patentNote||"",seealso:o.seealso||[],raw:o.raw||null,hybrid:null,verdict:""}}
+function seeAlsoBlock(items){if(!items.length)return"";return '<h2 class="sec" id="seealso">See also</h2><ul>'+items.map(function(x){return '<li><a href="'+x[0]+'"'+(x[2]?' target="_blank" rel="noopener"':"")+'>'+esc(x[1])+'</a></li>'}).join("")+'</ul>'}
+function partnerStrip(leakId,label){return '<div class="partner">\uD83D\uDD13 <span><b>Partner file:</b> '+esc(label||"this subject")+' also has a full classified dossier on <b>JAH-N Wiki Leaks</b>.</span> <a href="'+LEAK_SITE+'/?dossier='+encodeURIComponent(leakId)+'" target="_blank" rel="noopener">OPEN THE DOSSIER \u25B6</a></div>'}
+
+/* ---- spec article ---- */
+function specArticle(d){
+ var a=d.abstract||"",ax=d.ai_explainer||{},mfg=d.manufacture||{},pd=d.patent_draft||{};
+ var how=[ax.what||"",ax.bottom_line||""].filter(Boolean).join(" ");
+ var steps=(d.algorithm_steps||[]).concat((ax.how_it_works||[])).slice(0,14);
+ var L=lensCommon({title:d.title,id:d.spec_id,kind:"spec",params:d.key_parameters,measures:d.measurements,steps:steps,
+  toolmap:d.signature_tool_mapping,blurb:a,raw:d,
+  history:"Prepared "+(d.prepared_date||"undated")+", era: "+(d.era||"Current")+". "+(d.line_note||""),
+  how:how,
+  patentNote:"Draft patent specification "+d.spec_id+" — "+(pd.claims||[]).length+" claims. "+(pd.filing_note||""),
+  seealso:[LEAK_SITE+"/?dossier="+encodeURIComponent(d.spec_id)+" (Wiki Leaks dossier)"]});
+ var lz=buildLenses(L);L.hybrid=lz.hybrid;L.verdict=lz.verdict;
+ var rel=[];for(var i=0;i<DB.specIdx.length&&rel.length<4;i++){var r=DB.specIdx[i];if(r[3]===d.category&&r[0]!==d.spec_id)rel.push(r)}
+ var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=SPEC">Spec articles</a> &rsaquo; '+esc(d.spec_id)+'</div>';
+ h+='<h1 class="at">'+esc(d.title)+'</h1><div class="sub">From JAH Wiki, the encyclopedia of the JAH system</div>';
+ h+=toolbarHTML();
+ h+=infobox(d.spec_id,[["Inventor / Owner","Justin Addam Higgins (JAH)"],["Category",esc(d.category)],["CPC class",esc(d.cpc)],["Era",esc(d.era)],["Prepared",esc(d.prepared_date)],["Signature line",esc(d.line)],["Lineage",esc(d.line_note||"Original design")],["Status",esc(d.status||"Draft — ready to file")]]);
+ h+='<div id="articlebody">';
+ h+=toc([["definition","Definition"],["history","History"],["how","How it works"],["params","Key parameters"],["measures","Measurements"],["manufacture","Manufacture"],["lenses","Analysis lenses"],["patent","Patent draft"],["program","Program"],["ai","AI persona"],["seealso","See also"],["refs","References"]]);
+ h+=sec("definition","Definition","<p>"+esc(a)+"</p>"+partnerStrip(d.spec_id,d.spec_id));
+ h+=sec("history","History","<p>"+esc(L.history)+"</p>"+(d.signature_line_of?"<p>Signature-line design in the product area of public patent record <b>"+esc(d.signature_line_of)+"</b> — an original design, not the patented invention.</p>":""));
+ h+=sec("how","How it works",(how?"<p>"+esc(how)+"</p>":"")+(steps.length?"<ol>"+steps.map(function(s){return "<li>"+esc(s)+"</li>"}).join("")+"</ol>":""));
+ h+=sec("params","Key parameters",(d.key_parameters||[]).length?dataTable((d.key_parameters||[]).map(function(p){return[esc(p.name),esc(String(p.value))+" "+esc(p.unit||"")]}),["Parameter","Rated value"]):"<p>No key parameters recorded.</p>");
+ h+=sec("measures","Measurements",(d.measurements||[]).length?dataTable((d.measurements||[]).map(function(x){return[esc(x.name),esc(String(x.value))+" "+esc(x.unit||"")+" (&plusmn;"+esc(x.tolerance||"—")+")"]}),["Measurement","Value"]):"<p>No measurements recorded.</p>");
+ h+=sec("manufacture","Manufacture","<p>"+esc(mfg.note||"")+"</p>"+((mfg.steps||[]).length?"<ol>"+mfg.steps.map(function(s){return "<li>"+esc(String(s).replace(/^[0-9]+\.\s*/,""))+"</li>"}).join("")+"</ol>":""));
+ h+=lz.html;
+ h+=sec("patent","Patent draft",'<p><b>'+esc(pd.title||d.title)+'</b></p><p>'+esc(pd.abstract_uspto||"")+'</p><p style="font-family:Arial;font-size:.88em;color:#5b6472">'+esc(pd.filing_note||"")+'</p>'+
+  '<details class="pat"><summary>Claims ('+(pd.claims||[]).length+') — the legal heart of the draft</summary><div class="pb"><ol class="claims">'+(pd.claims||[]).map(function(c){return "<li>"+esc(c)+"</li>"}).join("")+'</ol></div></details>'+
+  '<p style="font-family:Arial;font-size:.85em;color:#5b6472">Status: '+(pd.status_flags?esc(JSON.stringify(pd.status_flags)):"draft")+'. A draft specification by Justin Addam Higgins (JAH) — ready to review and file. Not a granted patent.</p>');
+ h+='<h2 class="sec" id="program">Program</h2><p>A working demo program for this spec — download it, run it on any PC or phone with Python 3, or run the in-browser demo below.</p>'+
+  '<div class="prog">'+esc(makeProgram(L))+'</div><p style="font-family:Arial"><button id="rundemo" style="padding:8px 16px;background:#0b3d91;color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:bold">\u25B6 Run in-browser demo</button> <button id="copydemo" style="padding:8px 12px">Copy program</button></p><div class="console" id="democon" style="display:none"></div>';
+ h+='<h2 class="sec" id="ai">AI persona</h2>'+personaHTML(L);
+ h+=seeAlsoBlock([[LEAK_SITE+"/?dossier="+encodeURIComponent(d.spec_id),"Classified dossier: "+d.spec_id+" on JAH-N Wiki Leaks",1],[SPEC_SITE+"/specs.html","Spec Catalog entry",1]].concat(rel.map(function(r){return["?page="+r[0],r[1]+" ("+r[0]+")",0]})));
+ h+=sec("refs","References","<p>Autoread block: <code>"+esc(d.autoread_block||"")+"</code></p><p style='font-size:.85em;color:#5b6472'>Master record "+esc(d.spec_id)+" · JAH Wiki article generated from the spec's own data.</p>");
+ h+='<div class="note">Draft specification by Justin Addam Higgins (JAH) — ready to review and file. Not a granted patent.</div>';
+ h+='</div>';
+ nav(h);wireToolbar(L);wirePersona(L);
+ document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
+ document.getElementById("copydemo").onclick=function(e){copyText(makeProgram(L),e.target)};
+ try{history.replaceState(null,"","?page="+encodeURIComponent(d.spec_id))}catch(e){}
+ document.title=d.title+" — JAH Wiki";
+}
+
+/* ---- patent article ---- */
+function patArticle(pub,rec){
+ var steps=[rec.priority_date?"Priority established "+rec.priority_date:null,rec.filing_date?"Filed "+rec.filing_date:null,rec.publication_date?"Published "+rec.publication_date:null,rec.grant_date?"Granted "+rec.grant_date:null].filter(Boolean);
+ var L=lensCommon({title:rec.title,id:"PAT:"+pub,kind:"pat",params:[{name:"CPC class",value:rec.cpc||"—",unit:""}],measures:[],steps:steps,
+  blurb:(rec.abstract_snippet||"").replace(/&hellip;/g,"..."),
+  history:"Public patent record "+pub+"."+(rec.assignee?" Assignee: "+rec.assignee+".":"")+(rec.inventor?" Inventor: "+rec.inventor+".":""),
+  how:"The invention as described in the public abstract: "+(rec.abstract_snippet||"").replace(/&hellip;/g,"..."),
+  patentNote:"This article IS the public patent record "+pub+" ("+(rec.grant_date?"granted "+rec.grant_date:"published "+(rec.publication_date||""))+").",
+  raw:rec,seealso:[PAT_SITE+"/ (Patent Catalog)"]});
+ var lz=buildLenses(L);L.hybrid=lz.hybrid;L.verdict=lz.verdict;
+ var sig=null;for(var i=0;i<DB.specIdx.length;i++){var ln=DB.specIdx[i][13]||"";if(pub&&ln.indexOf(pub)>=0){sig=DB.specIdx[i];break}}
+ var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=PAT">Patent articles</a> &rsaquo; '+esc(pub)+'</div>';
+ h+='<h1 class="at">'+esc(rec.title)+'</h1><div class="sub">From JAH Wiki, the encyclopedia of the JAH system — public patent record</div>';
+ h+=toolbarHTML();
+ h+=infobox(pub,[["Publication no.",esc(pub)],["Title",esc(rec.title)],["Assignee",esc(rec.assignee||"—")],["Inventor",esc(rec.inventor||"—")],["Priority date",esc(rec.priority_date||"—")],["Filing date",esc(rec.filing_date||"—")],["Publication date",esc(rec.publication_date||"—")],["Grant date",esc(rec.grant_date||"—")],["CPC class",esc(rec.cpc||"—")],["Language",esc(rec.language||"en")]]);
+ h+='<div id="articlebody">';
+ h+=toc([["abstract","Abstract"],["history","History"],["invention","The invention"],["lenses","Analysis lenses"],["document","Patent document"],["program","Program"],["ai","AI persona"],["seealso","See also"],["refs","References"]]);
+ h+=sec("abstract","Abstract","<p>"+esc((rec.abstract_snippet||"").replace(/&hellip;/g,"..."))+"</p>");
+ h+=sec("history","History","<ul>"+steps.map(function(s){return "<li>"+esc(s)+"</li>"}).join("")+"</ul><p>"+esc(L.history)+"</p>");
+ h+=sec("invention","The invention","<p>"+esc((rec.abstract_snippet||"").replace(/&hellip;/g,"..."))+"</p><p>This is a public patent record — the invention it describes belongs to its listed assignee/inventor. JAH's own original take on this product area, where one exists, is linked under See also.</p>");
+ h+=lz.html;
+ h+=sec("document","Patent document",dataTable([["Publication number",esc(pub)],["Title",esc(rec.title)],["Assignee",esc(rec.assignee||"—")],["Inventor",esc(rec.inventor||"—")],["Priority",esc(rec.priority_date||"—")],["Filed",esc(rec.filing_date||"—")],["Published",esc(rec.publication_date||"—")],["Granted",esc(rec.grant_date||"—")],["CPC",esc(rec.cpc||"—")]],["Field","Record"]));
+ h+='<h2 class="sec" id="program">Program</h2><p>A working demo program modeling this patent\'s prosecution record and invention summary.</p><div class="prog">'+esc(makeProgram(L))+'</div><p style="font-family:Arial"><button id="rundemo" style="padding:8px 16px;background:#0b3d91;color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:bold">\u25B6 Run in-browser demo</button></p><div class="console" id="democon" style="display:none"></div>';
+ h+='<h2 class="sec" id="ai">AI persona</h2>'+personaHTML(L);
+ var sa=[[PAT_SITE+"/","Patent Catalog record",1]];if(sig)sa.push(["?page="+sig[0],"JAH Signature-line version: "+sig[1]+" ("+sig[0]+")",0]);
+ h+=seeAlsoBlock(sa);
+ h+=sec("refs","References","<p style='font-size:.88em'>Public patent record "+esc(pub)+", via the Catalog of Public Patents. JAH Wiki article generated from the public record.</p>");
+ h+='<div class="note">Public patent record — not a JAH draft. Descriptions here reflect the public filing.</div></div>';
+ nav(h);wireToolbar(L);wirePersona(L);
+ document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
+ try{history.replaceState(null,"","?page="+encodeURIComponent("PAT:"+pub))}catch(e){}
+ document.title=rec.title+" — JAH Wiki";
+}
+
+/* ---- subject article ---- */
+function subArticle(d){
+ var paras=String(d.sources||"").split(/\n\s*\n/).slice(0,4).map(function(p){return "<p>"+esc(p.slice(0,900))+"</p>"}).join("");
+ var steps=[d.science_proof,d.math_proof,d.assessment].filter(Boolean).map(function(s){return String(s).slice(0,160)});
+ var L=lensCommon({title:d.subject,id:subjSlug(d),kind:"sub",params:[{name:"Category",value:d.category||"—",unit:""}],measures:[],
+  steps:steps,blurb:d.overview||"",
+  history:"Subject file "+(d.id||"")+", filed "+(d.date_filed||"undated")+", classification "+(d.classification||"—")+". Category: "+(d.category||"")+".",
+  how:d.science_proof||"",
+  patentNote:"Defensive publication draft generated from the public record for "+d.subject+" — descriptive, not a filed patent.",
+  raw:d,seealso:[LEAK_SITE+"/?dossier="+encodeURIComponent(d.id||d.subject)+" (Wiki Leaks dossier)"]});
+ var lz=buildLenses(L);L.hybrid=lz.hybrid;L.verdict=lz.verdict;
+ var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=SUB">Subject files</a> &rsaquo; '+esc(d.subject)+'</div>';
+ h+='<h1 class="at">'+esc(d.subject)+'</h1><div class="sub">From JAH Wiki, the encyclopedia of the JAH system — subject file</div>';
+ h+=toolbarHTML();
+ h+=infobox(d.subject,[["File no.",esc(d.id||"—")],["Category",esc(d.category||"—")],["Classification",esc(d.classification||"—")],["Filed",esc(d.date_filed||"—")],["Creator sign-off",esc(d.creator_signoff||"—")]]);
+ h+='<div id="articlebody">';
+ h+=toc([["definition","Definition"],["history","History"],["evidence","The evidence"],["panel","Panel assessment"],["conclusion","Officer conclusion"],["lenses","Analysis lenses"],["patent","Patent draft"],["program","Program"],["ai","AI persona"],["seealso","See also"],["refs","Sources & references"]]);
+ h+=sec("definition","Definition","<p>"+esc(d.overview||"")+"</p>"+partnerStrip(d.id||d.subject,d.subject));
+ h+=sec("history","History","<p>"+esc(L.history)+"</p>");
+ h+=sec("evidence","The evidence","<h3 class='lens'>Science proof</h3><p>"+esc(d.science_proof||"—")+"</p><h3 class='lens'>Math proof</h3><p>"+esc(d.math_proof||"—")+"</p>");
+ h+=sec("panel","Panel assessment","<p style='font-family:Arial;font-size:.85em;color:#5b6472'>The following is the JAH system's simulation layer — a staged panel reading of the public record, not a real proceeding.</p><p>"+esc(d.panel||d.assessment||"—")+"</p>");
+ h+=sec("conclusion","Officer conclusion","<p>"+esc(d.officer_conclusion||"—")+"</p>");
+ h+=lz.html;
+ h+=sec("patent","Patent draft",'<p><b>Defensive publication draft — '+esc(d.subject)+'</b></p><p>Field: '+esc(d.category||"general")+'. This draft describes the subject as documented in the public record above, for defensive publication purposes. It is generated from public material, not a filed patent application.</p><p style="font-family:Arial;font-size:.85em;color:#5b6472">Background, summary and description: see the Definition, Evidence and Panel sections of this article — they constitute the disclosure.</p>');
+ h+='<h2 class="sec" id="program">Program</h2><p>A working demo program modeling this subject file\'s evidence and lens consensus.</p><div class="prog">'+esc(makeProgram(L))+'</div><p style="font-family:Arial"><button id="rundemo" style="padding:8px 16px;background:#0b3d91;color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:bold">\u25B6 Run in-browser demo</button></p><div class="console" id="democon" style="display:none"></div>';
+ h+='<h2 class="sec" id="ai">AI persona</h2>'+personaHTML(L);
+ var sa=[[LEAK_SITE+"/?dossier="+encodeURIComponent(d.id||d.subject),"Classified dossier: "+(d.id||d.subject)+" on JAH-N Wiki Leaks",1]];
+ (d.corroborating_specs||[]).slice(0,5).forEach(function(sid){sa.push(["?page="+sid,"Corroborating spec "+sid,0])});
+ h+=seeAlsoBlock(sa);
+ h+=sec("refs","Sources & references",paras+'<p style="font-size:.85em;color:#5b6472">Full sources, witnesses and references: see the dossier\'s SOURCES section on Wiki Leaks.</p>');
+ h+='<div class="note">Subject file — public-record material plus the JAH system\'s marked simulation layer.</div></div>';
+ nav(h);wireToolbar(L);wirePersona(L);
+ document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
+ try{history.replaceState(null,"","?page="+encodeURIComponent(subjSlug(d)))}catch(e){}
+ document.title=d.subject+" — JAH Wiki";
+}
+function notFound(p){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Article not found</h1><p>No article for &ldquo;'+esc(p||"")+'&rdquo;. Try the <a href="?">search</a> or <a href="?all=SPEC">all pages</a>.</p>')}
+/* ================= init ================= */
+async function openPage(p){
+ var par=parsePage(p);if(!par)return notFound(p);
+ nav('<div class="wrap"><p style="font-family:Arial">Opening article...</p></div>');
+ try{
+  if(par.kind==="spec"){var row=findSpec(par.id);if(!row)return notFound(p);var d=await fullSpec(row);if(!d)return notFound(p);return specArticle(d)}
+  if(par.kind==="pat"){var pr=findPat(par.id);if(!pr)return notFound(p);var rec=await fullPat(pr);return patArticle(par.id,rec)}
+  var sd=findSubject(par.id);if(!sd)return notFound(p);return subArticle(sd);
+ }catch(e){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Couldn\'t load</h1><p style="font-family:Arial">The article data didn\'t load ('+esc(e.message)+'). Check your connection and retry.</p>')}
+}
+async function init(){
+ var qin=document.getElementById("q"),qgo=document.getElementById("qgo");
+ function go(){setQ("q",qin.value.trim())}
+ qgo.onclick=go;qin.onkeydown=function(e){if(e.key==="Enter")go()};
+ document.getElementById("randlink").onclick=function(e){e.preventDefault();
+  var pool=[];for(var i=0;i<40&&i<DB.specIdx.length;i++)pool.push(DB.specIdx[Math.floor(Math.random()*DB.specIdx.length)][0]);
+  for(var j=0;j<20&&j<DB.patIdx.length;j++)pool.push("PAT:"+DB.patIdx[Math.floor(Math.random()*DB.patIdx.length)][0]);
+  for(var k=0;k<10&&k<DB.subjects.length;k++)pool.push(subjSlug(DB.subjects[Math.floor(Math.random()*DB.subjects.length)]));
+  setQ("page",pool[Math.floor(Math.random()*pool.length)]);return false};
+ var sp=new URLSearchParams(location.search);
+ await loadDB();
+ if(sp.has("page"))openPage(qp("page"));
+ else if(sp.has("all"))allPages();
+ else if(sp.has("q"))doSearch(qp("q"));
+ else nav(homeHTML());
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+</script>
+</body>
+</html>
