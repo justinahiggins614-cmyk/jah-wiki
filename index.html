@@ -232,21 +232,28 @@ async function doSearch(q){q=q.trim();if(!q)return nav(homeHTML());
  h+=sec("Spec articles",rs,function(r){return '<li><a href="?page='+r[0]+'">'+esc(r[1])+'</a> <span style="color:#888">'+esc(r[0])+'</span></li>'});
  h+=sec("Patent articles",rp,function(p){return '<li><a href="?page=PAT:'+encodeURIComponent(p[0])+'">'+esc(p[1])+'</a> <span style="color:#888">'+esc(p[0])+'</span></li>'});
  h+=sec("Subject files",rb,function(d){return '<li><a href="?page='+subjSlug(d)+'">'+esc(d.subject)+'</a></li>'});
- /* dictionary answers single words too */
+ /* dictionary answers single words too — loaded after the main results so search stays instant */
+ var hasOther=rs.length||rp.length||rb.length;
+ if(!hasOther)h+='<div id="dictsec"><p style="font-family:Arial;color:#888">Checking the JAH Dictionary...</p></div>';
+ else h+='<div id="dictsec"></div>';
+ nav(h);
+ dictSec(q).then(function(dh){var el=document.getElementById("dictsec");if(el&&dh)el.innerHTML=dh;
+  else if(el&&!hasOther)el.innerHTML="<p>No articles matched. Try fewer words.</p>"});
+}
+async function dictSec(q){
  try{
   await dictIdx();
-  var di=dictFind(q);
+  var di=dictFind(q),dh="";
   if(di>=0){var de=await dictEntry(q);
    if(de&&de.k==="w"){var senses=(Array.isArray(de.d)?de.d:[]).slice(0,2).map(function(s){return esc(String(s).replace(/^\d+\.\s*/,"").slice(0,300))});
-    h+='<h2 class="sec">From the JAH Dictionary</h2><div class="feat"><h3 style="margin:0 0 6px">'+esc(de.w)+' <span class="stamp">'+esc(de.st)+'</span></h3><p style="font-family:Arial;font-size:.9em">'+senses.join("<br><br>")+'</p><p style="font-family:Arial"><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Open the full dictionary entry &rarr;</a></p></div>'}
+    dh='<h2 class="sec">From the JAH Dictionary</h2><div class="feat"><h3 style="margin:0 0 6px">'+esc(de.w)+' <span class="stamp">'+esc(de.st)+'</span></h3><p style="font-family:Arial;font-size:.9em">'+senses.join("<br><br>")+'</p><p style="font-family:Arial"><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Open the full dictionary entry &rarr;</a></p></div>'}
   }else{
    var pm=[],li=dictLower(q);
    while(li<DICT.idx.length&&pm.length<8){var k2=DICT.idx[li][0];if(k2.indexOf(q)!==0)break;pm.push(k2);li++}
-   if(pm.length)h+='<h2 class="sec">From the JAH Dictionary</h2><ul class="pgln">'+pm.map(function(kx){return '<li><a href="'+DICT_SITE+'/?w='+encodeURIComponent(kx)+'" target="_blank" rel="noopener">'+esc(kx)+'</a></li>'}).join("")+'</ul>';
+   if(pm.length)dh='<h2 class="sec">From the JAH Dictionary</h2><ul class="pgln">'+pm.map(function(kx){return '<li><a href="'+DICT_SITE+'/?w='+encodeURIComponent(kx)+'" target="_blank" rel="noopener">'+esc(kx)+'</a></li>'}).join("")+'</ul>';
   }
- }catch(e){}
- if(!rs.length&&!rp.length&&!rb.length&&h.indexOf("JAH Dictionary")<0)h+="<p>No articles matched. Try fewer words.</p>";
- nav(h);
+  return dh;
+ }catch(e){return ""}
 }
 function allPages(){
  var kind=(qp("all")||"SPEC").toUpperCase(),pg=parseInt(qp("pg")||"1",10),per=200,letter=(qp("L")||"").toUpperCase();
