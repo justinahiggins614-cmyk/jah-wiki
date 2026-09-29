@@ -246,7 +246,7 @@ async function dictSec(q){
   var di=dictFind(q),dh="";
   if(di>=0){var de=await dictEntry(q);
    if(de&&de.k==="w"){var senses=(Array.isArray(de.d)?de.d:[]).slice(0,2).map(function(s){return esc(String(s).replace(/^\d+\.\s*/,"").slice(0,300))});
-    dh='<h2 class="sec">From the IWB Dictionary</h2><div class="feat"><h3 style="margin:0 0 6px">'+esc(de.w)+' <span class="stamp">'+esc(de.st)+'</span></h3><p style="font-family:Arial;font-size:.9em">'+senses.join("<br><br>")+'</p><p style="font-family:Arial"><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Open the full dictionary entry &rarr;</a></p></div>'}
+    dh='<h2 class="sec">From the IWB Dictionary</h2><div class="feat"><h3 style="margin:0 0 6px">'+esc(de.w)+' <span class="stamp">'+esc(de.st)+'</span></h3><p style="font-family:Arial;font-size:.9em">'+senses.join("<br><br>")+'</p><p style="font-family:Arial"><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Open the full dictionary entry &rarr;</a> &middot; <a href="'+SPEC_SITE+'/specs.html?word='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Word patent &rarr;</a></p></div>'}
   }else{
    var pm=[],li=dictLower(q);
    while(li<DICT.idx.length&&pm.length<8){var k2=DICT.idx[li][0];if(k2.indexOf(q)!==0)break;pm.push(k2);li++}
