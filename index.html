@@ -202,6 +202,7 @@ function parsePage(p){if(!p)return null;
  if(/^JAH-SPEC-/i.test(p))return{kind:"spec",id:p.toUpperCase()};
  if(/^PAT:/i.test(p))return{kind:"pat",id:p.slice(4).toUpperCase()};
  if(/^SUB:/i.test(p))return{kind:"sub",id:decodeURIComponent(p.slice(4))};
+ if(/^[a-z][a-z'\- ]{0,40}$/i.test(p)&&p.trim().length>1)return{kind:"word",id:p.toLowerCase().trim()};
  return null}
 /* ================= router / home / search / all pages ================= */
 function nav(html){document.getElementById("app").innerHTML=html;window.scrollTo(0,0)}
@@ -225,22 +226,40 @@ function homeHTML(){
  return h;
 }
 async function doSearch(q){q=q.trim();if(!q)return nav(homeHTML());
- q=q.toLowerCase();var rs=[],rp=[],rb=[];
- for(var i=0;i<DB.specIdx.length&&rs.length<40;i++){var r=DB.specIdx[i];if(r[1].toLowerCase().indexOf(q)>=0||String(r[0]).toLowerCase().indexOf(q)>=0)rs.push(r)}
- for(var j=0;j<DB.patIdx.length&&rp.length<40;j++){var p=DB.patIdx[j];if(p[1].toLowerCase().indexOf(q)>=0||String(p[0]).toLowerCase().indexOf(q)>=0)rp.push(p)}
- for(var k=0;k<DB.subjects.length&&rb.length<20;k++){var d=DB.subjects[k];if(String(d.subject||"").toLowerCase().indexOf(q)>=0)rb.push(d)}
- var h='<div class="crumb"><a href="?">Home</a> &rsaquo; Search</div><h1 class="at">Search results for &ldquo;'+esc(qp("q"))+'&rdquo;</h1>';
+ var ql=q.toLowerCase(),disp=qp("q");
+ var single=/^[a-z][a-z'\- ]{1,40}$/i.test(q);
+ var dictTop="";
+ if(single){
+  /* single-word query: the dictionary answers FIRST; an exact match opens the word article straight away */
+  try{
+   await dictIdx();
+   if(dictFind(ql)>=0){var de0=await dictEntry(ql);if(de0&&de0.k==="w")return wordArticle(de0,"")}
+   dictTop=await dictSec(ql);
+  }catch(e){}
+ }
+ var rs=[],rp=[],rb=[];
+ for(var i=0;i<DB.specIdx.length&&rs.length<40;i++){var r=DB.specIdx[i];if(String(r[1]).toLowerCase().indexOf(ql)>=0||String(r[0]).toLowerCase().indexOf(ql)>=0)rs.push(r)}
+ for(var j=0;j<DB.patIdx.length&&rp.length<40;j++){var p=DB.patIdx[j];if(String(p[1]).toLowerCase().indexOf(ql)>=0||String(p[0]).toLowerCase().indexOf(ql)>=0)rp.push(p)}
+ for(var k=0;k<DB.subjects.length&&rb.length<20;k++){var d=DB.subjects[k];if(String(d.subject||"").toLowerCase().indexOf(ql)>=0)rb.push(d)}
+ var h='<div class="crumb"><a href="?">Home</a> &rsaquo; Search</div><h1 class="at">Search results for &ldquo;'+esc(disp)+'&rdquo;</h1>';
  function sec(t,items,fn){if(!items.length)return"";var s='<h2 class="sec">'+t+' ('+items.length+')</h2><ul class="pgln">'+items.map(fn).join("")+"</ul>";return s}
- h+=sec("Spec articles",rs,function(r){return '<li><a href="?page='+r[0]+'">'+esc(r[1])+'</a> <span style="color:#888">'+esc(r[0])+'</span></li>'});
- h+=sec("Patent articles",rp,function(p){return '<li><a href="?page=PAT:'+encodeURIComponent(p[0])+'">'+esc(p[1])+'</a> <span style="color:#888">'+esc(p[0])+'</span></li>'});
- h+=sec("Subject files",rb,function(d){return '<li><a href="?page='+subjSlug(d)+'">'+esc(d.subject)+'</a></li>'});
- /* dictionary answers single words too — loaded after the main results so search stays instant */
+ function snip(t){t=String(t||"").replace(/\s+/g," ").trim();return t?'<br><span style="color:#5b6472;font-size:.85em">'+esc(t.slice(0,160))+'</span>':""}
+ h+=dictTop;
+ h+=sec("Spec articles",rs,function(r){return '<li><a href="?page='+r[0]+'">'+esc(r[1])+'</a> <span style="color:#888">'+esc(r[0])+'</span>'+snip(firstPara(r[2]||"",160))+'</li>'});
+ h+=sec("Patent articles",rp,function(p){return '<li><a href="?page=PAT:'+encodeURIComponent(p[0])+'">'+esc(String(p[1]).replace(/&hellip;/g,"..."))+'</a> <span style="color:#888">'+esc(p[0])+'</span>'+snip(firstPara(((p[3]?p[3]+" \u2014 ":"")+"public patent record "+p[0]),160))+'</li>'});
+ h+=sec("Subject files",rb,function(d){return '<li><a href="?page='+subjSlug(d)+'">'+esc(d.subject)+'</a>'+snip(firstPara(d.overview||d.summary||"",160))+'</li>'});
  var hasOther=rs.length||rp.length||rb.length;
- if(!hasOther)h+='<div id="dictsec"><p style="font-family:Arial;color:#888">Checking the IWB Dictionary...</p></div>';
- else h+='<div id="dictsec"></div>';
- nav(h);
- dictSec(q).then(function(dh){var el=document.getElementById("dictsec");if(el&&dh)el.innerHTML=dh;
-  else if(el&&!hasOther)el.innerHTML="<p>No articles matched. Try fewer words.</p>"});
+ if(!single){
+  /* multi-word query: dictionary section still loads after, so search stays instant */
+  if(!hasOther)h+='<div id="dictsec"><p style="font-family:Arial;color:#888">Checking the IWB Dictionary...</p></div>';
+  else h+='<div id="dictsec"></div>';
+  nav(h);
+  dictSec(ql).then(function(dh){var el=document.getElementById("dictsec");if(el&&dh)el.innerHTML=dh;
+   else if(el&&!hasOther)el.innerHTML="<p>No articles matched. Try fewer words.</p>"});
+ }else{
+  if(!hasOther&&!dictTop)h+='<p style="font-family:Arial">No articles matched. Try fewer words.</p>';
+  nav(h);
+ }
 }
 async function dictSec(q){
  try{
@@ -248,7 +267,7 @@ async function dictSec(q){
   var di=dictFind(q),dh="";
   if(di>=0){var de=await dictEntry(q);
    if(de&&de.k==="w"){var senses=(Array.isArray(de.d)?de.d:[]).slice(0,2).map(function(s){return esc(String(s).replace(/^\d+\.\s*/,"").slice(0,300))});
-    dh='<h2 class="sec">From the IWB Dictionary</h2><div class="feat"><h3 style="margin:0 0 6px">'+esc(de.w)+' <span class="stamp">'+esc(de.st)+'</span></h3><p style="font-family:Arial;font-size:.9em">'+senses.join("<br><br>")+'</p><p style="font-family:Arial"><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Open the full dictionary entry &rarr;</a> &middot; <a href="'+SPEC_SITE+'/specs.html?word='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Word patent &rarr;</a></p></div>'}
+    dh='<h2 class="sec">From the IWB Dictionary</h2><div class="feat"><h3 style="margin:0 0 6px">'+esc(de.w)+' <span class="stamp">'+esc(de.st)+'</span></h3><p style="font-family:Arial;font-size:.9em">'+senses.join("<br><br>")+'</p><p style="font-family:Arial"><a href="?page='+encodeURIComponent(de.w)+'"><b>Read the encyclopedia article &ldquo;'+esc(de.w)+'&rdquo; &rarr;</b></a><br><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Open the full dictionary entry &rarr;</a> &middot; <a href="'+SPEC_SITE+'/specs.html?word='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Word patent &rarr;</a></p></div>'}
   }else{
    var pm=[],li=dictLower(q);
    while(li<DICT.idx.length&&pm.length<8){var k2=DICT.idx[li][0];if(k2.indexOf(q)!==0)break;pm.push(k2);li++}
@@ -686,6 +705,68 @@ function subArticle(d,tab){
  try{history.replaceState(null,"","?page="+encodeURIComponent(subjSlug(d))+(tab==="talk"?"&tab=talk":""))}catch(e){}
  document.title=d.subject+" — JAH Wiki";
 }
+/* ---- word article: plain dictionary word -> full encyclopedia article ----
+   Layer order (Manon's spec): 1) real-wiki top 2) JAH data 3) detailed definition+history
+   4) read-aloud at top (toolbar) 5) Ask AI at bottom. History is honest: no etymology is
+   ever invented — where the dictionary records none, the article says so plainly. */
+async function wordArticle(de,tab){
+ var w=de.w,senses=(Array.isArray(de.d)?de.d:[]).map(function(x){return String(x).replace(/^\d+\.\s*/,"").trim()}).filter(Boolean);
+ var first=senses[0]||"",syl=syllabify(w);
+ var defwords=senses.join(" ").split(/\s+/).filter(Boolean).length;
+ var L=lensCommon({title:w,id:"WORD:"+w.toLowerCase(),kind:"word",
+  params:[{name:"Part of speech",value:de.pos||"\u2014",unit:""},{name:"IWB stamp",value:de.st||"\u2014",unit:""}],
+  measures:[{name:"Letters",value:String(w).replace(/[^a-z]/gi,"").length,unit:""},
+            {name:"Syllables",value:syl.split("\u00B7").length,unit:""},
+            {name:"Senses defined",value:senses.length,unit:""},
+            {name:"Definition words",value:defwords,unit:""}],
+  steps:[],blurb:first,
+  history:"The IWB Dictionary records no etymology for this word yet; it carries the official deterministic stamp "+(de.st||"unstamped")+".",
+  how:"The word as the IWB Dictionary defines it: "+first,
+  patentNote:"Word patent: the Spec Catalog holds a full draft patent and a working program for the word \u201C"+w+"\u201D — see Cross-references below.",
+  raw:de,seealso:[]});
+ var lz=buildLenses(L);L.hybrid=lz.hybrid;L.verdict=lz.verdict;
+ var wl=w.toLowerCase(),relS=[],relP=[],i,j;
+ for(i=0;i<DB.specIdx.length&&relS.length<8;i++){var r=DB.specIdx[i];if(String(r[1]).toLowerCase().indexOf(wl)>=0)relS.push(r)}
+ for(j=0;j<DB.patIdx.length&&relP.length<8;j++){var p=DB.patIdx[j];if(String(p[1]).toLowerCase().indexOf(wl)>=0)relP.push(p)}
+ var h='<div class="crumb"><a href="?">Home</a> &rsaquo; Word articles &rsaquo; '+esc(w)+'</div>';
+ if(tab==="talk")return talkArticle(L,w,h);
+ h+=tabsHTML(w,tab);
+ h+=iconRowHTML();
+ h+='<h1 class="at">'+esc(w)+'</h1>';
+ h+=hatnoteHTML('This article is about the word <b>'+esc(w)+'</b> in the JAH system. For the full dictionary treatment, see <a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">the IWB Dictionary</a>.');
+ h+='<p class="lead"><b>'+esc(w)+'</b>'+pronHTML(w)+(de.pos?' <span style="font-family:Arial;font-size:.85em;color:#5b6472">'+esc(de.pos)+'</span>':"")+' \u2014 '+esc(dictLeadSense(first)||"a word in the IWB Dictionary")+'</p>';
+ h+=overviewHTML(w,firstPara(first,170),"Recorded in the IWB Dictionary ("+esc(de.st||"unstamped")+").","Hybrid lens consensus "+lz.hybrid+"% \u2014 "+lz.verdict);
+ h+=toolbarHTML();
+ h+=infobox(w,[["Word",esc(w)],["Pronunciation",esc(syl)],["Part of speech",esc(de.pos||"\u2014")],["IWB stamp",esc(de.st||"\u2014")],["Senses",esc(String(senses.length))],["Definition source",esc(de.defsrc==="iwb"?"IWB Dictionary (original)":"IWB Dictionary")]]);
+ h+='<div id="articlebody">';
+ h+=toc([["jahdata","JAH data"],["lenses","Analysis lenses"],["xrefs","Cross-references"],["program","Program"],["definition","Detailed definition"],["history","History"],["ai","Ask AI"],["seealso","See also"],["refs","References"]]);
+ /* layer 2: all the JAH data */
+ h+=sec("jahdata","JAH data","<p>Everything the JAH system holds for the word <b>"+esc(w)+"</b> \u2014 the eleven analysis lenses computed live from the word's own data, cross-references across the Spec Catalog and Patent Catalog, the word patent, and a working program.</p>");
+ h+=lz.html;
+ h+=sec("xrefs","Cross-references",
+  (relS.length?'<h3 class="lens">Spec articles mentioning \u201C'+esc(w)+'\u201D</h3><ul class="pgln">'+relS.map(function(r){return '<li><a href="?page='+r[0]+'">'+esc(r[1])+'</a> <span style="color:#888">'+esc(r[0])+'</span><br><span style="color:#5b6472;font-size:.85em">'+esc(firstPara(r[2]||"",160))+'</span></li>'}).join("")+'</ul>':"<p>No spec article titles mention this word.</p>")+
+  (relP.length?'<h3 class="lens">Patent articles mentioning \u201C'+esc(w)+'\u201D</h3><ul class="pgln">'+relP.map(function(p){return '<li><a href="?page=PAT:'+encodeURIComponent(p[0])+'">'+esc(String(p[1]).replace(/&hellip;/g,"..."))+'</a> <span style="color:#888">'+esc(p[0])+'</span><br><span style="color:#5b6472;font-size:.85em">'+esc(firstPara(((p[3]?p[3]+" \u2014 ":"")+"public patent record "+p[0]),160))+'</span></li>'}).join("")+'</ul>':"<p>No patent article titles mention this word.</p>")+
+  '<h3 class="lens">Word patent &amp; dictionary</h3><ul class="pgln"><li><a href="'+SPEC_SITE+'/specs.html?word='+encodeURIComponent(w)+'" target="_blank" rel="noopener">Word patent for \u201C'+esc(w)+'\u201D \u2014 full draft + working program (Spec Catalog)</a></li><li><a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">Full IWB Dictionary entry for \u201C'+esc(w)+'\u201D</a></li></ul>');
+ h+='<h2 class="sec" id="program">Program</h2><p>A working demo program for the word <b>'+esc(w)+'</b> \u2014 download it, run it on any PC or phone with Python 3, or run the in-browser demo below.</p>'+
+  '<div class="prog">'+esc(makeProgram(L))+'</div><p style="font-family:Arial"><button id="rundemo" style="padding:8px 16px;background:#0b3d91;color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:bold">\u25B6 Run in-browser demo</button> <button id="copydemo" style="padding:8px 12px">Copy program</button></p><div class="console" id="democon" style="display:none"></div>';
+ /* layer 3: detailed definition + history */
+ h+=sec("definition","Detailed definition",'<p class="sub">From the IWB Dictionary <span class="stamp">'+esc(de.st||"")+'</span> \u2014 original definitions, written for the IWB Dictionary.</p><ol>'+senses.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ol>');
+ h+=sec("history","History",'<p>The IWB Dictionary does not record an etymology for <b>'+esc(w)+'</b> yet \u2014 its editors are still writing the historical record, and nothing is invented here. What the JAH system does record: the word carries the official deterministic stamp <b>'+esc(de.st||"\u2014")+'</b>'+(de.pos?', is entered as '+esc(de.pos)+',':"")+' and the Spec Catalog holds a full word patent and working program for it (see Cross-references above).</p>');
+ /* layer 5: Ask AI at the bottom */
+ h+='<h2 class="sec" id="ai">Ask AI</h2>'+personaHTML(L);
+ var sa=[["?page="+encodeURIComponent(w),"This word article",0],[SPEC_SITE+"/specs.html?word="+encodeURIComponent(w),"Word patent for \u201C"+w+"\u201D (Spec Catalog)",1],[DICT_SITE+"/?w="+encodeURIComponent(w),"Full IWB Dictionary entry for \u201C"+w+"\u201D",1]];
+ relS.slice(0,4).forEach(function(r){sa.push(["?page="+r[0],r[1]+" ("+r[0]+")",0])});
+ relP.slice(0,4).forEach(function(p){sa.push(["?page=PAT:"+encodeURIComponent(p[0]),String(p[1]).replace(/&hellip;/g,"...")+" ("+p[0]+")",0])});
+ h+=seeAlsoBlock(sa);
+ h+=sec("refs","References",'<p>[1] IWB Dictionary entry \u201C'+esc(w)+'\u201D ('+esc(de.st||"unstamped")+'), <a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">the IWB Dictionary</a> \u2014 original definitions.</p><p style="font-size:.85em;color:#5b6472">JAH Wiki word article generated from the IWB Dictionary entry and the word\u2019s own computed data. Cross-references checked against the live Spec and Patent catalog indexes.</p>');
+ h+='<div class="note">Word article \u2014 the IWB Dictionary definition plus the JAH system\u2019s instruments. Definitions are original to the IWB Dictionary.</div></div>';
+ nav(h);wireToolbar(L);wirePersona(L);wirePronSpk();
+ document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
+ document.getElementById("copydemo").onclick=function(e){copyText(makeProgram(L),e.target)};
+ wireIcons(w);makeCollapsible();
+ try{history.replaceState(null,"","?page="+encodeURIComponent(w)+(tab==="talk"?"&tab=talk":""))}catch(e){}
+ document.title=w+" \u2014 JAH Wiki";
+}
 function notFound(p){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Article not found</h1><p>No article for &ldquo;'+esc(p||"")+'&rdquo;. Try the <a href="?">search</a> or <a href="?all=SPEC">all pages</a>.</p>')}
 /* ================= dictionary integration (Project 5) ================= */
 var DICT_SITE="https://justinahiggins614-cmyk.github.io/jah-dictionary";
@@ -694,6 +775,18 @@ async function dictIdx(){if(DICT.idx)return DICT.idx;var t=await fetchGz(DICT_SI
 function dictFind(key){var a=DICT.idx,lo=0,hi=a.length-1;while(lo<=hi){var m=(lo+hi)>>1,c=a[m][0];if(c===key)return m;if(c<key)lo=m+1;else hi=m-1}return -1}
 function dictLower(key){var a=DICT.idx,lo=0,hi=a.length;while(lo<hi){var m=(lo+hi)>>1;if(a[m][0]<key)lo=m+1;else hi=m}return lo}
 async function dictEntry(key){var i=dictFind(key);if(i<0)return null;var row=DICT.idx[i];var txt=await fetchGz(DICT_SITE+"/data/dict/"+row[1]);return JSON.parse(txt.split("\n")[row[2]])}
+/* WORD-ARTICLE v1.0 — word articles for plain dictionary words (Manon 2026-09-30) */
+async function wordEntry(key){try{await dictIdx();var de=await dictEntry(String(key||"").toLowerCase());return (de&&de.k==="w")?de:null}catch(e){return null}}
+/* syllable-break reference (real IPA later): mass -> "mass", gravity -> "gra\u00B7vi\u00B7ty" */
+function syllabify(w){w=String(w||"").toLowerCase().replace(/[^a-z'\- ]/g,"");if(!w)return"";
+ return w.split(" ").map(function(word){var v="aeiouy",parts=[],cur="";
+  for(var i=0;i<word.length;i++){var c=word[i];cur+=c;
+   if(v.indexOf(c)>=0){var rest=word.slice(i+1);
+    if(/[^aeiouy]+[aeiouy]/.test(rest)&&rest.length>1){parts.push(cur);cur=""}}}
+  if(cur)parts.push(cur);return parts.join("\u00B7")||word}).join(" ")}
+function pronHTML(w){var syl=syllabify(w);
+ return ' <span style="font-family:Arial;font-size:.85em;color:#5b6472">(<span class="pron">'+esc(syl)+'</span> <a href="#" class="spk" data-w="'+esc(w)+'" title="Hear it pronounced" style="text-decoration:none">\uD83D\uDD0A</a>)</span>'}
+function wirePronSpk(){Array.prototype.forEach.call(document.querySelectorAll("a.spk"),function(a){a.onclick=function(e){e.preventDefault();var w=a.getAttribute("data-w");if(w)ttsSpeak(w)}})}
 async function dictPage(q){
  var key=String(q||"").toLowerCase().trim();
  nav('<div class="crumb"><a href="?">Home</a> &rsaquo; Dictionary</div><h1 class="at">'+esc(q)+'</h1><p style="font-family:Arial">Looking up the IWB Dictionary...</p>');
@@ -704,7 +797,7 @@ async function dictPage(q){
   var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">IWB Dictionary</a> &rsaquo; '+esc(de.w)+'</div>';
   h+='<h1 class="at">'+esc(de.w)+'</h1><div class="sub">From the IWB Dictionary <span class="stamp">'+esc(de.st)+'</span></div>';
   h+='<p class="lead"><b>'+esc(de.w)+'</b>'+(de.pos?" ("+esc(de.pos)+")":"")+(senses.length?" is "+esc(dictLeadSense(senses[0])):"")+'</p>';
-  h+='<div class="hatnote">Dictionary entry. For the encyclopedia article, use the search above.</div>';
+  h+='<div class="hatnote">Dictionary entry. <a href="?page='+encodeURIComponent(de.w)+'">Read the encyclopedia article for &ldquo;'+esc(de.w)+'&rdquo; &rarr;</a></div>';
   h+='<h2 class="sec">IWB definition</h2><ol>'+senses.map(function(s){return '<li>'+esc(String(s).replace(/^\d+\.\s*/,"").slice(0,400))+'</li>'}).join("")+'</ol>';
   h+='<p style="font-family:Arial"><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener" style="display:inline-block;padding:8px 16px;background:#1a4d2e;color:#fff;border-radius:4px;font-weight:bold;text-decoration:none">Open the full entry in the IWB Dictionary &rarr;</a></p>';
   h+='<p class="note">The full entry adds the JAH deterministic definition, the official deterministic stamp, the program of the word, and a personal AI teacher.</p>';
@@ -799,6 +892,7 @@ async function openPage(p){
  try{
   if(par.kind==="spec"){var row=findSpec(par.id);if(!row)return notFound(p);var d=await fullSpec(row);if(!d)return notFound(p);return specArticle(d,tab)}
   if(par.kind==="pat"){var pr=findPat(par.id);if(!pr)return notFound(p);var rec=await fullPat(pr);return patArticle(par.id,rec,tab)}
+  if(par.kind==="word"){var de=await wordEntry(par.id);if(!de)return notFound(p);return wordArticle(de,tab)}
   var sd=findSubject(par.id);if(!sd)return notFound(p);return subArticle(sd,tab);
  }catch(e){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Couldn\'t load</h1><p style="font-family:Arial">The article data didn\'t load ('+esc(e.message)+'). Check your connection and retry.</p>')}
 }
