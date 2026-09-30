@@ -92,13 +92,13 @@ h2.sec .sectog{font-size:.7em;color:#5b6472;margin-right:8px}
 <style>.jahnet{background:#101418;color:#9aa4b2;font-size:.76em;padding:6px 10px;text-align:center;line-height:2;letter-spacing:.02em}.jahnet-t{color:#e8c766;font-weight:700;letter-spacing:.25em;margin-right:10px}.jahnet a{color:#9fc2ff;text-decoration:none;margin:0 7px;white-space:nowrap}.jahnet a:hover{text-decoration:underline}</style>
 </head>
 <body>
-<div class="jahnet"><span class="jahnet-t">THE JAH NETWORK</span><a href="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/">Globally Rejustered Patent Catalog</a><a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/">Signature Spec Catalog Pending Patents</a><a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/">The Signature Dictionary</a><a href="https://justinahiggins614-cmyk.github.io/jah-wiki/">JAH Wiki</a><a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/">Wiki Leaks</a><a href="https://justinahiggins614-cmyk.github.io/jah-calculator/">Signature Universal Paradox Immune Calculator</a><a href="https://justinahiggins614-cmyk.github.io/jah-ai-models/">The Signature AI Telephone Book</a></div>
+<div class="jahnet"><span class="jahnet-t">THE JAH NETWORK</span><a href="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/">Globally Rejustered Patent Catalog</a><a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/">Signature Spec Catalog Pending Patents</a><a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/">The Signature Dictionary</a><a href="https://justinahiggins614-cmyk.github.io/jah-wiki/">JAH Wiki</a><a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/">JAH-N Wiki</a><a href="https://justinahiggins614-cmyk.github.io/jah-calculator/">Signature Universal Paradox Immune Calculator</a><a href="https://justinahiggins614-cmyk.github.io/jah-ai-models/">The Signature AI Telephone Book</a></div>
 <div class="topbar">
   <a href="?" style="text-decoration:none"><div class="brand">JAH WIKI<small>THE ENCYCLOPEDIA OF THE JAH SYSTEM</small></div></a>
   <div class="navlinks">
     <a href="?">Home</a><a href="?all=SPEC">All pages</a><a href="#" id="randlink">Random article</a>
     <a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/" target="_blank" rel="noopener">The Signature Dictionary</a>
-    <a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/" target="_blank" rel="noopener">Wiki Leaks</a>
+    <a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/" target="_blank" rel="noopener">JAH-N Wiki</a>
     <a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html" target="_blank" rel="noopener">Signature Spec Catalog Pending Patents</a>
     <a href="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/" target="_blank" rel="noopener">Globally Rejustered Patent Catalog</a>
   </div>
@@ -107,7 +107,7 @@ h2.sec .sectog{font-size:.7em;color:#5b6472;margin-right:8px}
 <div class="wrap"><div id="app"><p style="font-family:Arial">Loading the encyclopedia...</p></div></div>
 <footer class="site"><div class="wrap" style="padding:0">
 <b style="color:#fff">JAH Wiki</b> — the encyclopedia of the JAH system. Partner site of
-<a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/">Wiki Leaks</a>.
+<a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/">JAH-N Wiki</a>.
 Spec articles describe draft specifications by Justin Addam Higgins (JAH) — ready to review and file, not granted patents.
 Patent articles describe public patent records. Subject files blend verified public-record material with the system's simulation layer, marked where it appears.
 </div></footer>
@@ -219,7 +219,7 @@ function homeHTML(){
  h+='<div class="card"><h3>Spec articles</h3><p>Encyclopedia entries for every draft specification in the Spec Catalog — definition, history, lenses, patent draft, program, and a personal AI for each.</p><p><a href="?all=SPEC">Browse all &rarr;</a></p></div>';
  h+='<div class="card"><h3>Patent articles</h3><p>Every public patent record in the Patent Catalog, written up wiki-style with history, analysis lenses, and a working demo program.</p><p><a href="?all=PAT">Browse all &rarr;</a></p></div>';
  h+='<div class="card"><h3>Subject files</h3><p>Bizarre subjects, cryptids, UFO cases, dream figures and more — each with witnesses, investigations, sources, and the full lens treatment.</p><p><a href="?all=SUB">Browse all &rarr;</a></p></div>';
- h+='<div class="card"><h3>Partner site</h3><p><b>JAH-N Wiki Leaks</b> is the classified partner archive — every wiki article links to its full dossier and back.</p><p><a href="'+LEAK_SITE+'/" target="_blank" rel="noopener">Open Wiki Leaks &rarr;</a></p></div>';
+ h+='<div class="card"><h3>Partner site</h3><p><b>JAH-N Wiki</b> is the classified partner archive — every wiki article links to its full dossier and back.</p><p><a href="'+LEAK_SITE+'/" target="_blank" rel="noopener">Open JAH-N Wiki &rarr;</a></p></div>';
  h+='</div>';
  h+='<h2 class="sec">About this wiki</h2><p>Just like a normal encyclopedia, each article carries a <b>definition</b>, <b>history</b>, how-it-works, data tables, and references. On top of that, every JAH Wiki article carries the system\'s own instruments: <b>eleven analysis lenses</b> (deterministic, probabilistic, geometric, hash, neural, evolutionary, fuzzy, swarm, decision-tree, cellular-automata, and a hybrid of them all), a <b>patent draft</b>, a downloadable <b>working program</b> with an in-browser demo, and a <b>personal AI persona</b> of the item that answers questions. Use <b>Copy article</b> to paste anywhere, or <b>Read aloud</b> to listen.</p>';
  return h;
@@ -287,12 +287,21 @@ function lensHead(n,d){return '<h3 class="lens" id="lens-'+n+'">'+d+'</h3><div c
 function buildLenses(L){
  var seed=L.seed||hashStr(L.title||"x"),R=prng(seed),nums=lensNums(L),H="";
  var take=nums.slice(0,6);
- /* 1 deterministic */
- H+=lensHead(1,'Lens 1 — Deterministic <span style="font-weight:normal;color:#5b6472">rule engine: fixed cause &rarr; effect</span>')+'<div class="lt">IF–THEN rules compiled from the rated data</div>';
- if(take.length){H+='<table class="data"><tr><th>Rule</th><th>Condition</th><th>Outcome</th></tr>'+take.map(function(n,i){
-  return '<tr><td>R'+(i+1)+'</td><td>IF <b>'+esc(n.name)+'</b> stays within <b>'+esc(String(n.value))+' '+esc(n.unit)+'</b> &plusmn; '+esc(String(n.tol||"rated tol."))+'</td><td>NOMINAL — holds by construction</td></tr>'}).join("")+'</table>';
-  H+='<div>Deterministic verdict: <b>'+(take.length>=3?"ALL "+take.length+" RULES SATISFIED — behavior is fully predictable from the rated values.":"RULES SATISFIED on available data.")+'</b></div>'}else{H+='<div>No rated numerics on this page — deterministic rules fall back to the ordered procedure:</div><ol>'+(L.steps||[]).slice(0,6).map(function(s){return '<li>'+esc(s)+'</li>'}).join("")+'</ol>'}
- H+='<div style="color:#5b6472">Usable as: a pass/fail checklist. Anything outside a rule\'s band is a deviation by definition.</div></div>';
+ /* 1 deterministic — written as paragraphs, like the rest of the article */
+ H+=lensHead(1,'Lens 1 — Deterministic <span style="font-weight:normal;color:#5b6472">rule engine: fixed cause &rarr; effect</span>');
+ if(take.length){
+  var dsubj=esc(L.title||"this subject");
+  var rules=take.map(function(n){return "if "+n.name+" stays within "+n.value+(n.unit?" "+n.unit:"")+" (\u00b1"+(n.tol||"rated tolerance")+"), it holds nominal"}).join("; ");
+  H+='<p>The deterministic lens reads <b>'+dsubj+'</b> as a fixed cause-and-effect machine. '+take.length+' rated '+(take.length===1?"quantity governs its behavior":"quantities govern its behavior")+', each compiled into an IF\u2013THEN rule: '+esc(rules)+'.</p>';
+  H+='<p><b>Deterministic verdict:</b> '+(take.length>=3?"all "+take.length+" rules are satisfied on the rated data, so its behavior is fully predictable from the rated values \u2014 the same inputs always produce the same outputs.":"the rules are satisfied on the available data, so its behavior follows its rated values.")+'</p>';
+  H+='<p style="color:#5b6472">In practice this lens is a pass/fail checklist: anything outside a rule\u2019s band counts as a deviation by definition.</p>';
+ }else{
+  var dseq=(L.steps||[]).slice(0,6),ords=["First","Then","Next","After that","Then","Finally"];
+  var prose=dseq.map(function(s,i){s=String(s||"").trim();return ords[i]+", "+s.charAt(0).toLowerCase()+s.slice(1).replace(/[.]+$/,"")}).join(". ");
+  H+='<p>With no rated numerics on this page, the deterministic reading falls back to the ordered procedure'+(prose?": "+esc(prose)+".":" \u2014 no ordered procedure is recorded.")+'</p>';
+  H+='<p style="color:#5b6472">Followed exactly, the procedure above reproduces the rated behavior step for step.</p>';
+ }
+ H+='</div>';
  /* 2 probabilistic */
  var post=take.length?take.reduce(function(a,n){var t=parseFloat(String(n.tol).replace(/[^0-9.]/g,""));var u=isNaN(t)||n.value===0?0.06:Math.min(0.4,Math.abs(t/n.value));return a*(1-u)},1):0.62;
  post=Math.round(post*1000)/10;
@@ -486,7 +495,7 @@ function personaReply(L,q){
  if(has("patent","claim","file"))return intro+"my patent position: "+esc(L.patentNote||"covered in the Patent section of this article.").slice(0,380);
  if(has("program","code","demo","download","app"))return intro+"you can download my working program from the Program section — a Python demo you can run on PC or phone, plus an in-browser run right here.";
  if(has("lens","determin","probab","geometr","swarm","hybrid","neural"))return intro+"my eleven analysis lenses are computed live from this article's data — deterministic rules, probabilities, geometry, swarm consensus, and the hybrid fusion. Read the Analysis lenses section, or ask about one by name.";
- if(has("leak","classified","dossier","secret"))return intro+"my classified partner file lives on JAH-N Wiki Leaks — follow the partner link in See also.";
+ if(has("leak","classified","dossier","secret"))return intro+"my classified partner file lives on JAH-N Wiki — follow the partner link in See also.";
  if(has("hello","hi","hey"))return intro+"hello. Ask me anything on this page — what I am, how I work, my numbers.";
  if(has("thank"))return "You're welcome — "+esc(L.title)+" at your service.";
  var keys=t.split(/\s+/).filter(function(w){return w.length>4});
@@ -538,7 +547,7 @@ function dataTable(rows,heads){return '<table class="data"><tr>'+heads.map(funct
 function lensCommon(o){return{title:o.title,id:o.id,kind:o.kind,seed:hashStr(String(o.id)),params:o.params||[],measures:o.measures||[],
  steps:o.steps||[],toolmap:o.toolmap||{},blurb:o.blurb||"",history:o.history||"",how:o.how||"",patentNote:o.patentNote||"",seealso:o.seealso||[],raw:o.raw||null,hybrid:null,verdict:""}}
 function seeAlsoBlock(items){if(!items.length)return"";return '<h2 class="sec" id="seealso">See also</h2><ul>'+items.map(function(x){return '<li><a href="'+x[0]+'"'+(x[2]?' target="_blank" rel="noopener"':"")+'>'+esc(x[1])+'</a></li>'}).join("")+'</ul>'}
-function partnerStrip(leakId,label){return '<div class="partner">\uD83D\uDD13 <span><b>Partner file:</b> '+esc(label||"this subject")+' also has a full classified dossier on <b>JAH-N Wiki Leaks</b>.</span> <a href="'+LEAK_SITE+'/?dossier='+encodeURIComponent(leakId)+'" target="_blank" rel="noopener">OPEN THE DOSSIER \u25B6</a></div>'}
+function partnerStrip(leakId,label){return '<div class="partner">\uD83D\uDD13 <span><b>Partner file:</b> '+esc(label||"this subject")+' also has a full classified dossier on <b>JAH-N Wiki</b>.</span> <a href="'+LEAK_SITE+'/?dossier='+encodeURIComponent(leakId)+'" target="_blank" rel="noopener">OPEN THE DOSSIER \u25B6</a></div>'}
 
 /* ---- spec article ---- */
 function specArticle(d,tab){
@@ -550,7 +559,7 @@ function specArticle(d,tab){
   history:"Prepared "+(d.prepared_date||"undated")+", era: "+(d.era||"Current")+". "+(d.line_note||""),
   how:how,
   patentNote:"Draft patent specification "+d.spec_id+" — "+(pd.claims||[]).length+" claims. "+(pd.filing_note||""),
-  seealso:[LEAK_SITE+"/?dossier="+encodeURIComponent(d.spec_id)+" (Wiki Leaks dossier)"]});
+  seealso:[LEAK_SITE+"/?dossier="+encodeURIComponent(d.spec_id)+" (JAH-N Wiki dossier)"]});
  var lz=buildLenses(L);L.hybrid=lz.hybrid;L.verdict=lz.verdict;
  var rel=[];for(var i=0;i<DB.specIdx.length&&rel.length<4;i++){var r=DB.specIdx[i];if(r[3]===d.category&&r[0]!==d.spec_id)rel.push(r)}
  var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=SPEC">Spec articles</a> &rsaquo; '+esc(d.spec_id)+'</div>';
@@ -558,10 +567,10 @@ function specArticle(d,tab){
  h+=tabsHTML(d.spec_id,tab);
  h+=iconRowHTML();
  h+='<h1 class="at">'+esc(d.title)+'</h1>';
- h+=hatnoteHTML('This article is about the draft specification <b>'+esc(d.spec_id)+'</b>. For the classified dossier, see <a href="'+LEAK_SITE+'/?dossier='+encodeURIComponent(d.spec_id)+'" target="_blank" rel="noopener">JAH-N Wiki Leaks</a>.');
+ h+=hatnoteHTML('This article is about the draft specification <b>'+esc(d.spec_id)+'</b>. For the classified dossier, see <a href="'+LEAK_SITE+'/?dossier='+encodeURIComponent(d.spec_id)+'" target="_blank" rel="noopener">JAH-N Wiki</a>.');
+ h+=specLeadHTML(d);
  h+=sisterDictHTML(d.title);
  h+=overviewHTML(d.title,firstPara(a,170),firstPara(L.history,140),"Hybrid lens consensus "+lz.hybrid+"% — "+lz.verdict);
- h+='<p class="lead"><b>'+esc(d.title)+'</b> is a draft specification by Justin Addam Higgins (JAH)'+(d.category?" in "+esc(d.category):"")+'. '+esc(firstPara(a,280))+'</p>';
  h+=toolbarHTML();
  h+=infobox(d.spec_id,[["Inventor / Owner","Justin Addam Higgins (JAH)"],["Category",esc(d.category)],["CPC class",esc(d.cpc)],["Era",esc(d.era)],["Prepared",esc(d.prepared_date)],["Signature line",esc(d.line)],["Lineage",esc(d.line_note||"Original design")],["Status",esc(d.status||"Draft — ready to file")]]);
  h+='<div id="articlebody">';
@@ -579,7 +588,7 @@ function specArticle(d,tab){
  h+='<h2 class="sec" id="program">Program</h2><p>A working demo program for this spec — download it, run it on any PC or phone with Python 3, or run the in-browser demo below.</p>'+
   '<div class="prog">'+esc(makeProgram(L))+'</div><p style="font-family:Arial"><button id="rundemo" style="padding:8px 16px;background:#0b3d91;color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:bold">\u25B6 Run in-browser demo</button> <button id="copydemo" style="padding:8px 12px">Copy program</button></p><div class="console" id="democon" style="display:none"></div>';
  h+='<h2 class="sec" id="ai">AI persona</h2>'+personaHTML(L);
- h+=seeAlsoBlock([[LEAK_SITE+"/?dossier="+encodeURIComponent(d.spec_id),"Classified dossier: "+d.spec_id+" on JAH-N Wiki Leaks",1],[SPEC_SITE+"/specs.html","Spec Catalog entry",1]].concat(rel.map(function(r){return["?page="+r[0],r[1]+" ("+r[0]+")",0]})));
+ h+=seeAlsoBlock([[LEAK_SITE+"/?dossier="+encodeURIComponent(d.spec_id),"Classified dossier: "+d.spec_id+" on JAH-N Wiki",1],[SPEC_SITE+"/specs.html","Spec Catalog entry",1]].concat(rel.map(function(r){return["?page="+r[0],r[1]+" ("+r[0]+")",0]})));
  h+=sec("refs","References","<p>Autoread block: <code>"+esc(d.autoread_block||"")+"</code></p><p style='font-size:.85em;color:#5b6472'>Master record "+esc(d.spec_id)+" · JAH Wiki article generated from the spec's own data.</p>");
  h+='<div class="note">Draft specification by Justin Addam Higgins (JAH) — ready to review and file. Not a granted patent.</div>';
  h+='</div>';
@@ -608,9 +617,9 @@ function patArticle(pub,rec,tab){
  h+=iconRowHTML();
  h+='<h1 class="at">'+esc(rec.title)+'</h1>';
  h+=hatnoteHTML('This article is about the public patent record <b>'+esc(pub)+'</b>. For JAH&rsquo;s original Signature-line version, if one exists, see <b>See also</b> below.');
+ h+=patLeadHTML(rec,pub);
  h+=sisterDictHTML(rec.title);
  h+=overviewHTML(rec.title,firstPara(L.blurb,170),firstPara(L.history,140),"Public patent record "+pub+(rec.grant_date?", granted "+rec.grant_date:""));
- h+='<p class="lead"><b>'+esc(rec.title)+'</b> is a public patent record ('+esc(pub)+'). '+esc(firstPara(L.blurb,280))+'</p>';
  h+=toolbarHTML();
  h+=infobox(pub,[["Publication no.",esc(pub)],["Title",esc(rec.title)],["Assignee",esc(rec.assignee||"—")],["Inventor",esc(rec.inventor||"—")],["Priority date",esc(rec.priority_date||"—")],["Filing date",esc(rec.filing_date||"—")],["Publication date",esc(rec.publication_date||"—")],["Grant date",esc(rec.grant_date||"—")],["CPC class",esc(rec.cpc||"—")],["Language",esc(rec.language||"en")]]);
  h+='<div id="articlebody">';
@@ -642,17 +651,17 @@ function subArticle(d,tab){
   history:"Subject file "+(d.id||"")+", filed "+(d.date_filed||"undated")+", classification "+(d.classification||"—")+". Category: "+(d.category||"")+".",
   how:d.science_proof||"",
   patentNote:"Defensive publication draft generated from the public record for "+d.subject+" — descriptive, not a filed patent.",
-  raw:d,seealso:[LEAK_SITE+"/?dossier="+encodeURIComponent(d.id||d.subject)+" (Wiki Leaks dossier)"]});
+  raw:d,seealso:[LEAK_SITE+"/?dossier="+encodeURIComponent(d.id||d.subject)+" (JAH-N Wiki dossier)"]});
  var lz=buildLenses(L);L.hybrid=lz.hybrid;L.verdict=lz.verdict;
  var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=SUB">Subject files</a> &rsaquo; '+esc(d.subject)+'</div>';
  if(tab==="talk")return talkArticle(L,subjSlug(d),h);
  h+=tabsHTML(subjSlug(d),tab);
  h+=iconRowHTML();
  h+='<h1 class="at">'+esc(d.subject)+'</h1>';
- h+=hatnoteHTML('This article is about the subject file. For the full classified dossier, see <a href="'+LEAK_SITE+'/?dossier='+encodeURIComponent(d.id||d.subject)+'" target="_blank" rel="noopener">JAH-N Wiki Leaks</a>.');
+ h+=hatnoteHTML('This article is about the subject file. For the full classified dossier, see <a href="'+LEAK_SITE+'/?dossier='+encodeURIComponent(d.id||d.subject)+'" target="_blank" rel="noopener">JAH-N Wiki</a>.');
+ h+=subjLeadHTML(d);
  h+=sisterDictHTML(d.subject);
  h+=overviewHTML(d.subject,firstPara(d.overview||"",170),firstPara(L.history,140),"Hybrid lens consensus "+lz.hybrid+"% — "+lz.verdict);
- h+='<p class="lead"><b>'+esc(d.subject)+'</b> is a subject file in the JAH system'+(d.category?" ("+esc(d.category)+")":"")+'. '+esc(firstPara(d.overview||"",280))+'</p>';
  h+=toolbarHTML();
  h+=infobox(d.subject,[["File no.",esc(d.id||"—")],["Category",esc(d.category||"—")],["Classification",esc(d.classification||"—")],["Filed",esc(d.date_filed||"—")],["Creator sign-off",esc(d.creator_signoff||"—")]]);
  h+='<div id="articlebody">';
@@ -666,10 +675,10 @@ function subArticle(d,tab){
  h+=sec("patent","Patent draft",'<p><b>Defensive publication draft — '+esc(d.subject)+'</b></p><p>Field: '+esc(d.category||"general")+'. This draft describes the subject as documented in the public record above, for defensive publication purposes. It is generated from public material, not a filed patent application.</p><p style="font-family:Arial;font-size:.85em;color:#5b6472">Background, summary and description: see the Definition, Evidence and Panel sections of this article — they constitute the disclosure.</p>');
  h+='<h2 class="sec" id="program">Program</h2><p>A working demo program modeling this subject file\'s evidence and lens consensus.</p><div class="prog">'+esc(makeProgram(L))+'</div><p style="font-family:Arial"><button id="rundemo" style="padding:8px 16px;background:#0b3d91;color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:bold">\u25B6 Run in-browser demo</button></p><div class="console" id="democon" style="display:none"></div>';
  h+='<h2 class="sec" id="ai">AI persona</h2>'+personaHTML(L);
- var sa=[[LEAK_SITE+"/?dossier="+encodeURIComponent(d.id||d.subject),"Classified dossier: "+(d.id||d.subject)+" on JAH-N Wiki Leaks",1]];
+ var sa=[[LEAK_SITE+"/?dossier="+encodeURIComponent(d.id||d.subject),"Classified dossier: "+(d.id||d.subject)+" on JAH-N Wiki",1]];
  (d.corroborating_specs||[]).slice(0,5).forEach(function(sid){sa.push(["?page="+sid,"Corroborating spec "+sid,0])});
  h+=seeAlsoBlock(sa);
- h+=sec("refs","Sources & references",paras+'<p style="font-size:.85em;color:#5b6472">Full sources, witnesses and references: see the dossier\'s SOURCES section on Wiki Leaks.</p>');
+ h+=sec("refs","Sources & references",paras+'<p style="font-size:.85em;color:#5b6472">Full sources, witnesses and references: see the dossier\'s SOURCES section on JAH-N Wiki.</p>');
  h+='<div class="note">Subject file — public-record material plus the JAH system\'s marked simulation layer.</div></div>';
  nav(h);wireToolbar(L);wirePersona(L);
  document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
@@ -694,6 +703,7 @@ async function dictPage(q){
   var senses=(Array.isArray(de.d)?de.d:[de.d]).slice(0,5);
   var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">IWB Dictionary</a> &rsaquo; '+esc(de.w)+'</div>';
   h+='<h1 class="at">'+esc(de.w)+'</h1><div class="sub">From the IWB Dictionary <span class="stamp">'+esc(de.st)+'</span></div>';
+  h+='<p class="lead"><b>'+esc(de.w)+'</b>'+(de.pos?" ("+esc(de.pos)+")":"")+(senses.length?" is "+esc(dictLeadSense(senses[0])):"")+'</p>';
   h+='<div class="hatnote">Dictionary entry. For the encyclopedia article, use the search above.</div>';
   h+='<h2 class="sec">IWB definition</h2><ol>'+senses.map(function(s){return '<li>'+esc(String(s).replace(/^\d+\.\s*/,"").slice(0,400))+'</li>'}).join("")+'</ol>';
   h+='<p style="font-family:Arial"><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener" style="display:inline-block;padding:8px 16px;background:#1a4d2e;color:#fff;border-radius:4px;font-weight:bold;text-decoration:none">Open the full entry in the IWB Dictionary &rarr;</a></p>';
@@ -718,6 +728,30 @@ function dictWordFor(title){var m=String(title||"").toLowerCase().match(/[a-z]{3
 function sisterDictHTML(title){var w=dictWordFor(title);if(!w)return"";
  return '<div class="sisterbox">\uD83D\uDCD6 Look up <b><a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">'+esc(w)+'</a></b> in the JAH Dictionary, the JAH lexicon.</div>'}
 function firstPara(s,n){s=String(s||"").replace(/\s+/g," ").trim();if(s.length<=(n||200))return s;var c=s.slice(0,n||200);var p=c.lastIndexOf(". ");return (p>40?c.slice(0,p+1):c)+"..."}
+/* ---- Wikipedia-style definition leads: each article opens by defining its subject in the wiki's own wording ---- */
+function artAn(w){w=String(w==null?"":w).trim();return /^[aeiou]/i.test(w)?"an":"a"}
+function cleanSent(s,n){s=String(s==null?"":s).replace(/\s+/g," ").trim().replace(/^(the present invention relates to|this invention relates to|disclosed herein is|provided is|the invention provides)\s+/i,"");if(!s)return "";s=s.charAt(0).toUpperCase()+s.slice(1);n=n||240;if(s.length>n){var c=s.slice(0,n);var p=c.lastIndexOf(". ");s=p>40?c.slice(0,p+1):c+"..."}if(!/[.!?]$/.test(s))s+=".";return s}
+function kindWord(t,cat){var s=(String(t||"")+" "+String(cat||"")).toLowerCase();if(/method|process|procedure|technique/.test(s))return "method";if(/\bsystem\b/.test(s))return "system";if(/apparatus/.test(s))return "apparatus";if(/device/.test(s))return "device";if(/composition|material|compound|alloy/.test(s))return "material";return "invention"}
+function specLeadHTML(d){
+ var kind=kindWord(d.title,d.category),ax=d.ai_explainer||{};
+ var what=cleanSent(ax.what||ax.bottom_line||d.abstract,240);
+ var fact="",kp=d.key_parameters||[];
+ if(kp.length&&kp[0]&&kp[0].value!=null&&String(kp[0].value).trim()!=="")fact="It is rated for "+kp[0].name+" at "+kp[0].value+(kp[0].unit?" "+kp[0].unit:"")+".";
+ else if((d.algorithm_steps||[]).length){var st=cleanSent(d.algorithm_steps[0],170);fact="Its working principle begins: "+st.charAt(0).toLowerCase()+st.slice(1)}
+ var s1="<b>"+esc(d.title)+"</b> is "+artAn((d.category||"")+" "+kind)+" "+(d.category?esc(d.category.toLowerCase())+" ":"")+kind+" developed by Justin Addam Higgins (JAH).";
+ return '<p class="lead">'+s1+(what?" "+esc(what):"")+(fact?" "+esc(fact):"")+"</p>";
+}
+function patLeadHTML(rec,pub){
+ var yr=String(rec.grant_date||rec.publication_date||rec.filing_date||"").slice(0,4);
+ var what=cleanSent((rec.abstract_snippet||"").replace(/&hellip;/g,"..."),240);
+ var who=rec.assignee&&rec.assignee!=="\u2014"?" assigned to "+rec.assignee:(rec.inventor&&rec.inventor!=="\u2014"?" by inventor "+rec.inventor:"");
+ return '<p class="lead"><b>'+esc(rec.title)+"</b> is an invention documented in public patent record <b>"+esc(pub)+"</b>"+(yr?", "+yr:"")+esc(who)+"."+(what?" "+esc(what):"")+"</p>";
+}
+function subjLeadHTML(d){
+ var what=cleanSent(d.overview,240);
+ return '<p class="lead"><b>'+esc(d.subject)+"</b> is "+artAn(d.category||"subject")+" "+(d.category?esc(d.category.toLowerCase())+" ":"")+"subject documented in the JAH system."+(what?" "+esc(what):"")+"</p>";
+}
+function dictLeadSense(s){s=String(s||"").replace(/^\d+\.\s*/,"").trim();if(!s)return "";s=s.replace(/^(An?)\s+(?=[a-z])/i,function(m,a){return a.toLowerCase()+" "});if(!/[.!?]$/.test(s))s+=".";return s}
 function shortTitle(t){return String(t||"").split(/\s+/).slice(0,6).join(" ")}
 function overviewHTML(title,def,origin,core){
  return '<div class="ovbox"><h3>What is '+esc(shortTitle(title))+'?</h3><ul>'+
