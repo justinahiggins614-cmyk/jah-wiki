@@ -4,9 +4,10 @@
   "creator": "Justin Addam Higgins (JAH)",
   "description": "Wikipedia-style encyclopedia over all of Manon's data: every spec, patent, subject file, and dictionary word as an article with definition, analysis lenses, patent draft, working program, and AI persona.",
   "for_bots": "Machine-readable manifest. Humans use the site above; bots, scrapers, and AI assistants should use the endpoints below \u2014 plain JSON/JSONL over HTTPS, no JavaScript needed.",
-  "records_approx": 0,
-  "records_as_of": "2026-09-29",
-  "note": "Counts grow on automated schedules; re-read this file for the latest shape of the data.",
+  "records_approx": 451054,
+  "records_breakdown_2026_10_01": {"spec_articles": 415355, "patent_articles": 35579, "subject_files": 120},
+  "records_as_of": "2026-10-01",
+  "note": "Counts grow on automated schedules; re-read this file for the latest shape of the data. Count = spec + patent + subject articles live-indexed by the site's home page. Dictionary word articles resolve live from the IWB Dictionary index and are not enumerated here.",
   "endpoints": [
     {
       "note": "JAH Wiki holds no dataset of its own \u2014 it reads the other sites live. Use their api.json manifests: signature-one-archive (specs + word patents), cyber-patent-catalog (patents), jah-n-wiki-leaks (dossiers), jah-dictionary (words)."
@@ -32,7 +33,7 @@
   ],
   "article_schema": {
     "schema": "jah-wiki-article/1.0",
-    "article_id": "JAH-WIKI-###### (permanent; titles can change, IDs never do)",
+    "article_id": "JAH-WIKI-SPEC-###### | JAH-WIKI-PAT-<pub-no> | JAH-WIKI-W-<word> | JAH-WIKI-SUB-<slug> — derived deterministically from the record's own permanent key (spec number / patent publication number / dictionary word / subject slug); stable across rebuilds and unique at any scale",
     "classification": {
       "article_type": "SPECIFICATION | PUBLIC PATENT RECORD | SUBJECT FILE | WORD ARTICLE",
       "source": "JAH ORIGINAL | PUBLIC RECORD | MIXED PUBLIC-RECORD + JAH SIMULATION | IWB DICTIONARY",

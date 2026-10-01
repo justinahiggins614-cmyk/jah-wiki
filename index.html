@@ -137,8 +137,18 @@ function download(name,content,mime){var b=new Blob([content],{type:mime||"text/
 function copyText(t,btn){function done(){if(btn){var o=btn.textContent;btn.textContent="Copied!";setTimeout(function(){btn.textContent=o},1400)}}
  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done).catch(function(){fallback()})}else fallback();
  function fallback(){var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done()}catch(e){}ta.remove()}}
-/* ================= article identity / classification / provenance (JAH-WIKI-######) ================= */
-function wikiId(kind,id){return "JAH-WIKI-"+String(hashStr(kind+":"+id)%1000000).padStart(6,"0")}
+/* ================= article identity / classification / provenance (permanent article IDs) ================= */
+/* Permanent article IDs: derived deterministically from each record's own permanent key
+   (spec number / patent publication number / dictionary word / subject slug), so the ID is
+   stable across rebuilds AND unique at any scale — never a hash-space collision. */
+function wikiId(kind,id){
+ var k=String(kind||"").toLowerCase(),s=String(id||"");
+ try{s=decodeURIComponent(s)}catch(e){}
+ if(k==="spec"){var m=/SPEC-(\d{1,7})/i.exec(s);return "JAH-WIKI-SPEC-"+(m?String(m[1]).padStart(6,"0"):"X"+hashStr("spec:"+s).toString(36))}
+ if(k==="pat"){var p=s.replace(/^PAT:/i,"").replace(/[^A-Za-z0-9]+/g,"").toUpperCase().slice(0,40);return "JAH-WIKI-PAT-"+(p||"X"+hashStr("pat:"+s).toString(36))}
+ if(k==="word"){var w=s.replace(/^WORD:/i,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,50);return "JAH-WIKI-W-"+(w||"X"+hashStr("word:"+s).toString(36))}
+ var sb=s.replace(/^SUB:/i,"").replace(/[^A-Za-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60);return "JAH-WIKI-SUB-"+(sb||"X"+hashStr("sub:"+s).toString(36))
+}
 function classBanner(kind,meta){
  var label={spec:["SPECIFICATION","JAH ORIGINAL","STATUS: DRAFT — ready to review and file. <b>NOT A GRANTED PATENT.</b>"],
   pat:["PUBLIC PATENT RECORD","PUBLIC RECORD","Descriptions reflect the public filing — the invention belongs to its listed owner."],
@@ -273,9 +283,9 @@ async function loadDB(){
      var base=shardBase(s);
      var txt=await fetchGz(base+"/"+s.index);var rows=txt.trim().split("\n").map(function(l){return JSON.parse(l)});
      rows.forEach(function(r){r.push(base)});DB.specIdx=DB.specIdx.concat(rows);
-   }catch(e){}}
- }).catch(function(){}));
- jobs.push(fetchGz(PAT_SITE+"/data/patents.idx.json.gz").then(function(t){DB.patIdx=JSON.parse(t)}).catch(function(){}));
+   }catch(e){DB.shardErrors=(DB.shardErrors||0)+1}}
+ }).catch(function(){DB.shardErrors=(DB.shardErrors||0)+1}));
+ jobs.push(fetchGz(PAT_SITE+"/data/patents.idx.json.gz").then(function(t){DB.patIdx=JSON.parse(t)}).catch(function(){DB.patErrors=(DB.patErrors||0)+1}));
  jobs.push(fetch(LEAK_SITE+"/data/bizarre.json").then(function(r){return r.json()}).then(function(j){DB.subjects=j}).catch(function(){}));
  await Promise.all(jobs);DB.ready=true;return DB;
 }
@@ -301,6 +311,7 @@ function homeHTML(){
  var h='<div class="crumb">Main page</div>';
  h+='<h1 class="at">Welcome to JAH Wiki</h1><div class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</div>';
  h+='<p class="sub" style="color:#1a4d2e">Encyclopedia ready — '+(ns+np+nb).toLocaleString()+' articles indexed.</p>';
+ if(DB.shardErrors||DB.patErrors)h+='<p class="sub" style="color:#a00">Note: '+(DB.shardErrors||0)+' spec index and '+(DB.patErrors||0)+' patent index file(s) failed to load — counts below may be incomplete. <a href="?">Reload to retry</a>.</p>';
  h+='<div class="stats"><div class="stat"><div class="n">'+ns.toLocaleString()+'</div><div class="l">spec articles</div></div>';
  h+='<div class="stat"><div class="n">'+np.toLocaleString()+'</div><div class="l">patent articles</div></div>';
  h+='<div class="stat"><div class="n">'+nb+'</div><div class="l">subject files</div></div>';
@@ -585,6 +596,7 @@ function runDemo(L){
 function personaHTML(L){
  var pid="chat-"+hashStr(L.id).toString(36);
  return '<div class="persona"><b>'+esc(L.title)+'</b> — personal AI persona. Ask it anything about this article; it answers as the item itself.</div>'+
+ '<div class="sub" style="margin:-8px 0 12px"><span class="prov">AI assistant</span><span style="color:#5b6472;font-size:.85em">Answers only from this article\u2019s text.</span></div>'+
  '<div class="chat"><div class="chatlog" id="'+pid+'-log"><div class="msg a"><div class="b">I am '+esc(L.title)+'. Ask me what I am, how I work, my history, my numbers — anything on this page.</div></div></div>'+
  '<div class="chatin"><input id="'+pid+'-in" placeholder="Ask '+esc(L.title.slice(0,40))+'..." aria-label="Ask the persona"><button id="'+pid+'-go">Ask</button></div></div>'+
  '<script type="text/plain" id="'+pid+'-L" style="display:none">'+esc(JSON.stringify(L))+'</'+'script>';
@@ -635,14 +647,16 @@ function wikiEnvelope(kind,L,src){
 }
 function wireToolbar(kind,L,src){
  var WM=window.__wikiMeta||wikiMeta(kind,L,src||{});
+ /* downloads are labeled with what + article ID + version: JAH-WIKI-SPEC-000123-v1a2b3c.json */
+ var dltag=(WM.article_id||slug(L))+"-v"+WM.version;
  var b=document.getElementById("ttsbtn");if(b)b.onclick=function(){if(TTS.speaking&&!TTS.stopped)ttsStop();else ttsSpeak(articleSpeechText())};
  var txt=articleText(kind,L,WM);
  document.getElementById("copyart").onclick=function(e){copyText(txt,e.target)};
- document.getElementById("dlart").onclick=function(){download(slug(L)+".txt",txt)};
+ document.getElementById("dlart").onclick=function(){download(dltag+".txt",txt)};
  var py=makeProgram(L);
- document.getElementById("dlpy").onclick=function(){download(pyFile(L),py,"text/x-python")};
+ document.getElementById("dlpy").onclick=function(){download(dltag+"-demo.py",py,"text/x-python")};
  document.getElementById("copyprog").onclick=function(e){copyText(py,e.target)};
- document.getElementById("dljson").onclick=function(){download(slug(L)+".json",JSON.stringify(wikiEnvelope(kind,L,src||{}),null,1),"application/json")};
+ document.getElementById("dljson").onclick=function(){download(dltag+".json",JSON.stringify(wikiEnvelope(kind,L,src||{}),null,1),"application/json")};
 }
 function slug(L){return "jahwiki-"+String(L.id||"page").replace(/[^A-Za-z0-9]+/g,"-").slice(0,50)}
 function articleText(kind,L,WM){
