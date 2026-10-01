@@ -15,13 +15,43 @@
   "deep_links": [
     {
       "pattern": "?page=<article-id>",
-      "desc": "Deep link to an article (spec id, PAT:<pub>, or subject slug)."
+      "desc": "Deep link to an article (spec id, PAT:<pub>, SUB:<slug>, or word)."
     },
     {
       "pattern": "?dict=<word>",
       "desc": "Dictionary word route."
+    },
+    {
+      "pattern": "?random=1&seed=<n>",
+      "desc": "Random article; with a seed the same article is picked every time."
+    },
+    {
+      "pattern": "?all=SPEC|PAT|SUB&L=<letter>&pg=<n>",
+      "desc": "Paginated, filterable all-pages listing (200/page, A-Z partitions, article-type filters)."
     }
   ],
+  "article_schema": {
+    "schema": "jah-wiki-article/1.0",
+    "article_id": "JAH-WIKI-###### (permanent; titles can change, IDs never do)",
+    "classification": {
+      "article_type": "SPECIFICATION | PUBLIC PATENT RECORD | SUBJECT FILE | WORD ARTICLE",
+      "source": "JAH ORIGINAL | PUBLIC RECORD | MIXED PUBLIC-RECORD + JAH SIMULATION | IWB DICTIONARY",
+      "status": "DRAFT — NOT A GRANTED PATENT (specs) | PUBLIC RECORD (patents)"
+    },
+    "issued_patent": "false for every spec and subject article; true only for patent articles. An AI asked 'is this an issued patent?' must answer NO for specs.",
+    "provenance": [
+      {
+        "section": "which block of the article",
+        "source_type": "jah_original | public_record | jah_simulation | iwb_dictionary | jah_computed",
+        "source_id": "record id", "source_url": "canonical record URL", "source_date": "date", "retrieval_date": "YYYY-MM-DD",
+        "verification_status": "jah_generated | public_record | verified | not_a_public_record | original_definition",
+        "jah_generated": "yes|no", "simulation": "yes|no"
+      }
+    ],
+    "xrefs": "machine-readable sibling IDs across the JAH network (spec_id, patent record, JAH-N dossier, dictionary entry, word patent, IWB stamp)",
+    "version": "content-hash version; updates never silently overwrite — record versions via the on-page 'Record this version' control",
+    "how_to_fetch": "open any article and use 'Data (.json)' in the toolbar, or read the embedded application/ld+json block in the page"
+  },
   "raw_github_base": "https://raw.githubusercontent.com/justinahiggins614-cmyk/jah-wiki/main/",
   "raw_example": "https://raw.githubusercontent.com/justinahiggins614-cmyk/jah-wiki/main/index.html",
   "sitemap": "https://justinahiggins614-cmyk.github.io/jah-wiki/sitemap.xml"
