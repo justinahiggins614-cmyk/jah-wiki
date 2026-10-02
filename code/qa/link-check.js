@@ -40,7 +40,7 @@ const CANON = [
   ["https://justinahiggins614-cmyk.github.io/signature-ai-robot-matcher/", "AI Robot Matcher"],
   ["https://justinahiggins614-cmyk.github.io/signature-experiment-solver/", "Experiment Solver"],
   ["https://justinahiggins614-cmyk.github.io/signature-ai-image-video-maker/", "Signature AI Pixel"],
-  ["https://justinahiggins614-cmyk.github.io/signature-ai-video-maker/", "Video Maker AI"],
+  ["https://justinahiggins614-cmyk.github.io/signature-ai-song-maker/", "Signature Music Studio"],
 ];
 console.log("[nav] THE JAH NETWORK bar");
 const navDiv = (INDEX_HTML.match(/<div class="jahnet">[\s\S]*?<\/div>/) || [""])[0];
