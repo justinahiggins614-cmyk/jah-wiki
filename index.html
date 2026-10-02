@@ -327,6 +327,8 @@ var SPEC_SITE="https://justinahiggins614-cmyk.github.io/signature-one-archive";
 var PAT_SITE="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog";
 var LEAK_SITE="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks";
 var WIKI_HOME="https://justinahiggins614-cmyk.github.io/jah-wiki/";
+var PHONE_SITE="https://justinahiggins614-cmyk.github.io/jah-ai-models";
+var PC_SITE="https://justinahiggins614-cmyk.github.io/jah-computer-systems";
 var DB={specIdx:[],patIdx:[],subjects:[],shards:[],ready:false};
 function shardBase(s){var b=(s&&s.base)||"";return b?b.replace(/\/?$/,""):SPEC_SITE}
 async function loadDB(){
@@ -804,9 +806,10 @@ function specArticle(d,tab){
  h+=toolbarHTML();
  h+=infobox(d.spec_id,[["Inventor / Owner","Justin Addam Higgins (JAH)"],["Category",esc(d.category)],["CPC class",esc(d.cpc)],["Era",esc(d.era)],["Prepared",esc(d.prepared_date)],["Signature line",esc(d.line)],["Lineage",esc(d.line_note||"Original design")],["Status",esc(d.status||"Draft — ready to file")]]);
  h+='<div id="articlebody">';
- h+=toc([["definition","Definition"],["history","History"],["how","How it works"],["params","Key parameters"],["measures","Measurements"],["manufacture","Manufacture"],["lenses","Analysis lenses"],["patent","Patent draft"],["program","Program"],["ai","AI persona"],["seealso","See also"],["refs","References"]]);
+ h+='<div id="reportslot" aria-live="polite"><p class="sub">Compiling the network report on this subject&hellip;</p></div>';
+ h+=toc([["report","Collective report"],["definition","Definition"],["history","History"],["how","How it works"],["params","Key parameters"],["measures","Measurements"],["manufacture","Manufacture"],["lenses","Analysis lenses"],["patent","Patent draft"],["program","Program"],["ai","AI persona"],["seealso","See also"],["refs","References"]]);
  h+=sec("definition","Definition","<p>"+esc(a)+"</p>"+partnerStrip(d.spec_id,d.spec_id));
- h+=sec("history","History","<p>"+esc(L.history)+"</p>"+(d.signature_line_of?"<p>Signature-line design in the product area of public patent record <b>"+esc(d.signature_line_of)+"</b> — an original design, not the patented invention.</p>":""));
+ h+=sec("history","History","<p>"+esc(L.history)+"</p>"+(d.signature_line_of?"<p>Signature-line design in the product area of public patent record <b><a href=\""+PAT_SITE+"/?patent="+encodeURIComponent(String(d.signature_line_of.publication_number||d.signature_line_of))+"\" target=\"_blank\" rel=\"noopener\">"+esc(String(d.signature_line_of.publication_number||d.signature_line_of))+"</a></b> — an original design, not the patented invention.</p>":""));
  h+=sec("how","How it works",(how?"<p>"+esc(how)+"</p>":"")+(steps.length?"<ol>"+steps.map(function(s){return "<li>"+esc(s)+"</li>"}).join("")+"</ol>":""));
  h+=sec("params","Key parameters",(d.key_parameters||[]).length?dataTable((d.key_parameters||[]).map(function(p){return[esc(p.name),esc(String(p.value))+" "+esc(p.unit||"")]}),["Parameter","Rated value"]):"<p>No key parameters recorded.</p>");
  h+=sec("measures","Measurements",(d.measurements||[]).length?dataTable((d.measurements||[]).map(function(x){return[esc(x.name),esc(String(x.value))+" "+esc(x.unit||"")+" (&plusmn;"+esc(x.tolerance||"—")+")"]}),["Measurement","Value"]):"<p>No measurements recorded.</p>");
@@ -822,7 +825,7 @@ function specArticle(d,tab){
  h+=sec("refs","References",citeHTML(WM)+"<p>Autoread block: <code>"+esc(d.autoread_block||"")+"</code></p><p style='font-size:.85em;color:#5b6472'>Master record "+esc(d.spec_id)+" · JAH Wiki article generated from the spec's own data.</p>");
  h+='<div class="note">Draft specification by Justin Addam Higgins (JAH) — ready to review and file. Not a granted patent.</div>';
  h+='</div>';
- nav(h);wireToolbar("spec",L,{rec:d,page_param:d.spec_id});wirePersona(L);
+ nav(h);wireToolbar("spec",L,{rec:d,page_param:d.spec_id});wirePersona(L);fillReport("spec",{d:d});
  document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
  document.getElementById("copydemo").onclick=function(e){copyText(makeProgram(L),e.target)};
  wireIcons(d.spec_id);makeCollapsible();
@@ -855,7 +858,8 @@ function patArticle(pub,rec,tab){
  h+=toolbarHTML();
  h+=infobox(pub,[["Publication no.",esc(pub)],["Title",esc(rec.title)],["Assignee",esc(rec.assignee||"—")],["Inventor",esc(rec.inventor||"—")],["Priority date",esc(rec.priority_date||"—")],["Filing date",esc(rec.filing_date||"—")],["Publication date",esc(rec.publication_date||"—")],["Grant date",esc(rec.grant_date||"—")],["CPC class",esc(rec.cpc||"—")],["Language",esc(rec.language||"en")]]);
  h+='<div id="articlebody">';
- h+=toc([["abstract","Abstract"],["history","History"],["invention","The invention"],["lenses","Analysis lenses"],["document","Patent document"],["program","Program"],["ai","AI persona"],["seealso","See also"],["refs","References"]]);
+ h+='<div id="reportslot" aria-live="polite"><p class="sub">Compiling the network report on this subject&hellip;</p></div>';
+ h+=toc([["report","Collective report"],["abstract","Abstract"],["history","History"],["invention","The invention"],["lenses","Analysis lenses"],["document","Patent document"],["program","Program"],["ai","AI persona"],["seealso","See also"],["refs","References"]]);
  h+=sec("abstract","Abstract","<p>"+esc((rec.abstract_snippet||"").replace(/&hellip;/g,"..."))+"</p>");
  h+=sec("history","History","<ul>"+steps.map(function(s){return "<li>"+esc(s)+"</li>"}).join("")+"</ul><p>"+esc(L.history)+"</p>");
  h+=sec("invention","The invention","<p>"+esc((rec.abstract_snippet||"").replace(/&hellip;/g,"..."))+"</p><p>This is a public patent record — the invention it describes belongs to its listed assignee/inventor. JAH's own original take on this product area, where one exists, is linked under See also.</p>");
@@ -867,7 +871,7 @@ function patArticle(pub,rec,tab){
  h+=seeAlsoBlock(sa);
  h+=sec("refs","References",citeHTML(WMp)+"<p style='font-size:.88em'>Public patent record "+esc(pub)+", via the Catalog of Public Patents. JAH Wiki article generated from the public record.</p>");
  h+='<div class="note">Public patent record — not a JAH draft. Descriptions here reflect the public filing.</div></div>';
- nav(h);wireToolbar("pat",L,{rec:{pub:pub,title:rec.title,assignee:rec.assignee,inventor:rec.inventor,priority_date:rec.priority_date,filing_date:rec.filing_date,publication_date:rec.publication_date,grant_date:rec.grant_date},sig:(sig?sig[0]:null),page_param:"PAT:"+pub});wirePersona(L);
+ nav(h);wireToolbar("pat",L,{rec:{pub:pub,title:rec.title,assignee:rec.assignee,inventor:rec.inventor,priority_date:rec.priority_date,filing_date:rec.filing_date,publication_date:rec.publication_date,grant_date:rec.grant_date},sig:(sig?sig[0]:null),page_param:"PAT:"+pub});wirePersona(L);fillReport("pat",{rec:rec,pub:pub,sig:sig});
  document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
  wireIcons("PAT:"+pub);makeCollapsible();
  try{history.replaceState(null,"","?page="+encodeURIComponent("PAT:"+pub)+(tab==="talk"?"&tab=talk":""))}catch(e){}
@@ -899,7 +903,8 @@ function subArticle(d,tab){
  h+=toolbarHTML();
  h+=infobox(d.subject,[["File no.",esc(d.id||"—")],["Category",esc(d.category||"—")],["Classification",esc(d.classification||"—")],["Filed",esc(d.date_filed||"—")],["Creator sign-off",esc(d.creator_signoff||"—")]]);
  h+='<div id="articlebody">';
- h+=toc([["definition","Definition"],["history","History"],["evidence","The evidence"],["panel","Panel assessment"],["conclusion","Officer conclusion"],["lenses","Analysis lenses"],["patent","Patent draft"],["program","Program"],["ai","AI persona"],["seealso","See also"],["refs","Sources & references"]]);
+ h+='<div id="reportslot" aria-live="polite"><p class="sub">Compiling the network report on this subject&hellip;</p></div>';
+ h+=toc([["report","Collective report"],["definition","Definition"],["history","History"],["evidence","The evidence"],["panel","Panel assessment"],["conclusion","Officer conclusion"],["lenses","Analysis lenses"],["patent","Patent draft"],["program","Program"],["ai","AI persona"],["seealso","See also"],["refs","Sources & references"]]);
  h+=sec("definition","Definition","<p>"+esc(d.overview||"")+"</p>"+partnerStrip(d.id||d.subject,d.subject));
  h+=sec("history","History","<p>"+esc(L.history)+"</p>");
  h+=sec("evidence","The evidence",provHTML("public_record",true,"file "+(d.id||""))+"<h3 class='lens'>Science proof</h3><p>"+esc(d.science_proof||"—")+"</p><h3 class='lens'>Math proof</h3><p>"+esc(d.math_proof||"—")+"</p>");
@@ -914,7 +919,7 @@ function subArticle(d,tab){
  h+=seeAlsoBlock(sa);
  h+=sec("refs","Sources & references",citeHTML(WMs)+paras+'<p style="font-size:.85em;color:#5b6472">Full sources, witnesses and references: see the dossier\'s SOURCES section on JAH-N Wiki.</p>');
  h+='<div class="note">Subject file — public-record material plus the JAH system\'s marked simulation layer.</div></div>';
- nav(h);wireToolbar("sub",L,{rec:d,page_param:subjSlug(d)});wirePersona(L);
+ nav(h);wireToolbar("sub",L,{rec:d,page_param:subjSlug(d)});wirePersona(L);fillReport("sub",{d:d});
  document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
  wireIcons(subjSlug(d));makeCollapsible();
  try{history.replaceState(null,"","?page="+encodeURIComponent(subjSlug(d))+(tab==="talk"?"&tab=talk":""))}catch(e){}
@@ -956,7 +961,8 @@ async function wordArticle(de,tab){
  h+=toolbarHTML();
  h+=infobox(w,[["Word",esc(w)],["Pronunciation",esc(syl)],["Part of speech",esc(de.pos||"\u2014")],["IWB stamp",esc(de.st||"\u2014")],["Senses",esc(String(senses.length))],["Definition source",esc(de.defsrc==="iwb"?"IWB Dictionary (original)":"IWB Dictionary")]]);
  h+='<div id="articlebody">';
- h+=toc([["jahdata","JAH data"],["lenses","Analysis lenses"],["xrefs","Cross-references"],["program","Program"],["definition","Detailed definition"],["history","History"],["ai","Ask AI"],["seealso","See also"],["refs","References"]]);
+ h+='<div id="reportslot" aria-live="polite"><p class="sub">Compiling the network report on this subject&hellip;</p></div>';
+ h+=toc([["report","Collective report"],["jahdata","JAH data"],["lenses","Analysis lenses"],["xrefs","Cross-references"],["program","Program"],["definition","Detailed definition"],["history","History"],["ai","Ask AI"],["seealso","See also"],["refs","References"]]);
  /* layer 2: all the JAH data */
  h+=sec("jahdata","JAH data","<p>Everything the JAH system holds for the word <b>"+esc(w)+"</b> \u2014 the eleven analysis lenses computed live from the word's own data, cross-references across the Spec Catalog and Patent Catalog, the word patent, and a working program.</p>");
  h+=lz.html;
@@ -977,7 +983,7 @@ async function wordArticle(de,tab){
  h+=seeAlsoBlock(sa);
  h+=sec("refs","References",citeHTML(WMw)+'<p>[1] IWB Dictionary entry \u201C'+esc(w)+'\u201D ('+esc(de.st||"unstamped")+'), <a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">the IWB Dictionary</a> \u2014 original definitions.</p><p style="font-size:.85em;color:#5b6472">JAH Wiki word article generated from the IWB Dictionary entry and the word\u2019s own computed data. Cross-references checked against the live Spec and Patent catalog indexes.</p>');
  h+='<div class="note">Word article \u2014 the IWB Dictionary definition plus the JAH system\u2019s instruments. Definitions are original to the IWB Dictionary.</div></div>';
- nav(h);wireToolbar("word",L,{rec:de,page_param:w});wirePersona(L);wirePronSpk();
+ nav(h);wireToolbar("word",L,{rec:de,page_param:w});wirePersona(L);wirePronSpk();fillReport("word",{de:de,relS:relS,relP:relP});
  document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
  document.getElementById("copydemo").onclick=function(e){copyText(makeProgram(L),e.target)};
  wireIcons(w);makeCollapsible();
@@ -1024,6 +1030,161 @@ async function dictPage(q){
   h+='<p class="note">The full entry adds the JAH deterministic definition, the official deterministic stamp, the program of the word, and a personal AI teacher.</p>';
   nav(h);document.title=de.w+" — IWB Dictionary (via JAH Wiki)";
  }catch(e){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Dictionary unreachable</h1><p style="font-family:Arial">Couldn\'t reach the dictionary index. <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">Open the IWB Dictionary directly &rarr;</a></p>')}
+}
+/* ================= collective report: the article lead as a synthesis of the whole network =================
+   Manon: "wiki is a collective report of all website data on subject wrote in paragraph form
+   with links that tie to other sites and wiki pages. Like real wiki."
+   The report is built asynchronously after the article renders (lazy cross-site indexes,
+   cached per session, every fetch individually fault-tolerant). Every linked record is
+   verified against a live index before the link is written — no invented links, no dead
+   deep links. Spec dossiers (?dossier=JAH-SPEC-#) are generated on the fly for every spec,
+   so they always resolve; patent dossiers only exist for a subset, so patent-dossier links
+   are never written blind. */
+var XSTOP={a:1,an:1,the:1,and:1,or:1,of:1,to:1,in:1,on:1,for:1,with:1,by:1,from:1,as:1,at:1,is:1,are:1,was:1,were:1,be:1,this:1,that:1,these:1,those:1,it:1,its:1,into:1,over:1,under:1,than:1,then:1,when:1,which:1,while:1,also:1,using:1,use:1,used:1,based:1,via:1,new:1,novel:1,system:1,method:1,device:1,invention:1,subject:1};
+function sigWords(t){var out=[],seen={};String(t||"").toLowerCase().split(/[^a-z]+/).forEach(function(w){if(w.length>=4&&!XSTOP[w]&&!seen[w]){seen[w]=1;out.push(w)}});return out.slice(0,8)}
+function titleHits(title,words){var t=" "+String(title||"").toLowerCase()+" ",n=0;for(var i=0;i<words.length;i++)if(t.indexOf(words[i])>=0)n++;return n}
+function linkList(items){var ls=items.map(function(x){return '<a href="'+x[0]+'"'+(x[2]?' target="_blank" rel="noopener"':"")+'>'+esc(String(x[1]).replace(/&hellip;/g,"..."))+'</a>'});if(ls.length>1){var l=ls.pop();return ls.join(", ")+" and "+l}return ls.join("")}
+/* one pass over the spec index: same-category count + keyword-ranked neighbors */
+function specRelations(words,excludeId,category){
+ var same=[],kw=[];
+ for(var i=0;i<DB.specIdx.length;i++){var r=DB.specIdx[i],id=r[0];if(id===excludeId)continue;
+  var sc=titleHits(r[1],words);
+  if(r[3]===category)same.push({r:r,sc:sc});else if(sc>0)kw.push({r:r,sc:sc});}
+ same.sort(function(a,b){return b.sc-a.sc});kw.sort(function(a,b){return b.sc-a.sc});
+ return {catCount:same.length+1,same:same.slice(0,4).map(function(x){return x.r}),kw:kw.slice(0,3).map(function(x){return x.r})};
+}
+function patRelations(words,excludePub,limit){
+ var out=[],ex=String(excludePub||"").toUpperCase();
+ for(var i=0;i<DB.patIdx.length;i++){var p=DB.patIdx[i];if(String(p[0]).toUpperCase()===ex)continue;
+  var sc=titleHits(p[1],words);if(sc>0)out.push({p:p,sc:sc});}
+ out.sort(function(a,b){return b.sc-a.sc});return out.slice(0,limit||3).map(function(x){return x.p});
+}
+function subRelations(words,excludeSubj,category,limit){
+ var out=[];
+ for(var i=0;i<DB.subjects.length;i++){var d=DB.subjects[i];if(d.subject===excludeSubj)continue;
+  var sc=titleHits(d.subject+" "+(d.category||""),words)+(d.category===category?1:0);
+  if(sc>0)out.push({d:d,sc:sc});}
+ out.sort(function(a,b){return b.sc-a.sc});return out.slice(0,limit||4).map(function(x){return x.d});
+}
+function aiRelations(recs,words,limit){
+ var out=[];
+ for(var i=0;i<recs.length;i++){var a=recs[i];if(!a||!a.ID)continue;
+  var sc=titleHits((a.NAME||"")+" "+(a.DESCRIPTION||""),words);if(sc>0)out.push({a:a,sc:sc});}
+ out.sort(function(a,b){return b.sc-a.sc});return out.slice(0,limit||3).map(function(x){return x.a});
+}
+function pcRelations(recs,words,limit){
+ var out=[];
+ for(var i=0;i<recs.length;i++){var s=recs[i];if(!s||!s.system_id)continue;
+  var sc=titleHits((s.name||"")+" "+(s.tag||"")+" "+(s.desc||""),words);if(sc>0)out.push({s:s,sc:sc});}
+ out.sort(function(a,b){return b.sc-a.sc});return out.slice(0,limit||3).map(function(x){return x.s});
+}
+/* lazy cross-site indexes: fetched once per session, only when a report needs them */
+var XREF={ai:null,pc:null,wordai:null,aiTried:false,pcTried:false,wordaiTried:false};
+function fetchTO(url,ms,isGz){
+ var p=isGz?fetchGz(url):fetch(url).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()});
+ return Promise.race([p,new Promise(function(_,rej){setTimeout(function(){rej(new Error("timeout"))},ms||9000)})]);
+}
+async function xrefAI(){if(XREF.ai||XREF.aiTried)return XREF.ai;XREF.aiTried=true;
+ try{var j=await fetchTO(PHONE_SITE+"/ai-catalog.json",9000,false);XREF.ai=(j&&j.records)||[];}catch(e){XREF.ai=null;}return XREF.ai;}
+async function xrefPC(){if(XREF.pc||XREF.pcTried)return XREF.pc;XREF.pcTried=true;
+ try{XREF.pc=await fetchTO(PC_SITE+"/data/systems.json",9000,false);}catch(e){XREF.pc=null;}return XREF.pc;}
+async function xrefWordAI(){if(XREF.wordai||XREF.wordaiTried)return XREF.wordai;XREF.wordaiTried=true;
+ try{var t=await fetchTO(SPEC_SITE+"/data/index/wordai.idx.json.gz",9000,true);var m={},rows=JSON.parse(t);
+  for(var i=0;i<rows.length;i++)m[String(rows[i][0]).toLowerCase()]=rows[i][1];XREF.wordai=m;}catch(e){XREF.wordai=null;}return XREF.wordai;}
+/* shared paragraph: Telephone Book AIs + PC Depository systems related by keyword */
+async function netPara(words){
+ var bits=[];
+ try{var ai=await xrefAI();
+  if(ai&&ai.length){var m=aiRelations(ai,words,3).map(function(x){return [PHONE_SITE+"/#file-"+encodeURIComponent(x.ID),x.NAME+" ("+x.ID+")",1]});
+   if(m.length)bits.push('the Telephone Book\u2019s '+linkList(m)+' reason over related ground');}}catch(e){}
+ try{var pc=await xrefPC();
+  if(pc&&pc.length){var m2=pcRelations(pc,words,3).map(function(x){return [PC_SITE+"/?system="+encodeURIComponent(x.system_id),x.name+" ("+x.system_id+")",1]});
+   if(m2.length)bits.push('the PC Depository lists '+linkList(m2)+' among related systems');}}catch(e){}
+ if(!bits.length)return "";
+ return 'Across the network, '+bits.join('; ')+'.';
+}
+async function specReport(ctx){
+ var d=ctx.d,words=sigWords(d.title),H=[];
+ var sr=specRelations(words,d.spec_id,d.category);
+ var specUrl=SPEC_SITE+"/specs.html?spec="+encodeURIComponent(d.spec_id);
+ var dosUrl=LEAK_SITE+"/?dossier="+encodeURIComponent(d.spec_id);
+ H.push('<b>'+esc(d.title)+'</b> is a JAH original draft specification — '+esc(d.category||"general")+', '+esc(d.line||"Signature")+' line, prepared '+esc(d.prepared_date||"undated")+'. The full draft lives in the <a href="'+specUrl+'" target="_blank" rel="noopener">Spec Catalog</a>; its <a href="'+dosUrl+'" target="_blank" rel="noopener">classified JAH-N dossier</a> files it as the system sees it; this article gathers everything the network holds on the subject.');
+ var p2='The <b>'+esc(d.category||"general")+'</b> area holds <b>'+sr.catCount.toLocaleString()+'</b> draft specifications in the catalog.';
+ var relLinks=sr.same.map(function(r){return ["?page="+encodeURIComponent(r[0]),r[1],0]});
+ if(relLinks.length)p2+=' Closest among them: '+linkList(relLinks)+' — each with its own encyclopedia article.';
+ H.push(p2);
+ var slo=d.signature_line_of,sigPub="";
+ if(slo)sigPub=String(slo.publication_number||slo).toUpperCase();
+ var sigRow=sigPub?findPat(sigPub):null;
+ if(sigRow){var pub=String(sigRow[0]);
+  H.push('This design is JAH\u2019s original Signature-line take in the product area of public patent record <a href="'+PAT_SITE+'/?patent='+encodeURIComponent(pub)+'" target="_blank" rel="noopener">'+esc(pub)+'</a> — an original design, not the patented invention. The patent\u2019s own encyclopedia article is <a href="?page='+encodeURIComponent("PAT:"+pub)+'">'+esc(String(sigRow[1]).slice(0,80))+'</a>.');
+ }else{var kp=patRelations(words,"",3).map(function(p){return ["?page="+encodeURIComponent("PAT:"+p[0]),String(p[1]).slice(0,80)+" ("+p[0]+")",0]});
+  if(kp.length)H.push('Related public patent records: '+linkList(kp)+'.');}
+ var kw=sr.kw.map(function(r){return ["?page="+encodeURIComponent(r[0]),r[1],0]});
+ if(kw.length)H.push('Beyond its own area: '+linkList(kw)+'.');
+ var np=await netPara(words);if(np)H.push(np);
+ H.push('<span class="sub">Below: the full definition, history, eleven analysis lenses, the patent draft, a working program, and a personal AI persona that answers as the subject itself.</span>');
+ return H.filter(Boolean).map(function(p){return '<p>'+p+'</p>'}).join('');
+}
+async function patReport(ctx){
+ var rec=ctx.rec,pub=ctx.pub,sig=ctx.sig,words=sigWords(rec.title),H=[];
+ var yr=String(rec.grant_date||rec.publication_date||rec.filing_date||"").slice(0,4);
+ var who=rec.assignee&&rec.assignee!=="\u2014"?" assigned to "+rec.assignee:(rec.inventor&&rec.inventor!=="\u2014"?" by inventor "+rec.inventor:"");
+ H.push('<b>'+esc(rec.title)+'</b> is documented in public patent record <b><a href="'+PAT_SITE+'/?patent='+encodeURIComponent(pub)+'" target="_blank" rel="noopener">'+esc(pub)+'</a></b>'+(yr?", "+yr:"")+esc(who)+'. '+esc(cleanSent((rec.abstract_snippet||"").replace(/&hellip;/g,"..."),240))+' This article reports the public record — the invention belongs to its listed owner.');
+ if(sig){H.push('JAH\u2019s original Signature-line version of this product area is <a href="?page='+encodeURIComponent(sig[0])+'">'+esc(sig[1])+'</a> — a separate original design, not the patented invention. Its <a href="'+SPEC_SITE+'/specs.html?spec='+encodeURIComponent(sig[0])+'" target="_blank" rel="noopener">draft record</a> is in the Spec Catalog.');}
+ var rp=patRelations(words,pub,3).map(function(p){return ["?page="+encodeURIComponent("PAT:"+p[0]),String(p[1]).slice(0,80)+" ("+p[0]+")",0]});
+ if(rp.length)H.push('Related public patent records: '+linkList(rp)+'.');
+ var rs=specRelations(words,"","",3).kw.map(function(r){return ["?page="+encodeURIComponent(r[0]),r[1],0]});
+ if(rs.length)H.push('Related draft specifications: '+linkList(rs)+'.');
+ var np=await netPara(words);if(np)H.push(np);
+ H.push('<span class="sub">Below: the abstract, the history, the invention in plain words, eleven analysis lenses, the patent document, a working program, and a personal AI persona.</span>');
+ return H.filter(Boolean).map(function(p){return '<p>'+p+'</p>'}).join('');
+}
+async function subReport(ctx){
+ var d=ctx.d,words=sigWords(d.subject),H=[];
+ var dosUrl=LEAK_SITE+"/?dossier="+encodeURIComponent(d.id||d.subject);
+ H.push('<b>'+esc(d.subject)+'</b> is a '+esc(d.category||"general")+' subject file in the JAH system. The full <a href="'+dosUrl+'" target="_blank" rel="noopener">classified dossier</a> holds the witnesses, sources and references; this article is the encyclopedia\u2019s collective report on it.');
+ var cor=[];
+ (d.corroborating_specs||[]).forEach(function(sid){var row=findSpec(String(sid).toUpperCase());if(row)cor.push(["?page="+encodeURIComponent(row[0]),row[1]+" ("+row[0]+")",0])});
+ if(cor.length)H.push('Corroborating draft specifications: '+linkList(cor.slice(0,5))+'.');
+ var rel=subRelations(words,d.subject,d.category,4).map(function(x){return ["?page="+subjSlug(x),x.subject,0]});
+ if(rel.length)H.push('Related subject files: '+linkList(rel)+'.');
+ var np=await netPara(words);if(np)H.push(np);
+ H.push('<span class="sub">Below: the definition, the evidence, the panel assessment and officer conclusion — public-record blocks and the system\u2019s simulation layer are each marked where they appear — plus the analysis lenses, a patent draft, a working program, and a personal AI persona.</span>');
+ return H.filter(Boolean).map(function(p){return '<p>'+p+'</p>'}).join('');
+}
+async function wordReport(ctx){
+ var de=ctx.de,w=de.w,words=sigWords(w),H=[];
+ H.push('<b>'+esc(w)+'</b>'+(de.pos?' ('+esc(de.pos)+')':"")+' is entered in the IWB Dictionary under stamp <span class="stamp">'+esc(de.st||"\u2014")+'</span> — see the <a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">full dictionary entry</a>.');
+ var wmap=await xrefWordAI();
+ var wid=wmap?wmap[String(w).toLowerCase()]:null;
+ if(wid){H.push('The Spec Catalog holds a <a href="'+SPEC_SITE+'/specs.html?word='+encodeURIComponent(w)+'" target="_blank" rel="noopener">full word patent and working program</a> for \u201C'+esc(w)+'\u201D, and the Telephone Book\u2019s <a href="'+PHONE_SITE+'/#wordai-'+wid+'" target="_blank" rel="noopener">word AI</a> talks as the word itself. Dial it for a live session.');}
+ var sl=(ctx.relS||[]).map(function(r){return ["?page="+encodeURIComponent(r[0]),r[1]+" ("+r[0]+")",0]});
+ if(sl.length)H.push('Spec articles on \u201C'+esc(w)+'\u201D: '+linkList(sl.slice(0,4))+'.');
+ var pl=(ctx.relP||[]).map(function(p){return ["?page="+encodeURIComponent("PAT:"+p[0]),String(p[1]).slice(0,80)+" ("+p[0]+")",0]});
+ if(pl.length)H.push('Patent articles on \u201C'+esc(w)+'\u201D: '+linkList(pl.slice(0,4))+'.');
+ var np=await netPara(words);if(np)H.push(np);
+ H.push('<span class="sub">Below: the JAH data, the eleven analysis lenses, cross-references, the program, the detailed definition and history, and Ask AI.</span>');
+ return H.filter(Boolean).map(function(p){return '<p>'+p+'</p>'}).join('');
+}
+async function buildReport(kind,ctx){
+ if(kind==="spec")return specReport(ctx);
+ if(kind==="pat")return patReport(ctx);
+ if(kind==="sub")return subReport(ctx);
+ if(kind==="word")return wordReport(ctx);
+ return "";
+}
+/* fills the #reportslot placed at the top of #articlebody; the captured slot reference
+   plus isConnected() guards against a stale fill landing on a newer article */
+function fillReport(kind,ctx){
+ var slot=document.getElementById("reportslot");if(!slot)return;
+ buildReport(kind,ctx).then(function(html){
+  if(!slot.isConnected)return;
+  slot.innerHTML=html?'<h2 class="sec" id="report">Collective report</h2>'+html:'<p class="sub">No network report was compiled on this visit — the full article below is complete.</p>';
+ },function(){
+  if(!slot.isConnected)return;
+  slot.innerHTML='<p class="sub">The network report could not be compiled on this visit — the full article below is complete.</p>';
+ });
 }
 /* ================= real-wiki article chrome ================= */
 function tabsHTML(pageId,tab){
