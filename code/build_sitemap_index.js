@@ -14,7 +14,8 @@ const ROOT = path.resolve(__dirname, "..");
 const WIKI = "https://justinahiggins614-cmyk.github.io/jah-wiki/";
 const SPEC_CLONE = path.resolve(ROOT, "..", "signature-one-archive");
 const SPEC_IDX = path.join(SPEC_CLONE, "sitemap-index.xml");
-const PAT_RECORDS = ["https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/sitemap-records-1.xml"];
+const PAT_RECORDS = ["https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/sitemap-records-1.xml",
+  "https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/sitemap-records-2.xml"];
 
 function curlCode(u) {
   return new Promise((resolve) => {
