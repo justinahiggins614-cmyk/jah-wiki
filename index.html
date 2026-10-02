@@ -102,10 +102,10 @@ h2.sec .sectog{font-size:.7em;color:#5b6472;margin-right:8px}
 .loadstate button{padding:10px 22px;background:#0b3d91;color:#fff;border:none;border-radius:4px;font-weight:bold;cursor:pointer;margin-top:14px;font-size:1em}
 @media(max-width:700px){.ibox{float:none;margin:0 0 14px;width:100%}}
 </style>
-<style>.jahnet{background:#101418;color:#9aa4b2;font-size:.76em;padding:6px 10px;text-align:center;line-height:2;letter-spacing:.02em}.jahnet-t{color:#e8c766;font-weight:700;letter-spacing:.25em;margin-right:10px}.jahnet a{color:#9fc2ff;text-decoration:none;margin:0 7px;white-space:nowrap}.jahnet a:hover{text-decoration:underline}</style>
+<style>.jahnet{background:#101418;color:#9aa4b2;font-size:.76em;padding:6px 10px;text-align:center;line-height:2;letter-spacing:.02em}.jahnet-t{color:#e8c766;font-weight:700;letter-spacing:.25em;margin-right:10px}.jahnet-here{color:#e8c766;font-weight:700;margin-right:10px;white-space:nowrap;border:1px solid #e8c766;border-radius:3px;padding:1px 8px}.jahnet a{color:#9fc2ff;text-decoration:none;margin:0 7px;white-space:nowrap}.jahnet a:hover{text-decoration:underline}</style>
 </head>
 <body>
-<div class="jahnet"><span class="jahnet-t">THE JAH NETWORK</span><a href="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/">Globally Rejustered Patent Catalog</a><a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/">Signature Spec Catalog Pending Patents</a><a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/">The Signature Dictionary</a><a href="https://justinahiggins614-cmyk.github.io/jah-wiki/">JAH Wiki</a><a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/">JAH-N Wiki</a><a href="https://justinahiggins614-cmyk.github.io/jah-calculator/">Signature Universal Paradox Immune Calculator</a><a href="https://justinahiggins614-cmyk.github.io/jah-ai-models/">The Signature AI Telephone Book</a><a href="https://justinahiggins614-cmyk.github.io/signature-llama/">Signature Llama</a><a href="https://justinahiggins614-cmyk.github.io/jah-computer-systems/">The Signature PC System Depository</a></div>
+<div class="jahnet"><span class="jahnet-t">THE JAH NETWORK</span><span class="jahnet-here" aria-current="page">YOU ARE HERE: JAH WIKI</span><a href="https://justinahiggins614-cmyk.github.io/jah-ai-models/">The Signature AI Telephone Book</a><a href="https://justinahiggins614-cmyk.github.io/jah-calculator/">Signature Universal Paradox Immune Calculator</a><a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/">The Signature Dictionary</a><a href="https://justinahiggins614-cmyk.github.io/jah-wiki/">JAH Wiki</a><a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/">JAH-N Wiki</a><a href="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/">Globally Rejustered Patent Catalog</a><a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html">Signature Spec Catalog Pending Patents</a><a href="https://justinahiggins614-cmyk.github.io/signature-llama/">Signature Llama</a><a href="https://justinahiggins614-cmyk.github.io/jah-computer-systems/">The Signature PC System Depository</a></div>
 <div class="topbar">
   <a href="?" style="text-decoration:none"><div class="brand">JAH WIKI<small>THE ENCYCLOPEDIA OF THE JAH SYSTEM</small></div></a>
   <div class="navlinks">
@@ -132,7 +132,12 @@ function qp(n){var m=new RegExp("[?&]"+n+"=([^&]*)").exec(location.search);retur
 function setQ(k,v){var u=new URL(location.href);if(v==null)u.searchParams.delete(k);else u.searchParams.set(k,v);location.href=u.toString()}
 function hashStr(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
 function prng(seed){var a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
-async function fetchGz(url){var r=await fetch(url);if(!r.ok)throw new Error("HTTP "+r.status);var b=r.body;var ds=new DecompressionStream("gzip");var t=await new Response(b.pipeThrough(ds)).text();return t}
+/* index-data freshness: last-modified of every index file fetched, for the honest "last updated" line */
+var LASTMOD={};
+function noteMod(url,r){try{var lm=r.headers.get("last-modified");if(lm){var t=Date.parse(lm);if(t>0)LASTMOD[url]=t}}catch(e){}}
+function dataUpdated(){var mx=0;for(var k in LASTMOD)if(LASTMOD[k]>mx)mx=LASTMOD[k];return mx}
+function fmtTs(t){try{return new Date(t).toLocaleString()}catch(e){return String(t)}}
+async function fetchGz(url){var r=await fetch(url);if(!r.ok)throw new Error("HTTP "+r.status);noteMod(url,r);var b=r.body;var ds=new DecompressionStream("gzip");var t=await new Response(b.pipeThrough(ds)).text();return t}
 function download(name,content,mime){var b=new Blob([content],{type:mime||"text/plain"});var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove()},800)}
 function copyText(t,btn){function done(){if(btn){var o=btn.textContent;btn.textContent="Copied!";setTimeout(function(){btn.textContent=o},1400)}}
  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done).catch(function(){fallback()})}else fallback();
@@ -146,7 +151,12 @@ function wikiId(kind,id){
  try{s=decodeURIComponent(s)}catch(e){}
  if(k==="spec"){var m=/SPEC-(\d{1,7})/i.exec(s);return "JAH-WIKI-SPEC-"+(m?String(m[1]).padStart(6,"0"):"X"+hashStr("spec:"+s).toString(36))}
  if(k==="pat"){var p=s.replace(/^PAT:/i,"").replace(/[^A-Za-z0-9]+/g,"").toUpperCase().slice(0,40);return "JAH-WIKI-PAT-"+(p||"X"+hashStr("pat:"+s).toString(36))}
- if(k==="word"){var w=s.replace(/^WORD:/i,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,50);return "JAH-WIKI-W-"+(w||"X"+hashStr("word:"+s).toString(36))}
+ if(k==="word"){var wf=s.replace(/^WORD:/i,"").toLowerCase().replace(/[^a-z0-9]+/g,"-");
+  if(!/[a-z0-9]/.test(wf))return "JAH-WIKI-W-X"+hashStr("word:"+s).toString(36);
+  /* edge dashes are kept: "-able" (suffix) and "able" (word) are different entries.
+     long phrases: 50-char stem + hash of the full slug, so near-duplicates never share an ID */
+  var ww=wf.slice(0,50);if(wf.length>50)ww+="-"+hashStr("word:"+wf).toString(36);
+  return "JAH-WIKI-W-"+ww}
  var sb=s.replace(/^SUB:/i,"").replace(/[^A-Za-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60);return "JAH-WIKI-SUB-"+(sb||"X"+hashStr("sub:"+s).toString(36))
 }
 function classBanner(kind,meta){
@@ -276,7 +286,7 @@ function shardBase(s){var b=(s&&s.base)||"";return b?b.replace(/\/?$/,""):SPEC_S
 async function loadDB(){
  if(DB.ready)return DB;
  var jobs=[];
- jobs.push(fetch(SPEC_SITE+"/data/index/shards.json").then(function(r){return r.json()}).then(async function(j){
+ jobs.push(fetch(SPEC_SITE+"/data/index/shards.json").then(function(r){noteMod(SPEC_SITE+"/data/index/shards.json",r);return r.json()}).then(async function(j){
    var sh=Array.isArray(j)?j:((j&&j.shards)||[]);
    DB.shards=sh;
    for(var k=0;k<sh.length;k++){var s=sh[k];try{
@@ -286,7 +296,7 @@ async function loadDB(){
    }catch(e){DB.shardErrors=(DB.shardErrors||0)+1}}
  }).catch(function(){DB.shardErrors=(DB.shardErrors||0)+1}));
  jobs.push(fetchGz(PAT_SITE+"/data/patents.idx.json.gz").then(function(t){DB.patIdx=JSON.parse(t)}).catch(function(){DB.patErrors=(DB.patErrors||0)+1}));
- jobs.push(fetch(LEAK_SITE+"/data/bizarre.json").then(function(r){return r.json()}).then(function(j){DB.subjects=j}).catch(function(){}));
+ jobs.push(fetch(LEAK_SITE+"/data/bizarre.json").then(function(r){noteMod(LEAK_SITE+"/data/bizarre.json",r);return r.json()}).then(function(j){DB.subjects=j}).catch(function(){}));
  await Promise.all(jobs);DB.ready=true;return DB;
 }
 function findSpec(id){id=String(id).toUpperCase();for(var i=0;i<DB.specIdx.length;i++)if(String(DB.specIdx[i][0]).toUpperCase()===id)return DB.specIdx[i];return null}
@@ -298,10 +308,31 @@ async function fullPat(row){var off=row[4],len=row[5];var r=await fetch(PAT_SITE
 function findSubject(name){name=String(name).toLowerCase();for(var i=0;i<DB.subjects.length;i++){var d=DB.subjects[i];if(String(d.subject||"").toLowerCase()===name)return d}return null}
 function subjSlug(d){return "SUB:"+encodeURIComponent(d.subject)}
 function parsePage(p){if(!p)return null;
+ /* permanent article IDs resolve too: JAH-WIKI-SPEC-###### / JAH-WIKI-PAT-<pub> / JAH-WIKI-W-<word> / JAH-WIKI-SUB-<slug> */
+ var w=/^JAH-WIKI-(SPEC|PAT|W|SUB)-(.+)$/i.exec(p);
+ if(w){var wk=w[1].toUpperCase(),wr=w[2];
+  if(wk==="SPEC"){var dg=wr.replace(/\D/g,"");if(dg)return{kind:"spec",id:"JAH-SPEC-"+dg.padStart(6,"0")}}
+  else if(wk==="PAT"){var pb=wr.replace(/[^A-Za-z0-9]+/g,"").toUpperCase();if(pb)return{kind:"pat",id:pb}}
+  else if(wk==="W"){var ws=wr.toLowerCase();if(ws)return{kind:"word",slug:ws}}
+  else{var ss=wr.toLowerCase();if(ss)return{kind:"sub",slug:ss}}
+  return null}
+ if(/^JAH-WIKI-/i.test(p))return null; /* malformed permanent ID: 404, never a word search */
  if(/^JAH-SPEC-/i.test(p))return{kind:"spec",id:p.toUpperCase()};
  if(/^PAT:/i.test(p))return{kind:"pat",id:p.slice(4).toUpperCase()};
  if(/^SUB:/i.test(p))return{kind:"sub",id:decodeURIComponent(p.slice(4))};
  if(/^[a-z][a-z'\- ]{0,40}$/i.test(p)&&p.trim().length>1)return{kind:"word",id:p.toLowerCase().trim()};
+ if(/^-[a-z][a-z'\- ]{0,40}$/i.test(p))return{kind:"word",id:p.toLowerCase()}; /* affix entries: -able, pre-, ... */
+ return null}
+/* JAH-WIKI-W-* / JAH-WIKI-SUB-* slugs resolve by recomputing the article ID from each
+   record's own permanent key — never guessed, never invented. */
+function wordKeyBySlug(slug){if(!DICT.idx)return null;var t="JAH-WIKI-W-"+slug;
+ for(var i=0;i<DICT.idx.length;i++){try{if(wikiId("word",DICT.idx[i][0])===t)return DICT.idx[i][0]}catch(e){}}
+ /* X-hash IDs (non-latin words) keep an uppercase X: match case-insensitively as fallback */
+ var tl=t.toLowerCase();
+ for(var j=0;j<DICT.idx.length;j++){try{if(wikiId("word",DICT.idx[j][0]).toLowerCase()===tl)return DICT.idx[j][0]}catch(e){}}
+ return null}
+function subjBySlug(slug){var t=("JAH-WIKI-SUB-"+slug).toLowerCase();
+ for(var i=0;i<DB.subjects.length;i++){try{if(wikiId("sub",DB.subjects[i].subject).toLowerCase()===t)return DB.subjects[i]}catch(e){}}
  return null}
 /* ================= router / home / search / all pages ================= */
 function nav(html){document.getElementById("app").innerHTML=html;window.scrollTo(0,0)}
@@ -316,6 +347,9 @@ function homeHTML(){
  h+='<div class="stat"><div class="n">'+np.toLocaleString()+'</div><div class="l">patent articles</div></div>';
  h+='<div class="stat"><div class="n">'+nb+'</div><div class="l">subject files</div></div>';
  h+='<div class="stat"><div class="n">'+(ns+np+nb).toLocaleString()+'</div><div class="l">articles total</div></div></div>';
+ h+='<p class="sub" style="color:#1a4d2e;margin-top:10px">Articles mirror Signature specs, public patent records, and JAH-N subjects — one article per record.</p>';
+ var _du=dataUpdated();
+ h+='<p class="sub" style="color:#5b6472;margin-top:-8px"><span title="When the underlying index files were last published">\uD83D\uDD52 Index data last updated: '+esc(fmtTs(_du||Date.now()))+(_du?"":" (this visit)")+'</span></p>';
  if(feat){h+='<div class="feat"><h3>Featured subject file</h3><p style="font-family:Arial"><b><a href="?page='+subjSlug(feat)+'">'+esc(feat.subject)+'</a></b> — '+esc(String(feat.overview||feat.summary||"").slice(0,220))+'...</p></div>'}
  h+='<div class="cards">';
  h+='<div class="card"><h3>Spec articles</h3><p>Encyclopedia entries for every draft specification in the Spec Catalog — definition, history, lenses, patent draft, program, and a personal AI for each.</p><p><a href="?all=SPEC">Browse all &rarr;</a></p></div>';
@@ -943,10 +977,10 @@ function tabsHTML(pageId,tab){
 }
 function iconRowHTML(){
  return '<div class="iconrow"><span style="font-size:.8em;color:#5b6472;font-family:Arial">文A</span>'+
- '<a href="#" id="icon-dict" title="Look up in the IWB Dictionary" style="font-size:1em" >\uD83D\uDCD6 Dictionary</a>'+
- '<a href="#" id="icon-dl" title="Download article (.txt)">\u2B07</a>'+
- '<a href="#" id="icon-star" title="Watch this article">\u2606</a>'+
- '<a href="#" id="icon-talk" title="Discuss / suggest edits">\u270E</a></div>';
+ '<a href="#" id="icon-dict" title="Look up in the IWB Dictionary" aria-label="Look up in the IWB Dictionary" style="font-size:1em" >\uD83D\uDCD6 Dictionary</a>'+
+ '<a href="#" id="icon-dl" title="Download article (.txt)" aria-label="Download article (.txt)">\u2B07</a>'+
+ '<a href="#" id="icon-star" title="Watch this article" aria-label="Watch this article">\u2606</a>'+
+ '<a href="#" id="icon-talk" title="Discuss / suggest edits" aria-label="Discuss / suggest edits">\u270E</a></div>';
 }
 function hatnoteHTML(inner){return '<div class="hatnote">'+inner+'</div>'}
 function dictWordFor(title){var m=String(title||"").toLowerCase().match(/[a-z]{3,}/);return m?m[0]:""}
@@ -1025,8 +1059,10 @@ async function openPage(p){
  try{
   if(par.kind==="spec"){var row=findSpec(par.id);if(!row)return notFound(p);var d=await fullSpec(row);if(!d)return notFound(p);return specArticle(d,tab)}
   if(par.kind==="pat"){var pr=findPat(par.id);if(!pr)return notFound(p);var rec=await fullPat(pr);return patArticle(par.id,rec,tab)}
-  if(par.kind==="word"){var de=await wordEntry(par.id);if(!de)return notFound(p);return wordArticle(de,tab)}
-  var sd=findSubject(par.id);if(!sd)return notFound(p);return subArticle(sd,tab);
+  if(par.kind==="word"){var wkey=par.slug?null:String(par.id||"").toLowerCase();
+   try{await dictIdx();if(par.slug)wkey=wordKeyBySlug(par.slug)}catch(e){wkey=null}
+   var de=wkey?await wordEntry(wkey):null;if(!de)return notFound(p);return wordArticle(de,tab)}
+  var sd=par.slug?subjBySlug(par.slug):findSubject(par.id);if(!sd)return notFound(p);return subArticle(sd,tab);
  }catch(e){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Couldn\'t load</h1><p style="font-family:Arial">The article data didn\'t load ('+esc(e.message)+'). Check your connection and retry.</p>')}
 }
 /* random article: seeded + reproducible. ?random=1&seed=NNN always picks the same article. */
