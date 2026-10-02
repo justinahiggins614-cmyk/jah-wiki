@@ -1,5 +1,5 @@
 // code/qa/link-check.js — full link audit for JAH Wiki.
-// 1) Static: THE JAH NETWORK bar has the 12 canonical links in canonical order.
+// 1) Static: THE JAH NETWORK bar has the 17 canonical links in canonical order.
 // 2) Live: every external URL referenced by index.html / sitemap.xml / robots.txt /
 //    api.json is fetched (HEAD, GET fallback) and must return 2xx/3xx.
 // Usage: node code/qa/link-check.js [--static-only]
@@ -27,21 +27,26 @@ const CANON = [
   ["https://justinahiggins614-cmyk.github.io/signature-cyber-mega-mall/", "Signature Cyber Mega-Mall"],
   ["https://justinahiggins614-cmyk.github.io/signature-university/", "Signature University"],
   ["https://justinahiggins614-cmyk.github.io/signature-books/", "The Signature Book Depository"],
+  ["https://justinahiggins614-cmyk.github.io/signature-comics/", "The Signature Comic Store"],
+  ["https://justinahiggins614-cmyk.github.io/signature-newspapers/", "The Signature Global Newspaper Archive"],
+  ["https://justinahiggins614-cmyk.github.io/signature-3d-print/", "The Signature 3D Print Depository"],
+  ["https://justinahiggins614-cmyk.github.io/signature-backend/", "Signature Backend"],
+  ["https://justinahiggins614-cmyk.github.io/signature-boundless-generators/", "The Signature Boundless Generator Archive"],
 ];
 console.log("[nav] THE JAH NETWORK bar");
 const navDiv = (INDEX_HTML.match(/<div class="jahnet">[\s\S]*?<\/div>/) || [""])[0];
 if (!navDiv) { fail("jahnet nav div not found"); }
 else {
   const links = [...navDiv.matchAll(/<a href="([^"]+)">([^<]*)<\/a>/g)].map((m) => [m[1], m[2]]);
-  if (links.length !== 12) fail("nav has " + links.length + " links, expected 12");
+  if (links.length !== 17) fail("nav has " + links.length + " links, expected 17");
   CANON.forEach(([href, label], i) => {
     const got = links[i];
     if (!got) { fail("nav position " + (i + 1) + " missing"); return; }
     if (got[0] !== href || got[1] !== label)
       fail("nav position " + (i + 1) + ": got [" + got[1] + "](" + got[0] + "), want [" + label + "](" + href + ")");
   });
-  if (links.length === 12 && CANON.every(([h, l], i) => links[i][0] === h && links[i][1] === l))
-    ok("12 links in canonical order with canonical destinations");
+  if (links.length === 17 && CANON.every(([h, l], i) => links[i][0] === h && links[i][1] === l))
+    ok("17 links in canonical order with canonical destinations");
   if (!/YOU ARE HERE: JAH WIKI/.test(navDiv)) fail("YOU ARE HERE marker missing from nav");
   else ok("YOU ARE HERE: JAH WIKI marker present");
 }
