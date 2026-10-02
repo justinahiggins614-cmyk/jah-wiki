@@ -145,7 +145,7 @@ h2.sec .sectog{font-size:.7em;color:#5b6472;margin-right:8px}
 <section class="wrap" id="methodology" aria-label="Data and methodology" style="padding-top:0">
 <h2 class="sec">Data &amp; methodology</h2>
 <ul class="pgln">
-<li><b>What this wiki mirrors.</b> JAH Wiki holds no dataset of its own. Spec-derived articles read the Signature Spec Catalog's live shard indexes; patent-derived articles read the Patent Catalog's live index; subject articles read the JAH-N Wiki's subject files; word articles resolve live from the IWB Dictionary index. If an underlying index file fails to load, the page says so plainly and the count is marked incomplete.</li>
+<li><b>What this wiki mirrors.</b> JAH Wiki holds no dataset of its own. Spec-derived articles read the Signature Spec Catalog's live compact search index (one small row per spec — id, title, category — rebuilt from the shard indexes after every catalog update; full records load only when you open an article); patent-derived articles read the Patent Catalog's live index; subject articles read the JAH-N Wiki's subject files; word articles resolve live from the IWB Dictionary index. If an underlying index file fails to load, the page says so plainly and the count is marked incomplete.</li>
 <li><b>Article IDs.</b> Every article carries a permanent ID — <code>JAH-WIKI-SPEC-######</code> (spec-derived), <code>JAH-WIKI-PAT-&lt;pub-no&gt;</code> (patent-derived), <code>JAH-WIKI-W-&lt;word&gt;</code> (word articles), <code>JAH-WIKI-SUB-&lt;slug&gt;</code> (subject articles) — derived deterministically from the record's own permanent key (spec number, patent publication number, dictionary word, subject slug). The ID is stable across rebuilds and unique at any scale, and it resolves as <code>?page=&lt;ID&gt;</code>, the article's canonical URL.</li>
 <li><b>Source classification.</b> Spec-derived articles are JAH original designs. Patent-derived articles are public patent records — the invention belongs to its listed owner. Subject articles blend verified public-record material with the system's simulation layer; each block is marked. Word articles pair original IWB Dictionary definitions with computed JAH data.</li>
 <li><b>Draft vs granted — read carefully.</b> Spec-derived articles are <b>draft specifications, ready to review and file — NOT granted patents</b>. Only patent-derived articles describe issued or granted patents, and only where the public record says so. A machine asked "is this an issued patent?" must answer NO for any spec-derived or subject article.</li>
@@ -329,26 +329,31 @@ var LEAK_SITE="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks";
 var WIKI_HOME="https://justinahiggins614-cmyk.github.io/jah-wiki/";
 var PHONE_SITE="https://justinahiggins614-cmyk.github.io/jah-ai-models";
 var PC_SITE="https://justinahiggins614-cmyk.github.io/jah-computer-systems";
-var DB={specIdx:[],patIdx:[],subjects:[],shards:[],ready:false};
+var DB={specIdx:[],patIdx:[],subjects:[],shards:[],sigline:[],ready:false};
 function shardBase(s){var b=(s&&s.base)||"";return b?b.replace(/\/?$/,""):SPEC_SITE}
 async function loadDB(){
  if(DB.ready)return DB;
  var jobs=[];
- jobs.push(fetch(SPEC_SITE+"/data/index/shards.json").then(function(r){noteMod(SPEC_SITE+"/data/index/shards.json",r);return r.json()}).then(async function(j){
-   var sh=Array.isArray(j)?j:((j&&j.shards)||[]);
-   DB.shards=sh;
-   for(var k=0;k<sh.length;k++){var s=sh[k];try{
-     var base=shardBase(s);
-     var txt=await fetchGz(base+"/"+s.index);var rows=txt.trim().split("\n").map(function(l){return JSON.parse(l)});
-     rows.forEach(function(r){r.push(base)});DB.specIdx=DB.specIdx.concat(rows);
-   }catch(e){DB.shardErrors=(DB.shardErrors||0)+1}}
+ jobs.push(fetch(SPEC_SITE+"/data/index/shards.json").then(function(r){noteMod(SPEC_SITE+"/data/index/shards.json",r);return r.json()}).then(function(j){
+   DB.shards=Array.isArray(j)?j:((j&&j.shards)||[]);
  }).catch(function(){DB.shardErrors=(DB.shardErrors||0)+1}));
+ /* Compact search index: one row per spec as [spec_id, title, chunk, shard_n,
+    category] — ~12MB instead of the ~31MB full per-shard indexes, so search
+    works on phones. Full records load on demand per opened article. */
+ jobs.push(fetchGz(SPEC_SITE+"/data/index/specs.search.json.gz").then(function(t){
+   DB.specIdx=t.trim().split("\n").map(function(l){return JSON.parse(l)});
+ }).catch(function(){DB.shardErrors=(DB.shardErrors||0)+1}));
+ /* Signature-line lookup table: [pub, spec_id, title] — lets patent articles
+    link the Signature-line version without scanning the full index. */
+ jobs.push(fetchGz(SPEC_SITE+"/data/index/specs.sigline.json.gz").then(function(t){
+   DB.sigline=JSON.parse(t);
+ }).catch(function(){DB.sigline=[]}));
  jobs.push(fetchGz(PAT_SITE+"/data/patents.idx.json.gz").then(function(t){DB.patIdx=JSON.parse(t)}).catch(function(){DB.patErrors=(DB.patErrors||0)+1}));
  jobs.push(fetch(LEAK_SITE+"/data/bizarre.json").then(function(r){noteMod(LEAK_SITE+"/data/bizarre.json",r);return r.json()}).then(function(j){DB.subjects=j}).catch(function(){}));
  await Promise.all(jobs);DB.ready=true;return DB;
 }
 function findSpec(id){id=String(id).toUpperCase();for(var i=0;i<DB.specIdx.length;i++)if(String(DB.specIdx[i][0]).toUpperCase()===id)return DB.specIdx[i];return null}
-async function fullSpec(row){var url=row[21]+"/data/"+row[20];var txt=await fetchGz(url);var lines=txt.trim().split("\n");
+async function fullSpec(row){var base=shardBase(DB.shards[row[3]]);var url=base+"/data/"+row[2];var txt=await fetchGz(url);var lines=txt.trim().split("\n");
  for(var i=0;i<lines.length;i++){try{var d=JSON.parse(lines[i]);if(d.spec_id===row[0]){var kp=d.key_parameters;if(kp&&!Array.isArray(kp)){var pa=[];for(var k in kp)if(Object.prototype.hasOwnProperty.call(kp,k))pa.push({name:k,value:String(kp[k]),unit:""});d.key_parameters=pa}return d}}catch(e){}}return null}
 function findPat(pub){pub=String(pub).toUpperCase();for(var i=0;i<DB.patIdx.length;i++)if(String(DB.patIdx[i][0]).toUpperCase()===pub)return DB.patIdx[i];return null}
 async function fullPat(row){var off=row[4],len=row[5];var r=await fetch(PAT_SITE+"/data/patents.jsonl",{headers:{Range:"bytes="+off+"-"+(off+len+4)}});
@@ -432,7 +437,7 @@ async function doSearch(q){q=q.trim();if(!q)return nav(homeHTML());
  if(exr)h+='<h2 class="sec">Exact article</h2><ul class="pgln"><li><a href="?page='+exr[0]+'"><b>'+esc(exr[1])+'</b></a> <span style="color:#888">'+esc(exr[0])+'</span> — draft specification</li></ul>';
  else if(exp)h+='<h2 class="sec">Exact article</h2><ul class="pgln"><li><a href="?page=PAT:'+encodeURIComponent(exp[0])+'"><b>'+esc(String(exp[1]).replace(/&hellip;/g,"..."))+'</b></a> <span style="color:#888">'+esc(exp[0])+'</span> — public patent record</li></ul>';
  h+=dictTop;
- h+=sec("Spec articles",rs,function(r){return '<li><a href="?page='+r[0]+'">'+esc(r[1])+'</a> <span style="color:#888">'+esc(r[0])+'</span>'+snip(firstPara(r[2]||"",160))+'</li>'});
+ h+=sec("Spec articles",rs,function(r){return '<li><a href="?page='+r[0]+'">'+esc(r[1])+'</a> <span style="color:#888">'+esc(r[0])+'</span>'+(r[4]?'<br><span style="color:#5b6472;font-size:.85em">'+esc(r[4])+'</span>':"")+'</li>'});
  h+=sec("Patent articles",rp,function(p){return '<li><a href="?page=PAT:'+encodeURIComponent(p[0])+'">'+esc(String(p[1]).replace(/&hellip;/g,"..."))+'</a> <span style="color:#888">'+esc(p[0])+'</span>'+snip(firstPara(((p[3]?p[3]+" \u2014 ":"")+"public patent record "+p[0]),160))+'</li>'});
  h+=sec("Subject files",rb,function(d){return '<li><a href="?page='+subjSlug(d)+'">'+esc(d.subject)+'</a>'+snip(firstPara(d.overview||d.summary||"",160))+'</li>'});
  var hasOther=rs.length||rp.length||rb.length;
@@ -791,7 +796,7 @@ function specArticle(d,tab){
   patentNote:"Draft patent specification "+d.spec_id+" — "+(pd.claims||[]).length+" claims. "+(pd.filing_note||""),
   seealso:[LEAK_SITE+"/?dossier="+encodeURIComponent(d.spec_id)+" (JAH-N Wiki dossier)"]});
  var lz=buildLenses(L);L.hybrid=lz.hybrid;L.verdict=lz.verdict;
- var rel=[];for(var i=0;i<DB.specIdx.length&&rel.length<4;i++){var r=DB.specIdx[i];if(r[3]===d.category&&r[0]!==d.spec_id)rel.push(r)}
+ var rel=[];for(var i=0;i<DB.specIdx.length&&rel.length<4;i++){var r=DB.specIdx[i];if(r[4]===d.category&&r[0]!==d.spec_id)rel.push(r)}
  var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=SPEC">Spec articles</a> &rsaquo; '+esc(d.spec_id)+'</div>';
  if(tab==="talk")return talkArticle(L,d.spec_id,h,"spec");
  var WM=wikiMeta("spec",L,{rec:d,page_param:d.spec_id,source_list:"Spec Catalog master record "+d.spec_id});window.__wikiMeta=WM;
@@ -843,7 +848,7 @@ function patArticle(pub,rec,tab){
   patentNote:"This article IS the public patent record "+pub+" ("+(rec.grant_date?"granted "+rec.grant_date:"published "+(rec.publication_date||""))+").",
   raw:rec,seealso:[PAT_SITE+"/ (Patent Catalog)"]});
  var lz=buildLenses(L);L.hybrid=lz.hybrid;L.verdict=lz.verdict;
- var sig=null;for(var i=0;i<DB.specIdx.length;i++){var ln=DB.specIdx[i][13]||"";if(pub&&ln.indexOf(pub)>=0){sig=DB.specIdx[i];break}}
+ var sig=null;if(pub&&DB.sigline){for(var i=0;i<DB.sigline.length;i++){var se=DB.sigline[i];if(se[0]===pub||se[0].indexOf(pub)===0){sig=[se[1],se[2]];break}}}
  var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=PAT">Patent articles</a> &rsaquo; '+esc(pub)+'</div>';
  if(tab==="talk")return talkArticle(L,"PAT:"+pub,h,"pat");
  var WMp=wikiMeta("pat",L,{rec:{pub:pub,publication_date:rec.publication_date,grant_date:rec.grant_date,priority_date:rec.priority_date},sig:(sig?sig[0]:null),page_param:"PAT:"+pub,source_list:"Catalog of Public Patents record "+pub});window.__wikiMeta=WMp;
@@ -967,7 +972,7 @@ async function wordArticle(de,tab){
  h+=sec("jahdata","JAH data","<p>Everything the JAH system holds for the word <b>"+esc(w)+"</b> \u2014 the eleven analysis lenses computed live from the word's own data, cross-references across the Spec Catalog and Patent Catalog, the word patent, and a working program.</p>");
  h+=lz.html;
  h+=sec("xrefs","Cross-references",
-  (relS.length?'<h3 class="lens">Spec articles mentioning \u201C'+esc(w)+'\u201D</h3><ul class="pgln">'+relS.map(function(r){return '<li><a href="?page='+r[0]+'">'+esc(r[1])+'</a> <span style="color:#888">'+esc(r[0])+'</span><br><span style="color:#5b6472;font-size:.85em">'+esc(firstPara(r[2]||"",160))+'</span></li>'}).join("")+'</ul>':"<p>No spec article titles mention this word.</p>")+
+  (relS.length?'<h3 class="lens">Spec articles mentioning \u201C'+esc(w)+'\u201D</h3><ul class="pgln">'+relS.map(function(r){return '<li><a href="?page='+r[0]+'">'+esc(r[1])+'</a> <span style="color:#888">'+esc(r[0])+'</span>'+(r[4]?'<br><span style="color:#5b6472;font-size:.85em">'+esc(r[4])+'</span>':"")+'</li>'}).join("")+'</ul>':"<p>No spec article titles mention this word.</p>")+
   (relP.length?'<h3 class="lens">Patent articles mentioning \u201C'+esc(w)+'\u201D</h3><ul class="pgln">'+relP.map(function(p){return '<li><a href="?page=PAT:'+encodeURIComponent(p[0])+'">'+esc(String(p[1]).replace(/&hellip;/g,"..."))+'</a> <span style="color:#888">'+esc(p[0])+'</span><br><span style="color:#5b6472;font-size:.85em">'+esc(firstPara(((p[3]?p[3]+" \u2014 ":"")+"public patent record "+p[0]),160))+'</span></li>'}).join("")+'</ul>':"<p>No patent article titles mention this word.</p>")+
   '<h3 class="lens">Word patent &amp; dictionary</h3><ul class="pgln"><li><a href="'+SPEC_SITE+'/specs.html?word='+encodeURIComponent(w)+'" target="_blank" rel="noopener">Word patent for \u201C'+esc(w)+'\u201D \u2014 full draft + working program (Spec Catalog)</a></li><li><a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">Full IWB Dictionary entry for \u201C'+esc(w)+'\u201D</a></li></ul>');
  h+='<h2 class="sec" id="program">Program</h2><p>A working demo program for the word <b>'+esc(w)+'</b> \u2014 download it, run it on any PC or phone with Python 3, or run the in-browser demo below.</p>'+
@@ -1049,7 +1054,7 @@ function specRelations(words,excludeId,category){
  var same=[],kw=[];
  for(var i=0;i<DB.specIdx.length;i++){var r=DB.specIdx[i],id=r[0];if(id===excludeId)continue;
   var sc=titleHits(r[1],words);
-  if(r[3]===category)same.push({r:r,sc:sc});else if(sc>0)kw.push({r:r,sc:sc});}
+  if(r[4]===category)same.push({r:r,sc:sc});else if(sc>0)kw.push({r:r,sc:sc});}
  same.sort(function(a,b){return b.sc-a.sc});kw.sort(function(a,b){return b.sc-a.sc});
  return {catCount:same.length+1,same:same.slice(0,4).map(function(x){return x.r}),kw:kw.slice(0,3).map(function(x){return x.r})};
 }
