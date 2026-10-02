@@ -176,6 +176,7 @@ h2.sec .sectog{font-size:.7em;color:#5b6472;margin-right:8px}
 Spec articles describe draft specifications by Justin Addam Higgins (JAH) — ready to review and file, not granted patents.
 Patent articles describe public patent records. Subject files blend verified public-record material with the system's simulation layer, marked where it appears.
 </div></footer>
+<script src="js/jah-talk-fallback.js"></script>
 <script>
 "use strict";
 /* ================= utils ================= */
@@ -755,11 +756,31 @@ function runDemo(L){
  return lines.join("\n");
 }
 /* ================= AI persona ================= */
+/* JAHtalk shared voice (Manon's order 2026-10-02: every AI talks like a human, explains its duties;
+   no AI anywhere incoherent). This persona is a SITE HELPER — it carries NO canon JAH-AI ID. */
+function jahProfile(L){
+ return {
+  name:"Personal AI of "+(L.title||"this article"),
+  id:"",
+  description:"I am the personal AI for the article \""+(L.title||"this article")+"\" — "+(L.blurb||"I answer questions about this article, in plain human words."),
+  abilities:["answer questions about this article","explain what it is, how it works, and its history","explain the article's numbers in plain words","point to the right section for programs, patents, and lenses"],
+  domain:"the article's own subject",
+  kind:"helper"
+ };
+}
+function jahHtml(text){return esc(String(text)).replace(/\n/g,"<br>")}
+function jahFinal(raw,profile){
+ /* JAHtalk.guard on every final reply; keep the site's own HTML when the guard passes it unchanged */
+ if(!window.JAHtalk)return raw;
+ var repaired=JAHtalk.guard(raw,profile);
+ if(repaired===raw)return raw;
+ return jahHtml(repaired);
+}
 function personaHTML(L){
  var pid="chat-"+hashStr(L.id).toString(36);
  return '<div class="persona"><b>'+esc(L.title)+'</b> — personal AI persona. Ask it anything about this article; it answers as the item itself.</div>'+
  '<div class="sub" style="margin:-8px 0 12px"><span class="prov">AI assistant</span><span style="color:#5b6472;font-size:.85em">Answers only from this article\u2019s text.</span></div>'+
- '<div class="chat"><div class="chatlog" id="'+pid+'-log"><div class="msg a"><div class="b">I am '+esc(L.title)+'. Ask me what I am, how I work, my history, my numbers — anything on this page.</div></div></div>'+
+ '<div class="chat"><div class="chatlog" id="'+pid+'-log"><div class="msg a"><div class="b">'+(window.JAHtalk?jahHtml(JAHtalk.greet(jahProfile(L))):("I am "+esc(L.title)+". Ask me what I am, how I work, my history, my numbers — anything on this page."))+'</div></div></div>'+
  '<div class="chatin"><input id="'+pid+'-in" placeholder="Ask '+esc(L.title.slice(0,40))+'..." aria-label="Ask the persona"><button id="'+pid+'-go">Ask</button></div></div>'+
  '<script type="text/plain" id="'+pid+'-L" style="display:none">'+esc(JSON.stringify(L))+'</'+'script>';
 }
@@ -770,12 +791,14 @@ function wirePersona(L){
  function ask(){var q=inp.value.trim();if(!q)return;inp.value="";
   log.innerHTML+='<div class="msg u"><div class="b">'+esc(q)+'</div></div>';
   var a=personaReply(L,q);
+  a=jahFinal(a,jahProfile(L));
   log.innerHTML+='<div class="msg a"><div class="b">'+a+'</div></div>';log.scrollTop=log.scrollHeight}
  go.onclick=ask;inp.onkeydown=function(e){if(e.key==="Enter")ask()};
 }
 function personaReply(L,q){
  var t=q.toLowerCase(),intro="As "+esc(L.title)+", ";
  function has(){for(var i=0;i<arguments.length;i++)if(t.indexOf(arguments[i])>=0)return true;return false}
+ if(window.JAHtalk&&has("your duties","what do you do","what can you do","your job","your role","your abilities","explain your duties"))return jahHtml(JAHtalk.reply(jahProfile(L),q));
  if(has("what are you","who are you","define","definition","what is"))return intro+"in short: "+esc(L.blurb||"everything this article describes.").slice(0,420);
  if(has("history","origin","when","invent","discover"))return intro+"my history: "+esc(L.history||"recorded in this article's History section.").slice(0,420);
  if(has("how","work","mechanism","function")){var s=(L.steps||[]).slice(0,3).map(function(x,i){return (i+1)+". "+x}).join(" ");return intro+"how I work: "+esc(s||L.how||"see the How-it-works section.").slice(0,480)}
@@ -784,11 +807,13 @@ function personaReply(L,q){
  if(has("program","code","demo","download","app"))return intro+"you can download my working program from the Program section — a Python demo you can run on PC or phone, plus an in-browser run right here.";
  if(has("lens","determin","probab","geometr","swarm","hybrid","neural"))return intro+"my eleven analysis lenses are computed live from this article's data — deterministic rules, probabilities, geometry, swarm consensus, and the hybrid fusion. Read the Analysis lenses section, or ask about one by name.";
  if(has("leak","classified","dossier","secret"))return intro+"my classified partner file lives on JAH-N Wiki — follow the partner link in See also.";
+ if(window.JAHtalk&&(/\b(hi|hii+|hello|hey|yo|howdy|greetings|sup|thanks|thank you|bye|goodbye|good night)\b/.test(t)||has("how are you","how is it going")))return jahHtml(JAHtalk.reply(jahProfile(L),q));
  if(has("hello","hi","hey"))return intro+"hello. Ask me anything on this page — what I am, how I work, my numbers.";
  if(has("thank"))return "You're welcome — "+esc(L.title)+" at your service.";
  var keys=t.split(/\s+/).filter(function(w){return w.length>4});
  var blob=((L.blurb||"")+" "+(L.how||"")+" "+(L.history||"")).toLowerCase();
  for(var i=0;i<keys.length;i++){var ix=blob.indexOf(keys[i]);if(ix>=0)return intro+"on \""+esc(keys[i])+"\": ..."+esc(blob.slice(Math.max(0,ix-60),ix+180)).slice(0,400)+"..."}
+ if(window.JAHtalk)return jahHtml(JAHtalk.reply(jahProfile(L),q));
  return intro+"I answer from this article — try asking what I am, how I work, my history, or my numbers.";
 }
 /* ================= toolbar / article text ================= */
