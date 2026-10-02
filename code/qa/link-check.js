@@ -1,5 +1,5 @@
 // code/qa/link-check.js — full link audit for JAH Wiki.
-// 1) Static: THE JAH NETWORK bar has the 9 canonical links in canonical order.
+// 1) Static: THE JAH NETWORK bar has the 12 canonical links in canonical order.
 // 2) Live: every external URL referenced by index.html / sitemap.xml / robots.txt /
 //    api.json is fetched (HEAD, GET fallback) and must return 2xx/3xx.
 // Usage: node code/qa/link-check.js [--static-only]
@@ -24,21 +24,24 @@ const CANON = [
   ["https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html", "Signature Spec Catalog Pending Patents"],
   ["https://justinahiggins614-cmyk.github.io/signature-llama/", "Signature Llama"],
   ["https://justinahiggins614-cmyk.github.io/jah-computer-systems/", "The Signature PC System Depository"],
+  ["https://justinahiggins614-cmyk.github.io/signature-cyber-mega-mall/", "Signature Cyber Mega-Mall"],
+  ["https://justinahiggins614-cmyk.github.io/signature-university/", "Signature University"],
+  ["https://justinahiggins614-cmyk.github.io/signature-books/", "The Signature Book Depository"],
 ];
 console.log("[nav] THE JAH NETWORK bar");
 const navDiv = (INDEX_HTML.match(/<div class="jahnet">[\s\S]*?<\/div>/) || [""])[0];
 if (!navDiv) { fail("jahnet nav div not found"); }
 else {
   const links = [...navDiv.matchAll(/<a href="([^"]+)">([^<]*)<\/a>/g)].map((m) => [m[1], m[2]]);
-  if (links.length !== 9) fail("nav has " + links.length + " links, expected 9");
+  if (links.length !== 12) fail("nav has " + links.length + " links, expected 12");
   CANON.forEach(([href, label], i) => {
     const got = links[i];
     if (!got) { fail("nav position " + (i + 1) + " missing"); return; }
     if (got[0] !== href || got[1] !== label)
       fail("nav position " + (i + 1) + ": got [" + got[1] + "](" + got[0] + "), want [" + label + "](" + href + ")");
   });
-  if (links.length === 9 && CANON.every(([h, l], i) => links[i][0] === h && links[i][1] === l))
-    ok("9 links in canonical order with canonical destinations");
+  if (links.length === 12 && CANON.every(([h, l], i) => links[i][0] === h && links[i][1] === l))
+    ok("12 links in canonical order with canonical destinations");
   if (!/YOU ARE HERE: JAH WIKI/.test(navDiv)) fail("YOU ARE HERE marker missing from nav");
   else ok("YOU ARE HERE: JAH WIKI marker present");
 }
