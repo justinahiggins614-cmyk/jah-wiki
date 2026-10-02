@@ -4,8 +4,8 @@
   "creator": "Justin Addam Higgins (JAH)",
   "description": "Wikipedia-style encyclopedia over all of Manon's data: every spec, patent, subject file, and dictionary word as an article with definition, analysis lenses, patent draft, working program, and AI persona.",
   "for_bots": "Machine-readable manifest. Humans use the site above; bots, scrapers, and AI assistants should use the endpoints below \u2014 plain JSON/JSONL over HTTPS, no JavaScript needed.",
-  "records_approx": 463493,
-  "records_breakdown_2026_10_01": {"spec_articles": 426870, "patent_articles": 36503, "subject_files": 120},
+  "records_approx": 475897,
+  "records_breakdown_2026_10_01": {"spec_articles": 438346, "patent_articles": 37431, "subject_files": 120},
   "records_as_of": "2026-10-01",
   "note": "Counts grow on automated schedules; re-read this file for the latest shape of the data. Count = spec + patent + subject articles live-indexed by the site's home page. Dictionary word articles resolve live from the IWB Dictionary index and are not enumerated here.",
   "endpoints": [

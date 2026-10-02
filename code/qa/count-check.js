@@ -34,6 +34,21 @@ else {
   else fail("breakdown sums to " + sum + " but records_approx is " + api.records_approx);
 }
 
+console.log("[static] crawlable fallback count in raw HTML");
+const fb = INDEX_HTML.match(/<strong>([\d,]+) articles indexed<\/strong>, as of (\d{4}-\d{2}-\d{2})/);
+if (!fb) fail("static 'N articles indexed, as of YYYY-MM-DD' fallback not found in raw HTML");
+else {
+  const fbCount = parseInt(fb[1].replace(/,/g, ""), 10);
+  ok("static fallback count present: " + fbCount.toLocaleString() + " (as of " + fb[2] + ")");
+  if (fbCount === api.records_approx) ok("static fallback count matches api.json records_approx");
+  else fail("static fallback count " + fbCount + " != api.json records_approx " + api.records_approx + " — refresh together");
+  if (/What counts as an article/.test(INDEX_HTML)) ok("what-counts-as-an-article note present");
+  else fail("what-counts note missing from static fallback");
+  if (/id="methodology"/.test(INDEX_HTML)) ok("static Data & methodology section present in raw HTML");
+  else fail("Data & methodology section missing");
+  var fbN = fbCount; // used by the live comparison below
+}
+
 (async () => {
   if (STATIC_ONLY) { console.log("[live] skipped (--static-only)"); }
   else {
@@ -63,6 +78,10 @@ else {
         if (total >= snapTotal) ok("live total " + total.toLocaleString() + " >= snapshot " + snapTotal.toLocaleString() + " (grew " + (total - snapTotal).toLocaleString() + " since " + api.records_as_of + ")");
         else fail("live total " + total.toLocaleString() + " < snapshot " + snapTotal.toLocaleString() + " — DATA LOSS?");
         if (total > snapTotal * 1.5) fail("live total implausibly larger than snapshot — check for double counting");
+      }
+      if (typeof fbN === "number") {
+        if (total >= fbN) ok("live total " + total.toLocaleString() + " >= static fallback snapshot " + fbN.toLocaleString());
+        else fail("live total " + total.toLocaleString() + " < static fallback " + fbN.toLocaleString() + " — DATA LOSS?");
       }
       // persist for the other checkers / humans
       fs.writeFileSync(path.join(__dirname, "last-count.json"),

@@ -54,7 +54,7 @@ function addUrl(u) {
   else if (u.startsWith("/")) urls.add("https://justinahiggins614-cmyk.github.io" + u.split("#")[0]);
 }
 for (const m of INDEX_HTML.matchAll(/(?:href|src)="([^"]+)"/g)) addUrl(m[1]);
-for (const f of ["sitemap.xml", "robots.txt"]) {
+for (const f of ["sitemap.xml", "sitemap-pages.xml", "robots.txt"]) {
   const t = fs.readFileSync(path.join(ROOT, f), "utf8");
   for (const m of t.matchAll(/https?:\/\/[^\s"<]+/g)) addUrl(m[0]);
 }

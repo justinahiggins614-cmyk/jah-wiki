@@ -6,8 +6,9 @@ not a copy of the logic.
 
 | Checker | What it verifies |
 |---|---|
-| `link-check.js` | THE JAH NETWORK bar: 9 links, canonical order, canonical destinations, YOU ARE HERE marker. Then every external URL in `index.html` / `sitemap.xml` / `robots.txt` / `api.json` is fetched live (HEAD, GET fallback) and must return 2xx/3xx. |
-| `count-check.js` | Static: home page renders `(ns+np+nb)` live (no hardcoded total); `api.json` breakdown sums to `records_approx`. Live: recounts spec shards + patent index + bizarre subjects and asserts live total ≥ snapshot (data only grows). Writes `last-count.json`. |
+| `link-check.js` | THE JAH NETWORK bar: 9 links, canonical order, canonical destinations, YOU ARE HERE marker. Then every external URL in `index.html` / `sitemap.xml` / `sitemap-pages.xml` / `robots.txt` / `api.json` is fetched live (HEAD, GET fallback) and must return 2xx/3xx. |
+| `count-check.js` | Static: home page renders `(ns+np+nb)` live (no hardcoded total); `api.json` breakdown sums; the raw-HTML fallback "N articles indexed, as of YYYY-MM-DD" line exists with its what-counts note and matches `api.json` records_approx; methodology section present. Live: recounts spec shards + patent index + bizarre subjects and asserts live total ≥ snapshot and ≥ static fallback (data only grows). Writes `last-count.json`. |
+| `discoverability-check.js` | Static: robots.txt allows public crawling with no blocks and a Sitemap pointer; sitemap.xml is an index (own browse pages + spec/patent record-sitemap pointers, never per-article URLs); sitemap-pages.xml lists home + browse + A–Z partitions; static meta description, per-article canonical/meta helper, JSON-LD Article with stable IDs, skip link, labelled search. Live: every sitemap loc + key browse routes return 2xx, and curl of the raw HTML shows the static count line. |
 | `dupe-id-check.js` | Computes the shipped `wikiId()` for every live record (specs, patents, words, subjects): no duplicate article IDs within a namespace, and every article ID round-trips through the shipped `parsePage()`. |
 | `missing-id-check.js` | Unit vectors for `parsePage` (all `?page=` forms incl. `JAH-WIKI-*`), stub-data tests for the slug resolvers, and router coverage (`page`/`random`/`all`/`q`/`dict`). |
 

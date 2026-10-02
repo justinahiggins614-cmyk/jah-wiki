@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="JAH Wiki — the encyclopedia of the JAH system: every Signature spec, public patent record, and JAH-N subject file as a full article with definition, analysis lenses, patent draft, working program, and AI persona.">
 <title>JAH Wiki — The Encyclopedia of the JAH System</title>
 <style>
 :root{--ink:#1a1a2e;--paper:#fff;--accent:#0b3d91;--gold:#b8860b;--line:#d8dee9;--soft:#f6f8fc;--mut:#5b6472}
@@ -67,6 +68,9 @@ details.pat .pb{padding:10px 14px}
 .pgln{font-family:Arial,sans-serif;font-size:.88em}.pgln li{margin:5px 0}
 footer.site{background:#0a1f4d;color:#cdd9f2;padding:22px 18px;font-family:Arial,sans-serif;font-size:.85em;margin-top:30px}
 footer.site a{color:#e8d98a}
+.skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.skip:focus{left:8px;top:8px;width:auto;height:auto;background:#0b3d91;color:#fff;padding:10px 16px;z-index:100;border-radius:4px;font-family:Arial,sans-serif}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .partner{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:#141003;border:1px solid #5a4a15;border-radius:8px;padding:12px 16px;margin:14px 0;font-family:Arial,sans-serif}
 .partner a{color:#e8d98a;font-weight:bold}
 .note{font-size:.8em;color:var(--mut);font-family:Arial,sans-serif;border-top:1px solid var(--line);margin-top:24px;padding-top:10px}
@@ -105,19 +109,49 @@ h2.sec .sectog{font-size:.7em;color:#5b6472;margin-right:8px}
 <style>.jahnet{background:#101418;color:#9aa4b2;font-size:.76em;padding:6px 10px;text-align:center;line-height:2;letter-spacing:.02em}.jahnet-t{color:#e8c766;font-weight:700;letter-spacing:.25em;margin-right:10px}.jahnet-here{color:#e8c766;font-weight:700;margin-right:10px;white-space:nowrap;border:1px solid #e8c766;border-radius:3px;padding:1px 8px}.jahnet a{color:#9fc2ff;text-decoration:none;margin:0 7px;white-space:nowrap}.jahnet a:hover{text-decoration:underline}</style>
 </head>
 <body>
+<a class="skip" href="#app">Skip to content</a>
 <div class="jahnet"><span class="jahnet-t">THE JAH NETWORK</span><span class="jahnet-here" aria-current="page">YOU ARE HERE: JAH WIKI</span><a href="https://justinahiggins614-cmyk.github.io/jah-ai-models/">The Signature AI Telephone Book</a><a href="https://justinahiggins614-cmyk.github.io/jah-calculator/">Signature Universal Paradox Immune Calculator</a><a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/">The Signature Dictionary</a><a href="https://justinahiggins614-cmyk.github.io/jah-wiki/">JAH Wiki</a><a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/">JAH-N Wiki</a><a href="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/">Globally Rejustered Patent Catalog</a><a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html">Signature Spec Catalog Pending Patents</a><a href="https://justinahiggins614-cmyk.github.io/signature-llama/">Signature Llama</a><a href="https://justinahiggins614-cmyk.github.io/jah-computer-systems/">The Signature PC System Depository</a></div>
 <div class="topbar">
   <a href="?" style="text-decoration:none"><div class="brand">JAH WIKI<small>THE ENCYCLOPEDIA OF THE JAH SYSTEM</small></div></a>
-  <div class="navlinks">
+  <div class="navlinks" role="navigation" aria-label="Wiki sections">
     <a href="?">Home</a><a href="?all=SPEC">All pages</a><a href="#" id="randlink">Random article</a>
     <a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/" target="_blank" rel="noopener">The Signature Dictionary</a>
     <a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/" target="_blank" rel="noopener">JAH-N Wiki</a>
     <a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html" target="_blank" rel="noopener">Signature Spec Catalog Pending Patents</a>
     <a href="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/" target="_blank" rel="noopener">Globally Rejustered Patent Catalog</a>
   </div>
-  <div class="searchbox"><input id="q" placeholder="Search the encyclopedia..." aria-label="Search"><button id="qgo">Search</button></div>
+  <div class="searchbox" role="search"><label class="vh" for="q">Search the encyclopedia</label><input id="q" placeholder="Search the encyclopedia..." aria-label="Search"><button id="qgo">Search</button></div>
 </div>
-<div class="wrap"><div id="app"><p style="font-family:Arial">Loading the encyclopedia...</p></div></div>
+<div class="wrap"><div id="app">
+<!-- STATIC CRAWLABLE FALLBACK (no-JS / crawler view). The live app replaces this on load and
+     keeps the count live from the same catalog indexes. Snapshot refreshed 2026-10-01. -->
+<div class="crumb">Main page</div>
+<h1 class="at">Welcome to JAH Wiki</h1>
+<p class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</p>
+<p class="sub" style="color:#1a4d2e"><strong>475,897 articles indexed</strong>, as of 2026-10-01. What counts as an article: one record — a spec-derived article (a Signature draft specification), a patent-derived article (a public patent record), or a subject article (a JAH-N subject file). The number above is a snapshot; the live count refreshes from the catalog indexes every time this page loads.</p>
+<div class="stats">
+<div class="stat"><div class="n">438,346</div><div class="l">spec-derived articles</div></div>
+<div class="stat"><div class="n">37,431</div><div class="l">patent-derived articles</div></div>
+<div class="stat"><div class="n">120</div><div class="l">subject articles</div></div>
+</div>
+<h2 class="sec">Browse the encyclopedia</h2>
+<ul class="pgln">
+<li><a href="?all=SPEC">All spec-derived articles</a> — alphabetical, 200 per page</li>
+<li><a href="?all=PAT">All patent-derived articles</a> — alphabetical, 200 per page</li>
+<li><a href="?all=SUB">All subject articles</a> — browsable by category</li>
+<li><a href="?random=1">Random article</a> — one article, picked fresh on every visit</li>
+</ul>
+</div></div>
+<section class="wrap" id="methodology" aria-label="Data and methodology" style="padding-top:0">
+<h2 class="sec">Data &amp; methodology</h2>
+<ul class="pgln">
+<li><b>What this wiki mirrors.</b> JAH Wiki holds no dataset of its own. Spec-derived articles read the Signature Spec Catalog's live shard indexes; patent-derived articles read the Patent Catalog's live index; subject articles read the JAH-N Wiki's subject files; word articles resolve live from the IWB Dictionary index. If an underlying index file fails to load, the page says so plainly and the count is marked incomplete.</li>
+<li><b>Article IDs.</b> Every article carries a permanent ID — <code>JAH-WIKI-SPEC-######</code> (spec-derived), <code>JAH-WIKI-PAT-&lt;pub-no&gt;</code> (patent-derived), <code>JAH-WIKI-W-&lt;word&gt;</code> (word articles), <code>JAH-WIKI-SUB-&lt;slug&gt;</code> (subject articles) — derived deterministically from the record's own permanent key (spec number, patent publication number, dictionary word, subject slug). The ID is stable across rebuilds and unique at any scale, and it resolves as <code>?page=&lt;ID&gt;</code>, the article's canonical URL.</li>
+<li><b>Source classification.</b> Spec-derived articles are JAH original designs. Patent-derived articles are public patent records — the invention belongs to its listed owner. Subject articles blend verified public-record material with the system's simulation layer; each block is marked. Word articles pair original IWB Dictionary definitions with computed JAH data.</li>
+<li><b>Draft vs granted — read carefully.</b> Spec-derived articles are <b>draft specifications, ready to review and file — NOT granted patents</b>. Only patent-derived articles describe issued or granted patents, and only where the public record says so. A machine asked "is this an issued patent?" must answer NO for any spec-derived or subject article.</li>
+<li><b>How crawlers find articles (sitemap strategy).</b> The sitemap index (<a href="sitemap.xml">sitemap.xml</a>) lists (a) this wiki's own top-level and browse pages — home, the <code>?all=SPEC</code>, <code>?all=PAT</code>, <code>?all=SUB</code> listings with their A–Z partitions, and the random-article route — and (b) the Spec Catalog's and Patent Catalog's own record sitemaps, where the 460,000+ underlying record URLs live with the catalogs that own them and can keep them fresh. This wiki deliberately does not duplicate hundreds of thousands of record URLs in files it cannot refresh; every URL it lists returns 200. Every browse page above is a real link, so every article is reachable without search.</li>
+</ul>
+</section>
 <footer class="site"><div class="wrap" style="padding:0">
 <b style="color:#fff">JAH Wiki</b> — the encyclopedia of the JAH system. Partner site of
 <a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/">JAH-N Wiki</a>.
@@ -214,6 +248,18 @@ function jsonldHTML(meta){
   version:meta.version,dateModified:meta.updated||undefined,
   additionalProperty:[{name:"article_type",value:meta.classification.article_type},{name:"issued_patent",value:String(meta.issued_patent)},{name:"draft_spec",value:String(meta.draft_spec)},{name:"simulation_present",value:String(meta.simulation_present)}],
   citation:meta.source_list})+'<\/script>';
+}
+/* per-article head metadata: canonical link + descriptive meta, refreshed on every article view.
+   Canonical = the permanent ?page= article URL, matching the JSON-LD url field above. */
+function setArticleHead(meta,desc){
+ var cu=WIKI_HOME+"?page="+encodeURIComponent(meta.page_param||"");
+ var l=document.querySelector('link[rel="canonical"]');
+ if(!l){l=document.createElement("link");l.rel="canonical";document.head.appendChild(l)}
+ l.href=cu;
+ var m=document.querySelector('meta[name="description"]');
+ if(!m){m=document.createElement("meta");m.name="description";document.head.appendChild(m)}
+ if(desc)m.content=String(desc).replace(/\s+/g," ").trim().slice(0,300);
+ return cu;
 }
 function citeHTML(meta){
  var vs=getVersions(meta.article_id);
@@ -422,7 +468,16 @@ function allPages(){
  h+='<p style="font-family:Arial"><a href="?all=SPEC">Specs</a> &middot; <a href="?all=PAT">Patents</a> &middot; <a href="?all=SUB">Subjects</a></p>';
  if(kind==="SUB"){
   var ds=DB.subjects.slice().sort(function(a,b){return String(a.subject).localeCompare(String(b.subject))});
-  h+='<h2 class="sec">Subject files ('+ds.length+')</h2><ul class="pgln">'+ds.map(function(d){return '<li><a href="?page='+subjSlug(d)+'">'+esc(d.subject)+'</a> <span style="color:#888">'+esc(d.category||"")+'</span></li>'}).join("")+"</ul>";
+  /* category browse: real links so crawlers and readers can reach every subject without searching */
+  var cat=(qp("cat")||"").trim();
+  var cats={};ds.forEach(function(d){var c=String(d.category||"Uncategorized");cats[c]=(cats[c]||0)+1});
+  var catNames=Object.keys(cats).sort(function(a,b){return a.localeCompare(b)});
+  h+='<p style="font-family:Arial">Categories: <a href="?all=SUB">All ('+ds.length+')</a> &middot; '+catNames.map(function(c){
+   return '<a href="?all=SUB&cat='+encodeURIComponent(c)+'"'+(c===cat?' style="font-weight:bold;color:#0b3d91"':"")+'>'+esc(c)+' ('+cats[c]+')</a>'}).join(" &middot; ")+'</p>';
+  if(cat){ds=ds.filter(function(d){return String(d.category||"Uncategorized")===cat});
+   h+='<h2 class="sec">Subject files — '+esc(cat)+' ('+ds.length+')</h2>'}
+  else h+='<h2 class="sec">Subject files ('+ds.length+')</h2>';
+  h+='<ul class="pgln">'+ds.map(function(d){return '<li><a href="?page='+subjSlug(d)+'">'+esc(d.subject)+'</a> <span style="color:#888">'+esc(d.category||"")+'</span></li>'}).join("")+"</ul>";
   return nav(h);
  }
  var rows=(kind==="PAT"?DB.patIdx:DB.specIdx);
@@ -472,7 +527,7 @@ function buildLenses(L){
  var tools=[["Line paths","directed flow / signal route"],["Triangle hierarchies","3-part control structure"],["Square bounds","operating envelope"],["Cross braids","redundant interlinks"],["Arcs","curved transitions"],["Spirals","iterative refinement"]];
  var stm=L.toolmap||{};
  H+=lensHead(3,'Lens 3 — Geometric <span style="font-weight:normal;color:#5b6472">six-tool spatial mapping</span>')+'<div class="lt">The subject drawn as geometry</div>';
- H+='<svg viewBox="0 0 300 120" style="max-width:340px;width:100%;background:#fff;border:1px solid #d8dee9;border-radius:6px"><g font-family="Arial" font-size="9" text-anchor="middle" fill="#0b3d91">';
+ H+='<svg viewBox="0 0 300 120" aria-hidden="true" style="max-width:340px;width:100%;background:#fff;border:1px solid #d8dee9;border-radius:6px"><g font-family="Arial" font-size="9" text-anchor="middle" fill="#0b3d91">';
  var px=[30,90,150,210,262,150],py=[30,30,30,30,30,88];
  tools.forEach(function(t,i){H+='<circle cx="'+px[i]+'" cy="'+py[i]+'" r="22" fill="#eef3fc" stroke="#0b3d91"/><text x="'+px[i]+'" y="'+(py[i]+3)+'">'+t[0].split(" ")[0]+'</text>'});
  H+='</g></svg>';
@@ -772,7 +827,7 @@ function specArticle(d,tab){
  document.getElementById("copydemo").onclick=function(e){copyText(makeProgram(L),e.target)};
  wireIcons(d.spec_id);makeCollapsible();
  try{history.replaceState(null,"","?page="+encodeURIComponent(d.spec_id)+(tab==="talk"?"&tab=talk":""))}catch(e){}
- document.title=d.title+" — JAH Wiki";
+ document.title=d.title+" — JAH Wiki";setArticleHead(WM,firstPara(a,170));
 }
 
 /* ---- patent article ---- */
@@ -816,7 +871,7 @@ function patArticle(pub,rec,tab){
  document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
  wireIcons("PAT:"+pub);makeCollapsible();
  try{history.replaceState(null,"","?page="+encodeURIComponent("PAT:"+pub)+(tab==="talk"?"&tab=talk":""))}catch(e){}
- document.title=rec.title+" — JAH Wiki";
+ document.title=rec.title+" — JAH Wiki";setArticleHead(WMp,firstPara(L.blurb,170));
 }
 
 /* ---- subject article ---- */
@@ -863,7 +918,7 @@ function subArticle(d,tab){
  document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
  wireIcons(subjSlug(d));makeCollapsible();
  try{history.replaceState(null,"","?page="+encodeURIComponent(subjSlug(d))+(tab==="talk"?"&tab=talk":""))}catch(e){}
- document.title=d.subject+" — JAH Wiki";
+ document.title=d.subject+" — JAH Wiki";setArticleHead(WMs,firstPara(d.overview||"",170));
 }
 /* ---- word article: plain dictionary word -> full encyclopedia article ----
    Layer order (Manon's spec): 1) real-wiki top 2) JAH data 3) detailed definition+history
@@ -927,7 +982,7 @@ async function wordArticle(de,tab){
  document.getElementById("copydemo").onclick=function(e){copyText(makeProgram(L),e.target)};
  wireIcons(w);makeCollapsible();
  try{history.replaceState(null,"","?page="+encodeURIComponent(w)+(tab==="talk"?"&tab=talk":""))}catch(e){}
- document.title=w+" \u2014 JAH Wiki";
+ document.title=w+" \u2014 JAH Wiki";setArticleHead(WMw,firstPara(first,170));
 }
 function notFound(p){
  var r=getRetired()[String(p||"")];
@@ -1027,7 +1082,7 @@ function talkArticle(L,pageId,crumb,kind){
  h+=personaHTML(L);
  h+='<p class="note">Talk pages on JAH Wiki are conversations with the article&rsquo;s AI persona. Nothing here edits the generated article directly.</p>';
  nav(h);wirePersona(L);
- document.title="Talk:"+L.title+" — JAH Wiki";
+ document.title="Talk:"+L.title+" — JAH Wiki";if(window.__wikiMeta)setArticleHead(window.__wikiMeta,"Discussion notes on the JAH Wiki article: "+L.title);
 }
 function getWatch(){try{return JSON.parse(localStorage.getItem("jahwiki-watch")||"[]")}catch(e){return[]}}
 function toggleWatch(id){var w=getWatch(),i=w.indexOf(id);if(i>=0)w.splice(i,1);else w.push(id);try{localStorage.setItem("jahwiki-watch",JSON.stringify(w))}catch(e){}}

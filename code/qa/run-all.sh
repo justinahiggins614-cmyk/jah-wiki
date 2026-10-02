@@ -3,7 +3,7 @@
 set -u
 cd "$(dirname "$0")"
 fail=0
-for c in link-check count-check dupe-id-check missing-id-check; do
+for c in link-check count-check discoverability-check dupe-id-check missing-id-check; do
   echo "=== $c ==="
   node "$c.js" || fail=1
   echo
