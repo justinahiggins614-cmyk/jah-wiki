@@ -105,6 +105,24 @@ h2.sec .sectog{font-size:.7em;color:#5b6472;margin-right:8px}
 .loadstate .big{font-size:1.25em;font-weight:bold;color:#0b3d91;margin-bottom:10px}
 .loadstate button{padding:10px 22px;background:#0b3d91;color:#fff;border:none;border-radius:4px;font-weight:bold;cursor:pointer;margin-top:14px;font-size:1em}
 @media(max-width:700px){.ibox{float:none;margin:0 0 14px;width:100%}}
+
+/* Finder AI + article helper (additive) */
+.finderbar{background:#f6f8fd;border:1px solid #0b3d91;border-radius:8px;padding:12px 14px;margin:0 0 12px}
+.finder-kicker{color:#0b3d91;font-weight:bold;letter-spacing:1px;font-size:.85em;font-family:Arial,sans-serif}
+.finder-sub{font-family:Arial,sans-serif;font-size:.88em;color:#5b6472;margin:4px 0 8px}
+.finder-row{display:flex;gap:8px;flex-wrap:wrap}
+#finder-q{flex:1;min-width:170px;padding:8px 12px;border:1px solid #9db3d8;border-radius:4px;font-size:1em;font-family:Arial,sans-serif}
+#finder-go{padding:8px 18px;background:#0b3d91;color:#fff;border:none;border-radius:4px;font-weight:bold;cursor:pointer;font-family:Arial,sans-serif}
+.finder-card{background:#fff;border:1px solid #9db3d8;border-radius:6px;padding:10px 12px;margin:8px 0;font-family:Arial,sans-serif}
+.finder-card b{color:#0b3d91}
+.finder-card span{display:block;color:#5b6472;font-size:.85em;margin:2px 0 6px}
+.finder-card a{color:#0b3d91;font-weight:bold}
+.finder-none{font-family:Arial,sans-serif;color:#5b6472;font-size:.9em;margin:8px 0}
+.finder-help{background:#f6f8fd;border:1px solid #0b3d91;border-radius:8px;padding:12px 14px;margin:14px 0}
+.fh-k{color:#0b3d91;font-weight:bold;letter-spacing:1px;font-size:.82em;font-family:Arial,sans-serif;margin-bottom:8px}
+.fh-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.fh-row button{font-family:Arial,sans-serif;font-size:.85em;padding:7px 12px;border:1px solid #9db3d8;background:#fff;border-radius:4px;cursor:pointer;color:#0b3d91;font-weight:bold}
+.fh-a{font-family:Arial,sans-serif;font-size:.92em;background:#fff;border:1px solid #9db3d8;border-radius:6px;padding:10px 12px;min-height:1.4em}
 </style>
 <style>.jahnet{background:#101418;color:#9aa4b2;font-size:.76em;padding:6px 10px;text-align:center;line-height:2;letter-spacing:.02em}.jahnet-t{color:#e8c766;font-weight:700;letter-spacing:.25em;margin-right:10px}.jahnet-here{color:#e8c766;font-weight:700;margin-right:10px;white-space:nowrap;border:1px solid #e8c766;border-radius:3px;padding:1px 8px}.jahnet a{color:#9fc2ff;text-decoration:none;margin:0 7px;white-space:nowrap}.jahnet a:hover{text-decoration:underline}</style>
 </head>
@@ -388,7 +406,55 @@ function subjBySlug(slug){var t=("JAH-WIKI-SUB-"+slug).toLowerCase();
  for(var i=0;i<DB.subjects.length;i++){try{if(wikiId("sub",DB.subjects[i].subject).toLowerCase()===t)return DB.subjects[i]}catch(e){}}
  return null}
 /* ================= router / home / search / all pages ================= */
-function nav(html){document.getElementById("app").innerHTML=html;window.scrollTo(0,0)}
+/* ============ FINDER AI: describe it in plain words ============ */
+var FINDER_STOP={the:1,a:1,an:1,and:1,or:1,of:1,to:1,in:1,for:1,on:1,with:1,is:1,are:1,was:1,were:1,be:1,by:1,as:1,at:1,from:1,that:1,this:1,it:1,its:1,you:1,your:1,i:1,me:1,my:1,we:1,our:1,they:1,them:1,their:1,he:1,she:1,his:1,her:1,not:1,no:1,yes:1,do:1,does:1,did:1,can:1,could:1,will:1,would:1,should:1,what:1,which:1,who:1,whom:1,when:1,where:1,why:1,how:1,all:1,any:1,both:1,each:1,few:1,more:1,most:1,other:1,some:1,such:1,than:1,then:1,there:1,these:1,those:1,over:1,under:1,between:1,into:1,through:1,about:1,after:1,before:1,also:1,just:1,very:1,only:1,own:1,same:1,so:1,but:1,if:1,because:1,while:1,up:1,out:1,down:1,off:1,again:1,once:1,here:1,need:1,want:1,looking:1,find:1,get:1,show:1,give:1,tell:1,like:1,please:1};
+function finderKeywords(t){
+ return String(t==null?"":t).toLowerCase().replace(/[^a-z0-9\s]/g," ").split(/\s+/).filter(function(w){return w.length>=3&&!FINDER_STOP[w]});
+}
+function finderBarHTML(){
+ return '<div class="finderbar" id="finderbar"><div class="finder-kicker">THE FINDER \u2014 wiki assistance</div>'+
+ '<p class="finder-sub">Describe the article you want in plain words \u2014 the Finder reads every article title and brings you the five closest.</p>'+
+ '<div class="finder-row"><input type="text" id="finder-q" placeholder="Describe what you\u2019re looking for\u2026" aria-label="Describe the article you are looking for" autocomplete="off"><button type="button" id="finder-go">Find it</button></div>'+
+ '<div id="finder-res" aria-live="polite"></div></div>';
+}
+function wireFinder(){
+ var inp=document.getElementById("finder-q");if(!inp||inp._fwired)return;inp._fwired=1;
+ var btn=document.getElementById("finder-go"),res=document.getElementById("finder-res");
+ function run(){
+  var kw=finderKeywords(inp.value);
+  if(!kw.length){res.innerHTML='<p class="finder-none">Tell me a little more \u2014 a word or two about the article you want.</p>';return}
+  res.innerHTML='<p class="finder-none">Reading the index\u2026</p>';
+  var c=[],i,r,p,d,s,hay,j;
+  function sc(h){var n=0;for(j=0;j<kw.length;j++)if(h.indexOf(kw[j])>=0)n++;return n}
+  for(i=0;i<DB.specIdx.length;i++){r=DB.specIdx[i];hay=(String(r[1])+" "+String(r[0])+" "+String(r[4]||"")).toLowerCase();s=sc(hay);if(s>0)c.push({s:s,t:String(r[1]),sub:String(r[0])+" \u00b7 draft specification \u00b7 "+String(r[4]||""),href:"?page="+encodeURIComponent(String(r[0]))})}
+  for(i=0;i<DB.patIdx.length;i++){p=DB.patIdx[i];hay=(String(p[1])+" "+String(p[0])).toLowerCase();s=sc(hay);if(s>0)c.push({s:s,t:String(p[1]).replace(/&hellip;/g,"..."),sub:String(p[0])+" \u00b7 public patent record",href:"?page=PAT:"+encodeURIComponent(String(p[0]))})}
+  for(i=0;i<DB.subjects.length;i++){d=DB.subjects[i];hay=(String(d.subject||"")+" "+String(d.category||"")).toLowerCase();s=sc(hay);if(s>0)c.push({s:s,t:String(d.subject),sub:"subject file \u00b7 "+String(d.category||""),href:"?page="+subjSlug(d)})}
+  c.sort(function(a,b){return b.s-a.s||(a.t<b.t?-1:1)});
+  var top=c.slice(0,5);
+  if(!top.length){res.innerHTML='<p class="finder-none">No article matched \u2014 try fewer, simpler words.</p>';return}
+  res.innerHTML='<p class="finder-sub">Five closest articles:</p>'+top.map(function(x){
+   return '<div class="finder-card"><b>'+esc(x.t)+'</b><span>'+esc(x.sub)+'</span><a href="'+x.href+'">Take me there &rarr;</a></div>';
+  }).join("");
+ }
+ btn.onclick=run;
+ inp.addEventListener("keydown",function(e){if(e.key==="Enter")run()});
+}
+/* compact article helper: data-grounded answers, never invents */
+function wikiHelperHTML(qs){
+ window._wikiHelperA=qs.map(function(x){return x[1]});
+ return '<div class="finder-help"><div class="fh-k">ASK THIS ARTICLE \u2014 quick answers, straight from the record</div><div class="fh-row">'+
+  qs.map(function(x,i){return '<button type="button" data-wha="'+i+'">'+esc(x[0])+'</button>'}).join("")+
+  '</div><div class="fh-a" aria-live="polite">Tap a question above.</div></div>';
+}
+function wireHelper(){
+ var box=document.querySelector(".finder-help");if(!box||box._wired)return;box._wired=1;
+ box.addEventListener("click",function(ev){
+  var b=ev.target.closest?ev.target.closest("[data-wha]"):null;if(!b)return;
+  var a=box.querySelector(".fh-a"),t=(window._wikiHelperA||[])[+b.getAttribute("data-wha")];
+  if(a&&t!=null)a.textContent=t;
+ });
+}
+function nav(html){document.getElementById("app").innerHTML=html;window.scrollTo(0,0);wireFinder();wireHelper();}
 function homeHTML(){
  var ns=DB.specIdx.length,np=DB.patIdx.length,nb=DB.subjects.length;
  var feat=DB.subjects.length?DB.subjects[hashStr(String(Date.now()).slice(0,8))%DB.subjects.length]:null;
@@ -493,7 +559,7 @@ function allPages(){
  items.sort(function(a,b){return a.t.localeCompare(b.t)});
  var pages=Math.max(1,Math.ceil(items.length/per));if(pg<1)pg=1;if(pg>pages)pg=pages;
  var az="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(function(c){return '<a href="?all='+kind+'&L='+c+'"'+(c===letter?' style="background:#0b3d91;color:#fff"':"")+'>'+c+"</a>"}).join("");
- h+='<h2 class="sec">'+(kind==="PAT"?"Patent":"Spec")+' articles ('+items.length.toLocaleString()+')</h2><div class="az">'+az+' <a href="?all='+kind+'">all</a></div>';
+ h+=finderBarHTML()+'<h2 class="sec">'+(kind==="PAT"?"Patent":"Spec")+' articles ('+items.length.toLocaleString()+')</h2><div class="az">'+az+' <a href="?all='+kind+'">all</a></div>';
  var slice=items.slice((pg-1)*per,pg*per);
  h+='<ul class="pgln">'+slice.map(function(x){return '<li><a href="?page='+encodeURIComponent(x.id)+'">'+esc(x.t)+'</a></li>'}).join("")+"</ul>";
  h+='<p style="font-family:Arial">Page '+pg+' of '+pages.toLocaleString();
@@ -805,6 +871,11 @@ function specArticle(d,tab){
  h+=iconRowHTML();
  h+='<h1 class="at">'+esc(d.title)+'</h1>';
  h+=hatnoteHTML('This article is about the draft specification <b>'+esc(d.spec_id)+'</b>. For the classified dossier, see <a href="'+LEAK_SITE+'/?dossier='+encodeURIComponent(d.spec_id)+'" target="_blank" rel="noopener">JAH-N Wiki</a>.');
+h+=wikiHelperHTML([
+ ["What is this draft about?",firstPara(a,220)||"The record carries no abstract text."],
+ ["What is its record ID?","Record ID: "+d.spec_id+"."],
+ ["What category is it?","Category: "+(d.category||"not recorded")+"."],
+ ["Is this a granted patent?","No \u2014 status: "+(d.status||"Draft \u2014 ready to file")+". This is a draft specification by Justin Addam Higgins, not a granted patent."]]);
  h+=specLeadHTML(d);
  h+=sisterDictHTML(d.title);
  h+=overviewHTML(d.title,firstPara(a,170),firstPara(L.history,140),"Hybrid lens consensus "+lz.hybrid+"% — "+lz.verdict);
@@ -857,6 +928,10 @@ function patArticle(pub,rec,tab){
  h+=iconRowHTML();
  h+='<h1 class="at">'+esc(rec.title)+'</h1>';
  h+=hatnoteHTML('This article is about the public patent record <b>'+esc(pub)+'</b>. For JAH&rsquo;s original Signature-line version, if one exists, see <b>See also</b> below.');
+h+=wikiHelperHTML([
+ ["What is this record?","Public patent record "+pub+": "+rec.title+"."],
+ ["Is it granted?",rec.grant_date?("Granted "+rec.grant_date+"."):("The record shows publication "+(rec.publication_date||"date not recorded")+" and no grant date.")],
+ ["Who is behind it?",(rec.assignee||rec.inventor)?("Assignee: "+(rec.assignee||"not named")+". Inventor: "+(rec.inventor||"not named")+"."):"The record does not name an assignee or inventor."]]);
  h+=patLeadHTML(rec,pub);
  h+=sisterDictHTML(rec.title);
  h+=overviewHTML(rec.title,firstPara(L.blurb,170),firstPara(L.history,140),"Public patent record "+pub+(rec.grant_date?", granted "+rec.grant_date:""));
@@ -902,6 +977,10 @@ function subArticle(d,tab){
  h+=iconRowHTML();
  h+='<h1 class="at">'+esc(d.subject)+'</h1>';
  h+=hatnoteHTML('This article is about the subject file. For the full classified dossier, see <a href="'+LEAK_SITE+'/?dossier='+encodeURIComponent(d.id||d.subject)+'" target="_blank" rel="noopener">JAH-N Wiki</a>.');
+h+=wikiHelperHTML([
+ ["What is this file?",d.subject+" \u2014 "+(d.category||"subject file")+"."],
+ ["What does the evidence say?",firstPara(d.science_proof||d.overview||"",200)||"The file records no evidence summary."],
+ ["Is this proven fact?","The article files this under classification \u2018"+(d.classification||"not stated")+"\u2019 \u2014 read the Evidence and Sources sections for what is documented versus assessed."]]);
  h+=subjLeadHTML(d);
  h+=sisterDictHTML(d.subject);
  h+=overviewHTML(d.subject,firstPara(d.overview||"",170),firstPara(L.history,140),"Hybrid lens consensus "+lz.hybrid+"% — "+lz.verdict);
