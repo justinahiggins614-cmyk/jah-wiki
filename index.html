@@ -207,11 +207,11 @@ nav.crumb{margin-bottom:8px}
 <div class="crumb">Main page</div>
 <h1 class="at">Welcome to JAH Wiki</h1>
 <p class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</p>
-<p class="sub" style="color:#1a4d2e"><strong>673,152 core encyclopedia articles indexed</strong>, as of 2026-10-03. What counts as a core article: one record — a spec-derived article (a Signature draft specification), a patent-derived article (a public patent record), or a subject article (a JAH-N subject file). Dictionary word articles (763,366 as of 2026-10-03) resolve live from the IWB Dictionary and are counted separately, never folded into the core total. The numbers above are a snapshot; the live count refreshes from the catalog indexes every time this page loads.</p>
+<p class="sub" style="color:#1a4d2e"><strong>722,004 core encyclopedia articles indexed</strong>, as of 2026-10-03. What counts as a core article: one record — a spec-derived article (a Signature draft specification), a patent-derived article (a public patent record), or a subject article (a JAH-N subject file). Dictionary word articles (807,348 as of 2026-10-03) resolve live from the IWB Dictionary and are counted separately, never folded into the core total. The numbers above are a snapshot; the live count refreshes from the catalog indexes every time this page loads.</p>
 <details class="statdrawer" open><summary>Article counts</summary>
 <div class="stats">
-<div class="stat"><div class="n">621,226</div><div class="l">spec-derived articles</div></div>
-<div class="stat"><div class="n">51,806</div><div class="l">patent-derived articles</div></div>
+<div class="stat"><div class="n">666,199</div><div class="l">spec-derived articles</div></div>
+<div class="stat"><div class="n">55,685</div><div class="l">patent-derived articles</div></div>
 <div class="stat"><div class="n">120</div><div class="l">subject articles</div></div>
 </div></details>
 <h2 class="sec">Browse the encyclopedia</h2>
@@ -622,14 +622,20 @@ function homeHTML(){
  return h;
 }
 async function doSearch(q){q=q.trim();if(!q)return nav(homeHTML());
+ /* exact permanent wiki ID fast path: JAH-WIKI-SPEC-###### / JAH-WIKI-PAT-<pub> /
+    JAH-WIKI-W-<word> / JAH-WIKI-SUB-<slug> jumps straight to the article.
+    (A malformed permanent ID falls through to normal search — never a dead end.) */
+ if(/^JAH-WIKI-(SPEC|PAT|W|SUB)-/i.test(q)&&parsePage(q))return openPage(q);
  var ql=q.toLowerCase(),disp=qp("q");
  var single=/^[a-z][a-z'\- ]{1,40}$/i.test(q);
  var dictTop="";
  if(single){
-  /* single-word query: the dictionary answers FIRST; an exact match opens the word article straight away */
+  /* single-word query: the dictionary answers FIRST; an exact match opens the word article straight away.
+     Dictionary lookups run under an 8s timeout — if the dictionary stalls, the wiki-index
+     results still render and the dictionary section is simply skipped. */
   try{
-   await dictIdx();
-   if(dictFind(ql)>=0){var de0=await dictEntry(ql);if(de0&&de0.k==="w")return wordArticle(de0,"")}
+   await dictIdxT(8000);
+   if(dictFind(ql)>=0){var de0=await dictEntryT(ql,8000);if(de0&&de0.k==="w")return wordArticle(de0,"")}
    dictTop=await dictSec(ql);
   }catch(e){}
  }
@@ -644,6 +650,9 @@ async function doSearch(q){q=q.trim();if(!q)return nav(homeHTML());
  var exr=findSpec(q.toUpperCase()),exp=exr?null:findPat(q.toUpperCase());
  if(exr)h+='<h2 class="sec">Exact article</h2><ul class="pgln"><li><span class="rtbadge">SPECIFICATION</span><a href="?page='+exr[0]+'"><b>'+esc(exr[1])+'</b></a> <span style="color:#888">'+esc(exr[0])+'</span> — draft specification</li></ul>';
  else if(exp)h+='<h2 class="sec">Exact article</h2><ul class="pgln"><li><span class="rtbadge">PUBLIC PATENT RECORD</span><a href="?page=PAT:'+encodeURIComponent(exp[0])+'"><b>'+esc(String(exp[1]).replace(/&hellip;/g,"..."))+'</b></a> <span style="color:#888">'+esc(exp[0])+'</span> — public patent record</li></ul>';
+ /* visible result count across every section (exact match + spec + patent + subject hits) */
+ var nTot=(exr||exp?1:0)+rs.length+rp.length+rb.length;
+ h+='<p style="font-family:Arial;color:#5b6472;margin:6px 0 0"><b>'+nTot+'</b> matching article'+(nTot===1?"":"s")+' found.</p>';
  h+=dictTop;
  h+=sec("Spec articles",rs,function(r){return '<li><span class="rtbadge">SPECIFICATION</span><a href="?page='+r[0]+'">'+esc(r[1])+'</a> <span style="color:#888">'+esc(r[0])+'</span>'+(r[4]?'<br><span style="color:#5b6472;font-size:.85em">'+esc(r[4])+'</span>':"")+'</li>'});
  h+=sec("Patent articles",rp,function(p){return '<li><span class="rtbadge">PUBLIC PATENT RECORD</span><a href="?page=PAT:'+encodeURIComponent(p[0])+'">'+esc(String(p[1]).replace(/&hellip;/g,"..."))+'</a> <span style="color:#888">'+esc(p[0])+'</span>'+snip(firstPara(((p[3]?p[3]+" \u2014 ":"")+"public patent record "+p[0]),160))+'</li>'});
@@ -655,7 +664,7 @@ async function doSearch(q){q=q.trim();if(!q)return nav(homeHTML());
   else h+='<div id="dictsec"></div>';
   nav(h);
   dictSec(ql).then(function(dh){var el=document.getElementById("dictsec");if(el&&dh)el.innerHTML=dh;
-   else if(el&&!hasOther)el.innerHTML="<p>No articles matched. Try fewer words.</p>"});
+   else if(el&&!hasOther)el.innerHTML='<div class="loadstate" style="padding:20px 10px"><div class="big">No articles matched &ldquo;'+esc(disp)+'&rdquo;</div><p>Try fewer words, check the spelling, or explore another way in:</p><p><a href="?all=SPEC">Browse all pages</a> &middot; <a href="?random=1">Random article</a> &middot; <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">The Signature Dictionary</a></p></div>'});
  }else{
   if(!hasOther&&!dictTop&&!exr&&!exp)h+='<div class="loadstate" style="padding:20px 10px"><div class="big">No articles matched &ldquo;'+esc(disp)+'&rdquo;</div><p>Try fewer words, check the spelling, or explore another way in:</p><p><a href="?all=SPEC">Browse all pages</a> &middot; <a href="?random=1">Random article</a> &middot; <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">The Signature Dictionary</a></p></div>';
   else if(!hasOther&&!dictTop)h+='<p style="font-family:Arial">No articles matched. Try fewer words.</p>';
@@ -664,9 +673,9 @@ async function doSearch(q){q=q.trim();if(!q)return nav(homeHTML());
 }
 async function dictSec(q){
  try{
-  await dictIdx();
+  await dictIdxT(8000);
   var di=dictFind(q),dh="";
-  if(di>=0){var de=await dictEntry(q);
+  if(di>=0){var de=await dictEntryT(q,8000);
    if(de&&de.k==="w"){var senses=(Array.isArray(de.d)?de.d:[]).slice(0,2).map(function(s){return esc(String(s).replace(/^\d+\.\s*/,"").slice(0,300))});
     dh='<h2 class="sec">From the IWB Dictionary</h2><div class="feat"><h3 style="margin:0 0 6px"><span class="rtbadge">DICTIONARY RECORD</span>'+esc(de.w)+' <span class="stamp">'+esc(de.st)+'</span></h3><p style="font-family:Arial;font-size:.9em">'+senses.join("<br><br>")+'</p><p style="font-family:Arial"><a href="?page='+encodeURIComponent(de.w)+'"><b>Read the encyclopedia article &ldquo;'+esc(de.w)+'&rdquo; &rarr;</b></a><br><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Open the full dictionary entry &rarr;</a> &middot; <a href="'+SPEC_SITE+'/specs.html?word='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Word patent &rarr;</a></p></div>'}
   }else{
@@ -679,6 +688,7 @@ async function dictSec(q){
 }
 function allPages(){
  var kind=(qp("all")||"SPEC").toUpperCase(),pg=parseInt(qp("pg")||"1",10),per=200,letter=(qp("L")||"").toUpperCase();
+ if(isNaN(pg)||pg<1)pg=1;
  var h='<div class="crumb"><a href="?">Home</a> &rsaquo; All pages</div><h1 class="at">All pages</h1>';
  h+='<p style="font-family:Arial"><a href="?all=SPEC">Specs</a> &middot; <a href="?all=PAT">Patents</a> &middot; <a href="?all=SUB">Subjects</a> &middot; <a href="?all=WORD">Word articles</a></p>';
  if(kind==="SUB"){
@@ -702,6 +712,9 @@ function allPages(){
  var pages=Math.max(1,Math.ceil(items.length/per));if(pg<1)pg=1;if(pg>pages)pg=pages;
  var az="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(function(c){return '<a href="?all='+kind+'&L='+c+'"'+(c===letter?' style="background:#0b3d91;color:#fff"':"")+'>'+c+"</a>"}).join("");
  h+=finderBarHTML()+'<h2 class="sec">'+(kind==="PAT"?"Patent":"Spec")+' articles ('+items.length.toLocaleString()+')</h2><div class="az">'+az+' <a href="?all='+kind+'">all</a></div>';
+ /* previous/next letter navigation when a letter is selected */
+ var _AZ="ABCDEFGHIJKLMNOPQRSTUVWXYZ",_li=_AZ.indexOf(letter);
+ if(_li>=0)h+='<p style="font-family:Arial">'+(_li>0?'<a href="?all='+kind+'&L='+_AZ[_li-1]+'">&larr; previous letter ('+_AZ[_li-1]+')</a>':"&larr; first letter")+' &middot; <b>letter '+letter+'</b> &middot; '+(_li<25?'<a href="?all='+kind+'&L='+_AZ[_li+1]+'">next letter ('+_AZ[_li+1]+') &rarr;</a>':"last letter &rarr;")+'</p>';
  var slice=items.slice((pg-1)*per,pg*per);
  h+='<ul class="pgln">'+slice.map(function(x){return '<li><a href="?page='+encodeURIComponent(x.id)+'">'+esc(x.t)+'</a></li>'}).join("")+"</ul>";
  h+='<p style="font-family:Arial">Page '+pg+' of '+pages.toLocaleString();
@@ -713,15 +726,19 @@ function allPages(){
    word as an encyclopedia article, A–Z partitions, 200 per page. */
 async function wordPages(){
  var letter=(qp("L")||"").toUpperCase(),pg=parseInt(qp("pg")||"1",10),per=200;
+ if(isNaN(pg)||pg<1)pg=1;
  var h='<nav aria-label="Breadcrumb" class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=WORD">Word articles</a></nav><h1 class="at">Word articles</h1>';
  h+='<p style="font-family:Arial"><a href="?all=SPEC">Specs</a> &middot; <a href="?all=PAT">Patents</a> &middot; <a href="?all=SUB">Subjects</a> &middot; <b>Word articles</b></p>';
  h+='<p class="sub">Every word in the IWB Dictionary gets a full encyclopedia article — definition, JAH data, analysis lenses, working program, and AI persona.</p>';
  var words=[];
- try{await dictIdx();}catch(e){}
+ try{await dictIdxT(10000);}catch(e){}
  if(DICT.idx){for(var i=0;i<DICT.idx.length;i++){var w=String(DICT.idx[i][0]);if(/^[a-z][a-z'-]{0,40}$/i.test(w)&&(!letter||w.charAt(0).toUpperCase()===letter))words.push(w)}}
  var pages=Math.max(1,Math.ceil(words.length/per));if(pg<1)pg=1;if(pg>pages)pg=pages;
  var az="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(function(c){return '<a href="?all=WORD&L='+c+'"'+(c===letter?' style="background:#0b3d91;color:#fff"':"")+'>'+c+"</a>"}).join("");
  h+='<h2 class="sec">Word articles ('+words.length.toLocaleString()+')</h2><div class="az">'+az+' <a href="?all=WORD">all</a></div>';
+ /* previous/next letter navigation when a letter is selected */
+ var _AZ="ABCDEFGHIJKLMNOPQRSTUVWXYZ",_li=_AZ.indexOf(letter);
+ if(_li>=0)h+='<p style="font-family:Arial">'+(_li>0?'<a href="?all=WORD&L='+_AZ[_li-1]+'">&larr; previous letter ('+_AZ[_li-1]+')</a>':"&larr; first letter")+' &middot; <b>letter '+letter+'</b> &middot; '+(_li<25?'<a href="?all=WORD&L='+_AZ[_li+1]+'">next letter ('+_AZ[_li+1]+') &rarr;</a>':"last letter &rarr;")+'</p>';
  if(!words.length){h+='<p class="sub">The dictionary index did not load — the exact failed source is listed on the <a href="?">home page</a>. <a href="?all=WORD">Retry</a>.</p>';nav(h);return}
  var slice=words.slice((pg-1)*per,pg*per);
  h+='<ul class="pgln">'+slice.map(function(w){return '<li><span class="rtbadge">DICTIONARY RECORD</span><a href="?page='+encodeURIComponent(w)+'">'+esc(w)+'</a></li>'}).join("")+"</ul>";
@@ -1274,8 +1291,13 @@ async function dictIdx(){if(DICT.idx)return DICT.idx;var t=await fetchGz(DICT_SI
 function dictFind(key){var a=DICT.idx,lo=0,hi=a.length-1;while(lo<=hi){var m=(lo+hi)>>1,c=a[m][0];if(c===key)return m;if(c<key)lo=m+1;else hi=m-1}return -1}
 function dictLower(key){var a=DICT.idx,lo=0,hi=a.length;while(lo<hi){var m=(lo+hi)>>1;if(a[m][0]<key)lo=m+1;else hi=m}return lo}
 async function dictEntry(key){var i=dictFind(key);if(i<0)return null;var row=DICT.idx[i];var txt=await fetchGz(DICT_SITE+"/data/dict/"+row[1]);return JSON.parse(txt.split("\n")[row[2]])}
+/* timeout wrapper for the dictionary fetches: every caller that awaits the dictionary
+   gets a terminal state within seconds, never an indefinite hang */
+function dictTO(ms){return new Promise(function(_,rej){setTimeout(function(){rej(new Error("dictionary timeout"))},ms||10000)})}
+function dictIdxT(ms){return Promise.race([dictIdx(),dictTO(ms)])}
+function dictEntryT(key,ms){return Promise.race([dictEntry(key),dictTO(ms)])}
 /* WORD-ARTICLE v1.0 — word articles for plain dictionary words (Manon 2026-09-30) */
-async function wordEntry(key){try{await dictIdx();var de=await dictEntry(String(key||"").toLowerCase());return (de&&de.k==="w")?de:null}catch(e){return null}}
+async function wordEntry(key){try{await dictIdxT(10000);var de=await dictEntryT(String(key||"").toLowerCase(),10000);return (de&&de.k==="w")?de:null}catch(e){return null}}
 /* syllable-break reference (real IPA later): mass -> "mass", gravity -> "gra\u00B7vi\u00B7ty" */
 function syllabify(w){w=String(w||"").toLowerCase().replace(/[^a-z'\- ]/g,"");if(!w)return"";
  return w.split(" ").map(function(word){var v="aeiouy",parts=[],cur="";
@@ -1290,7 +1312,7 @@ async function dictPage(q){
  var key=String(q||"").toLowerCase().trim();
  nav('<div class="crumb"><a href="?">Home</a> &rsaquo; Dictionary</div><h1 class="at">'+esc(q)+'</h1><p style="font-family:Arial">Looking up the IWB Dictionary...</p>');
  try{
-  await dictIdx();var de=await dictEntry(key);
+  await dictIdxT(10000);var de=await dictEntryT(key,10000);
   if(!de||de.k!=="w"){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Not in the dictionary</h1><p style="font-family:Arial">No word &ldquo;'+esc(q)+'&rdquo;. <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">Browse the full IWB Dictionary &rarr;</a></p>');return}
   var senses=(Array.isArray(de.d)?de.d:[de.d]).slice(0,5);
   var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">IWB Dictionary</a> &rsaquo; '+esc(de.w)+'</div>';
@@ -1548,7 +1570,7 @@ async function openPage(p){
   if(par.kind==="spec"){var row=findSpec(par.id);if(!row)return notFound(p);var d=await fullSpec(row);if(!d)return notFound(p);return specArticle(d,tab)}
   if(par.kind==="pat"){var pr=findPat(par.id);if(!pr)return notFound(p);var rec=await fullPat(pr);return patArticle(par.id,rec,tab)}
   if(par.kind==="word"){var wkey=par.slug?null:String(par.id||"").toLowerCase();
-   try{await dictIdx();if(par.slug)wkey=wordKeyBySlug(par.slug)}catch(e){wkey=null}
+   try{await dictIdxT(10000);if(par.slug)wkey=wordKeyBySlug(par.slug)}catch(e){wkey=null}
    var de=wkey?await wordEntry(wkey):null;if(!de)return notFound(p);return wordArticle(de,tab)}
   var sd=par.slug?subjBySlug(par.slug):findSubject(par.id);if(!sd)return notFound(p);return subArticle(sd,tab);
  }catch(e){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Couldn\'t load</h1><p style="font-family:Arial">The article data didn\'t load ('+esc(e.message)+'). Check your connection and retry.</p>')}
@@ -1563,8 +1585,11 @@ function randomPage(seed){
  for(var k=0;k<10&&k<DB.subjects.length;k++)pool.push(subjSlug(DB.subjects[pick(DB.subjects.length)]));
  if(!pool.length){nav('<div class="crumb"><a href="?">Home</a></div><div class="loadstate"><div class="big">No articles available</div><p>The encyclopedia indexes did not load. Check your connection and <a href="?">reload</a>.</p></div>');return}
  var page=pool[pick(pool.length)];
- if(seed==null||seed==="")setQ("page",page);
- else{var u=new URL(location.href);u.searchParams.set("page",page);u.searchParams.set("seed",String(seed));location.href=u.toString()}
+ /* resolve to the article's own clean ?page= URL: the address bar shows the permanent
+    article URL (the random param is dropped, the optional seed is kept) */
+ var ru=new URL(location.href);ru.search="";ru.searchParams.set("page",page);
+ if(!(seed==null||seed===""))ru.searchParams.set("seed",String(seed));
+ location.href=ru.toString();
 }
 /* terminal loading states: Loading -> Ready, or Loading -> Unable to load -> Retry. No infinite spinner. */
 function unableHTML(off){
@@ -1580,6 +1605,9 @@ async function init(){
  qgo.onclick=go;qin.onkeydown=function(e){if(e.key==="Enter")go()};
  document.getElementById("randlink").onclick=function(e){e.preventDefault();randomPage(null);return false};
  var sp=new URLSearchParams(location.search);
+ /* search route: show a terminal loading state BEFORE the indexes load, so a ?q= visit
+    never sits on a blank page; doSearch (or the unable-to-load error path) replaces it */
+ if(sp.has("q")&&!sp.has("page"))nav('<div class="crumb"><a href="?">Home</a> &rsaquo; Search</div><div class="loadstate"><div class="big">Searching the encyclopedia&hellip;</div><p style="font-family:Arial">Looking up &ldquo;'+esc(qp("q")||"")+'&rdquo; across the spec, patent, and subject indexes.</p></div>');
  var ok=false;
  try{await Promise.race([loadDB(),new Promise(function(_,rej){setTimeout(function(){rej(new Error("load timeout"))},25000)})]);ok=true}catch(e){ok=false}
  var has=DB.specIdx.length+DB.patIdx.length+DB.subjects.length;
