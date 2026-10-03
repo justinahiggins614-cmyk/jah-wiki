@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- JAH Wiki sitemap index. Strategy (see the Data & methodology section on the site):
+<!-- JAH Wiki sitemap index. Strategy (see the Data and methodology section on the site):
      (a) this wiki's own top-level and browse pages (sitemap-pages.xml) — every URL
          listed returns 200;
      (b) pointers to the Spec Catalog's and Patent Catalog's own record sitemaps,

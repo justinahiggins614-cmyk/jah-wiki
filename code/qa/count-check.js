@@ -19,7 +19,7 @@ function ok(msg) { console.log("  ok   " + msg); }
 console.log("[static] count formula in index.html");
 if (/\(ns\+np\+nb\)\.toLocaleString\(\)/.test(INDEX_HTML)) ok("total rendered as (ns+np+nb) — live computed");
 else fail("live (ns+np+nb) total expression not found");
-const hardTotal = INDEX_HTML.match(/articles total<\/div><\/div>'/);
+const hardTotal = INDEX_HTML.match(/<div class="n">\d[\d,]*<\/div><div class="l">[^<]*articles total<\/div><\/div>'/);
 if (hardTotal) fail("suspicious hardcoded total near 'articles total'");
 else ok("no hardcoded total near the count display");
 
@@ -35,14 +35,14 @@ else {
 }
 
 console.log("[static] crawlable fallback count in raw HTML");
-const fb = INDEX_HTML.match(/<strong>([\d,]+) articles indexed<\/strong>, as of (\d{4}-\d{2}-\d{2})/);
+const fb = INDEX_HTML.match(/<strong>([\d,]+) (?:core encyclopedia )?articles indexed<\/strong>, as of (\d{4}-\d{2}-\d{2})/);
 if (!fb) fail("static 'N articles indexed, as of YYYY-MM-DD' fallback not found in raw HTML");
 else {
   const fbCount = parseInt(fb[1].replace(/,/g, ""), 10);
   ok("static fallback count present: " + fbCount.toLocaleString() + " (as of " + fb[2] + ")");
   if (fbCount === api.records_approx) ok("static fallback count matches api.json records_approx");
   else fail("static fallback count " + fbCount + " != api.json records_approx " + api.records_approx + " — refresh together");
-  if (/What counts as an article/.test(INDEX_HTML)) ok("what-counts-as-an-article note present");
+  if (/What counts as a (core )?article/.test(INDEX_HTML)) ok("what-counts-as-an-article note present");
   else fail("what-counts note missing from static fallback");
   if (/id="methodology"/.test(INDEX_HTML)) ok("static Data & methodology section present in raw HTML");
   else fail("Data & methodology section missing");

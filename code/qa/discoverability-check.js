@@ -42,9 +42,21 @@ else fail("index does not point at the spec/patent record sitemaps");
 if (locs.some((u) => /[?&]page=/.test(u))) fail("index lists per-article ?page= URLs it cannot keep fresh");
 else ok("no per-article URLs listed (strategy: browse pages + source record sitemaps)");
 
+console.log("[static] sitemap XML well-formedness");
+for (const f of ["sitemap.xml", "sitemap-pages.xml", "sitemap-wiki-spec.xml", "sitemap-wiki-pat.xml", "sitemap-wiki-sub.xml", "sitemap-wiki-word.xml"]) {
+  const p = path.join(ROOT, f);
+  if (!fs.existsSync(p)) { fail(f + " missing"); continue; }
+  const x = fs.readFileSync(p, "utf8");
+  const xbody = x.replace(/<!--[\s\S]*?-->/g, ""); // comments may legally contain &
+  if (!/^<\?xml version="1\.0" encoding="UTF-8"\?>/.test(x)) fail(f + ": missing XML declaration");
+  else if (/&(?!(amp|lt|gt|quot|apos);)/.test(xbody)) fail(f + ": bare & in XML (must be &amp;) — crawlers reject this file");
+  else if (!/<\/(urlset|sitemapindex)>/.test(x)) fail(f + ": missing closing root element");
+  else ok(f + " well-formed (no bare &, proper declaration)");
+}
+
 console.log("[static] sitemap-pages.xml");
 const pg = fs.readFileSync(path.join(ROOT, "sitemap-pages.xml"), "utf8");
-const plocs = [...pg.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+const plocs = [...pg.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].replace(/&amp;/g, "&"));
 for (const u of [H + "index.html", H + "?all=SPEC", H + "?all=PAT", H + "?all=SUB", H + "?random=1"])
   if (plocs.includes(u)) ok("lists " + u.replace(H, ""));
   else fail("sitemap-pages.xml missing " + u);

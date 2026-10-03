@@ -51,7 +51,7 @@ function curlCode(u) {
     else { skipped.push(u); console.log("  skip " + (c || "ERR") + " " + u); }
   }
   const xml = '<?xml version="1.0" encoding="UTF-8"?>\n' +
-    "<!-- JAH Wiki sitemap index. Strategy (see the Data & methodology section on the site):\n" +
+    "<!-- JAH Wiki sitemap index. Strategy (see the Data and methodology section on the site):\n" +
     "     (a) this wiki's own top-level and browse pages (sitemap-pages.xml) — every URL\n" +
     "         listed returns 200;\n" +
     "     (b) pointers to the Spec Catalog's and Patent Catalog's own record sitemaps,\n" +

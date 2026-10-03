@@ -191,11 +191,11 @@ nav.crumb{margin-bottom:8px}
 <div class="crumb">Main page</div>
 <h1 class="at">Welcome to JAH Wiki</h1>
 <p class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</p>
-<p class="sub" style="color:#1a4d2e"><strong>475,897 articles indexed</strong>, as of 2026-10-01. What counts as an article: one record — a spec-derived article (a Signature draft specification), a patent-derived article (a public patent record), or a subject article (a JAH-N subject file). The number above is a snapshot; the live count refreshes from the catalog indexes every time this page loads.</p>
+<p class="sub" style="color:#1a4d2e"><strong>636,713 core encyclopedia articles indexed</strong>, as of 2026-10-03. What counts as a core article: one record — a spec-derived article (a Signature draft specification), a patent-derived article (a public patent record), or a subject article (a JAH-N subject file). Dictionary word articles (738,298 as of 2026-10-03) resolve live from the IWB Dictionary and are counted separately, never folded into the core total. The numbers above are a snapshot; the live count refreshes from the catalog indexes every time this page loads.</p>
 <details class="statdrawer" open><summary>Article counts</summary>
 <div class="stats">
-<div class="stat"><div class="n">438,346</div><div class="l">spec-derived articles</div></div>
-<div class="stat"><div class="n">37,431</div><div class="l">patent-derived articles</div></div>
+<div class="stat"><div class="n">586,674</div><div class="l">spec-derived articles</div></div>
+<div class="stat"><div class="n">49,919</div><div class="l">patent-derived articles</div></div>
 <div class="stat"><div class="n">120</div><div class="l">subject articles</div></div>
 </div></details>
 <h2 class="sec">Browse the encyclopedia</h2>
@@ -218,6 +218,7 @@ Word articles A&ndash;Z: <a href="?all=WORD&L=A">A</a> <a href="?all=WORD&L=B">B
 <h2 class="sec">Data &amp; methodology</h2>
 <ul class="pgln">
 <li><b>What this wiki mirrors.</b> JAH Wiki holds no dataset of its own. Spec-derived articles read the Signature Spec Catalog's live compact search index (one small row per spec — id, title, category — rebuilt from the shard indexes after every catalog update; full records load only when you open an article); patent-derived articles read the Patent Catalog's live index; subject articles read the JAH-N Wiki's subject files; word articles resolve live from the IWB Dictionary index. If an underlying index file fails to load, the page says so plainly and the count is marked incomplete.</li>
+<li><b>How the headline count is defined (count contract).</b> The headline number counts <b>core encyclopedia articles</b> only: one per spec-derived article, patent-derived article, and subject file — computed live as <code>specIdx + patIdx + subjects</code> from the indexes above. Word articles resolve live from the IWB Dictionary and are counted <b>separately</b>, never folded into the core total. The static snapshot in this page's raw HTML is re-stamped daily from the live indexes; the live page always recomputes on load.</li>
 <li><b>Article IDs.</b> Every article carries a permanent ID — <code>JAH-WIKI-SPEC-######</code> (spec-derived), <code>JAH-WIKI-PAT-&lt;pub-no&gt;</code> (patent-derived), <code>JAH-WIKI-W-&lt;word&gt;</code> (word articles), <code>JAH-WIKI-SUB-&lt;slug&gt;</code> (subject articles) — derived deterministically from the record's own permanent key (spec number, patent publication number, dictionary word, subject slug). The ID is stable across rebuilds and unique at any scale, and it resolves as <code>?page=&lt;ID&gt;</code>, the article's canonical URL.</li>
 <li><b>Source classification.</b> Spec-derived articles are JAH original designs. Patent-derived articles are public patent records — the invention belongs to its listed owner. Subject articles blend verified public-record material with the system's simulation layer; each block is marked. Word articles pair original IWB Dictionary definitions with computed JAH data.</li>
 <li><b>Draft vs granted — read carefully.</b> Spec-derived articles are <b>draft specifications, ready to review and file — NOT granted patents</b>. Only patent-derived articles describe issued or granted patents, and only where the public record says so. A machine asked "is this an issued patent?" must answer NO for any spec-derived or subject article.</li>
@@ -337,7 +338,12 @@ function wikiMeta(kind,L,src){
   issued_patent:(kind==="pat"),draft_spec:(kind==="spec"),simulation_present:(kind==="sub"),
   classification:{article_type:{spec:"SPECIFICATION",pat:"PUBLIC PATENT RECORD",sub:"SUBJECT FILE",word:"WORD ARTICLE"}[kind]||"ARTICLE",
    source:{spec:"JAH ORIGINAL",pat:"PUBLIC RECORD",sub:"MIXED PUBLIC-RECORD + JAH SIMULATION",word:"IWB DICTIONARY"}[kind],
-   status:{spec:"DRAFT — NOT A GRANTED PATENT",pat:"PUBLIC RECORD",sub:"SUBJECT FILE",word:"WORD ARTICLE"}[kind]},
+   status:{spec:"DRAFT — NOT A GRANTED PATENT",pat:"PUBLIC RECORD",sub:"SUBJECT FILE",word:"WORD ARTICLE"}[kind],
+   /* Source-ownership boundary: which catalog owns the underlying record.
+      JAH Wiki owns only the encyclopedia presentation, never the source record. */
+   source_catalog:{spec:"Signature Spec Catalog Pending Patents",pat:"Globally Rejustered Patent Catalog",sub:"JAH-N Wiki Leaks",word:"The Signature Dictionary"}[kind]||"JAH Wiki",
+   source_owner:{spec:"Justin Addam Higgins (JAH) — original draft specification",pat:"Listed patent owner — external public record, NOT JAH-owned",sub:"JAH system — own internal archive, declassified by itself",word:"IWB Dictionary — original definitions"}[kind]||"JAH Wiki",
+   wiki_owns:"encyclopedia presentation only"},
   provenance:[],xrefs:{},source_list:(src&&src.source_list)||""};
  if(kind==="spec"){var d=src&&src.rec||{};
   m.provenance.push({section:"article",source_type:"jah_original",source_id:d.spec_id||"",source_url:SPEC_SITE+"/specs.html?spec="+encodeURIComponent(d.spec_id||""),source_date:d.prepared_date||"",retrieval_date:new Date().toISOString().slice(0,10),verification_status:"jah_generated",jah_generated:"yes",simulation:"no"});
@@ -371,7 +377,7 @@ function jsonldHTML(meta){
   publisher:{["@type"]:"Person",name:"Justin Addam Higgins"},
   about:{["@type"]:"Thing",name:c.article_type||"ARTICLE",description:c.source||""},
   keywords:[meta.article_id,c.article_type,c.source,c.status].filter(Boolean).join(", "),
-  additionalProperty:[{name:"article_type",value:c.article_type},{name:"issued_patent",value:String(meta.issued_patent)},{name:"draft_spec",value:String(meta.draft_spec)},{name:"simulation_present",value:String(meta.simulation_present)}],
+  additionalProperty:[{name:"article_type",value:c.article_type},{name:"issued_patent",value:String(meta.issued_patent)},{name:"draft_spec",value:String(meta.draft_spec)},{name:"simulation_present",value:String(meta.simulation_present)},{name:"source_catalog",value:c.source_catalog||""},{name:"source_owner",value:c.source_owner||""},{name:"wiki_owns",value:c.wiki_owns||"encyclopedia presentation only"}],
   citation:meta.source_list})+'<\/script>';
 }
 /* per-article head metadata: canonical link + descriptive meta, refreshed on every article view.
@@ -475,6 +481,9 @@ async function loadDB(){
  }).catch(function(){DB.sigline=[]}));
  jobs.push(fetchGz(PAT_SITE+"/data/patents.idx.json.gz").then(function(t){DB.patIdx=JSON.parse(t)}).catch(function(){DB.patErrors=(DB.patErrors||0)+1;noteFail(PAT_SITE+"/data/patents.idx.json.gz","Patent Catalog record index")}));
  jobs.push(fetch(LEAK_SITE+"/data/bizarre.json").then(function(r){noteMod(LEAK_SITE+"/data/bizarre.json",r);return r.json()}).then(function(j){DB.subjects=j}).catch(function(){noteFail(LEAK_SITE+"/data/bizarre.json","JAH-N Wiki subject files")}));
+ /* Dictionary word-article count (small api.json, not the 9MB word index):
+    word articles resolve live and are counted separately from the core total. */
+ jobs.push(fetch(DICT_SITE+"/api.json").then(function(r){return r.json()}).then(function(j){DB.wordCount=parseInt(j.records_approx,10)||0}).catch(function(){DB.wordCount=0}));
  await Promise.all(jobs);DB.ready=true;return DB;
 }
 function findSpec(id){id=String(id).toUpperCase();for(var i=0;i<DB.specIdx.length;i++)if(String(DB.specIdx[i][0]).toUpperCase()===id)return DB.specIdx[i];return null}
@@ -574,12 +583,14 @@ function homeHTML(){
  var feat=DB.subjects.length?DB.subjects[hashStr(String(Date.now()).slice(0,8))%DB.subjects.length]:null;
  var h='<div class="crumb">Main page</div>';
  h+='<h1 class="at">Welcome to JAH Wiki</h1><div class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</div>';
- h+='<p class="sub" style="color:#1a4d2e">Encyclopedia ready — '+(ns+np+nb).toLocaleString()+' articles indexed.</p>';
+ h+='<p class="sub" style="color:#1a4d2e">Encyclopedia ready — '+(ns+np+nb).toLocaleString()+' core articles indexed.</p>';
+ h+='<p class="sub" style="color:#5b6472">Core articles: one per spec, patent record, or subject file. Word articles ('+(DB.wordCount?DB.wordCount.toLocaleString():"—")+' dictionary entries, counted separately) resolve live from the IWB Dictionary.</p>';
  if(DB.failUrls&&DB.failUrls.length)h+='<p class="sub" style="color:#a00"><b>Some source indexes failed to load</b> — the exact affected sources:<br>'+DB.failUrls.map(function(f){return '&bull; '+esc(f.label)+' (<span style="font-family:monospace">'+esc(f.url)+'</span>)'}).join('<br>')+'<br>Counts below may be incomplete. <a href="?">Reload to retry</a>.</p>';
  h+='<details class="statdrawer" open><summary>Article counts</summary><div class="stats"><div class="stat"><div class="n">'+ns.toLocaleString()+'</div><div class="l">spec articles</div></div>';
  h+='<div class="stat"><div class="n">'+np.toLocaleString()+'</div><div class="l">patent articles</div></div>';
  h+='<div class="stat"><div class="n">'+nb+'</div><div class="l">subject files</div></div>';
- h+='<div class="stat"><div class="n">'+(ns+np+nb).toLocaleString()+'</div><div class="l">articles total</div></div></div></details>';
+ h+='<div class="stat"><div class="n">'+(ns+np+nb).toLocaleString()+'</div><div class="l">core articles total</div></div>';
+ h+='<div class="stat"><div class="n">'+(DB.wordCount?DB.wordCount.toLocaleString():"—")+'</div><div class="l">word articles (live)</div></div></div></details>';
  h+='<p class="sub" style="color:#1a4d2e;margin-top:10px">Articles mirror Signature specs, public patent records, and JAH-N subjects — one article per record.</p>';
  var _du=dataUpdated();
  h+='<p class="sub" style="color:#5b6472;margin-top:-8px"><span title="When the underlying index files were last published">\uD83D\uDD52 Index data last updated: '+esc(fmtTs(_du||Date.now()))+(_du?"":" (this visit)")+'</span></p>';

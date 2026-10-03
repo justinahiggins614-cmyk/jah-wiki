@@ -1,0 +1,119 @@
+#!/usr/bin/env python3
+"""code/restamp_counts.py — re-stamp JAH Wiki's static count snapshot from the LIVE indexes.
+
+The wiki reads spec/patent/subject/word indexes live at page load, so the JS count
+is always current. This script refreshes the STATIC no-JS fallback (the snapshot
+line + stat cards in index.html and api.json) so crawlers and readers without
+JavaScript see fresh, honest numbers.
+
+Counts fetched live:
+  spec   = rows in signature-one-archive/data/index/specs.search.json.gz (compact index)
+  patent = records in cyber-patent-catalog/data/patents.idx.json.gz
+  subject= entries in jah-n-wiki-leaks/data/bizarre.json
+  words  = jah-dictionary api.json records_approx (word articles resolve live)
+
+"Core encyclopedia articles" = spec + patent + subject (the JS live formula).
+Word articles are counted separately and never folded into the core total.
+
+Usage: python3 code/restamp_counts.py
+Exit 1 if any fetch fails (never stamp partial numbers).
+"""
+import gzip, io, json, re, sys, urllib.request, datetime
+
+BASE = "https://justinahiggins614-cmyk.github.io"
+TODAY = datetime.date.today().isoformat()
+
+def get_json(url):
+    req = urllib.request.Request(url, headers={"User-Agent": "jah-wiki-restamp", "Accept-Encoding": "gzip"})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        data = r.read()
+    if data[:2] == b"\x1f\x8b":
+        data = gzip.decompress(data)
+    return json.loads(data.decode("utf-8"))
+
+def get_gz_lines(url):
+    req = urllib.request.Request(url, headers={"User-Agent": "jah-wiki-restamp", "Accept-Encoding": "gzip"})
+    with urllib.request.urlopen(req, timeout=120) as r:
+        data = r.read()
+    text = gzip.decompress(data).decode("utf-8")
+    return [ln for ln in text.split("\n") if ln.strip()]
+
+def main():
+    spec_rows = get_gz_lines(BASE + "/signature-one-archive/data/index/specs.search.json.gz")
+    n_spec = len(spec_rows)
+    # sanity: every row must be a JSON array whose id starts with JAH-SPEC-
+    bad = 0
+    for ln in spec_rows[:2000]:
+        try:
+            r = json.loads(ln)
+            if not (isinstance(r, list) and str(r[0]).startswith("JAH-SPEC-")):
+                bad += 1
+        except Exception:
+            bad += 1
+    if bad:
+        sys.exit("ABORT: spec search index failed sanity check (%d bad rows)" % bad)
+
+    pat = get_json(BASE + "/cyber-patent-catalog/data/patents.idx.json.gz")
+    n_pat = len(pat)
+    subj = get_json(BASE + "/jah-n-wiki-leaks/data/bizarre.json")
+    n_sub = len(subj)
+    dapi = get_json(BASE + "/jah-dictionary/api.json")
+    n_words = int(dapi["records_approx"])
+    n_core = n_spec + n_pat + n_sub
+
+    def f(n):
+        return "{:,}".format(n)
+
+    # ---- index.html static snapshot ----
+    p = "index.html"
+    s = open(p, encoding="utf-8").read()
+    new_snap = (
+        '<p class="sub" style="color:#1a4d2e"><strong>' + f(n_core) + ' core encyclopedia articles indexed</strong>, '
+        'as of ' + TODAY + '. What counts as a core article: one record — a spec-derived article '
+        '(a Signature draft specification), a patent-derived article (a public patent record), or a subject article '
+        '(a JAH-N subject file). Dictionary word articles (' + f(n_words) + ' as of ' + TODAY + ') resolve live from '
+        'the IWB Dictionary and are counted separately, never folded into the core total. '
+        'The numbers above are a snapshot; the live count refreshes from the catalog indexes every time this page loads.</p>'
+    )
+    s2, n1 = re.subn(
+        r'<p class="sub" style="color:#1a4d2e"><strong>[\d,]+ articles indexed</strong>, as of \d{4}-\d{2}-\d{2}\..*?page loads\.</p>',
+        new_snap, s, count=1, flags=re.S)
+    if n1 != 1:
+        sys.exit("ABORT: static snapshot line not found in index.html")
+    # stat cards
+    def stat(label, val):
+        return r'(<div class="stat"><div class="n">)[\d,]+(</div><div class="l">' + re.escape(label) + r'</div></div>)'
+    for label, val in [("spec-derived articles", n_spec), ("patent-derived articles", n_pat), ("subject articles", n_sub)]:
+        s2, nn = re.subn(stat(label, val), r'\g<1>' + f(val) + r'\g<2>', s2, count=1)
+        if nn != 1:
+            sys.exit("ABORT: stat card '%s' not found" % label)
+    open(p, "w", encoding="utf-8").write(s2)
+
+    # ---- api.json ----
+    ap = "api.json"
+    a = json.load(open(ap, encoding="utf-8"))
+    a["records_approx"] = n_core
+    # retire the old dated breakdown key, keep history honest
+    old_keys = [k for k in a if k.startswith("records_breakdown_")]
+    for k in old_keys:
+        del a[k]
+    a["records_breakdown_" + TODAY.replace("-", "_")] = {
+        "core_encyclopedia_articles": n_core,
+        "spec_articles": n_spec,
+        "patent_articles": n_pat,
+        "subject_files": n_sub,
+        "word_articles_separate": n_words,
+    }
+    a["records_as_of"] = TODAY
+    a["note"] = ("Counts grow on automated schedules; re-read this file for the latest shape of the data. "
+                 "Core count = spec + patent + subject articles live-indexed by the site's home page. "
+                 "Dictionary word articles resolve live from the IWB Dictionary index and are counted "
+                 "separately, never folded into the core total.")
+    json.dump(a, open(ap, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
+    open(ap, "a", encoding="utf-8").write("\n")
+
+    print("restamped %s: spec=%s patent=%s subject=%s core=%s words=%s" % (
+        TODAY, f(n_spec), f(n_pat), f(n_sub), f(n_core), f(n_words)))
+
+if __name__ == "__main__":
+    main()

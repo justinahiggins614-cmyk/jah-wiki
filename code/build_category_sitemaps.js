@@ -13,11 +13,15 @@ const WIKI = "https://justinahiggins614-cmyk.github.io/jah-wiki/";
 const TODAY = new Date().toISOString().slice(0, 10);
 const AZ = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
+function xmlEsc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+}
 function urlset(urls) {
   return '<?xml version="1.0" encoding="UTF-8"?>\n' +
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
     urls.map(function (u) {
-      return '  <url><loc>' + u + '</loc><changefreq>weekly</changefreq><lastmod>' + TODAY + '</lastmod></url>';
+      return '  <url><loc>' + xmlEsc(u) + '</loc><changefreq>weekly</changefreq><lastmod>' + TODAY + '</lastmod></url>';
     }).join("\n") + '\n</urlset>\n';
 }
 function write(name, urls) {
