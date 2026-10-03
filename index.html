@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="JAH Wiki — the encyclopedia of the JAH system: every Signature spec, public patent record, and JAH-N subject file as a full article with definition, analysis lenses, patent draft, working program, and AI persona.">
 <title>JAH Wiki — The Encyclopedia of the JAH System</title>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Dataset","name":"JAH Wiki","creator":{"@type":"Person","name":"Justin Addam Higgins"}}
+</script>
 <style>
 :root{--ink:#1a1a2e;--paper:#fff;--accent:#0b3d91;--gold:#b8860b;--line:#d8dee9;--soft:#f6f8fc;--mut:#5b6472}
 *{box-sizing:border-box}
@@ -61,9 +64,13 @@ details.pat .pb{padding:10px 14px}
 .card h3{margin:.2em 0;font-family:Arial,sans-serif;color:#0b3d91}
 .card p{font-family:Arial,sans-serif;font-size:.88em;color:var(--mut)}
 .stats{display:flex;flex-wrap:wrap;gap:14px;margin:14px 0}
+details.statdrawer{border:0;padding:0;margin:0;background:none}
+details.statdrawer>summary{display:none}
+@media(max-width:767px){details.statdrawer{border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin:10px 0;font-family:Arial,sans-serif}details.statdrawer>summary{display:list-item;cursor:pointer;font-weight:bold;color:var(--accent)}}
 .stat{flex:1;min-width:150px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:14px;text-align:center;font-family:Arial,sans-serif}
 .stat .n{font-size:1.7em;font-weight:bold;color:#0b3d91}.stat .l{font-size:.8em;color:var(--mut)}
 .az{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0;font-family:Arial,sans-serif}
+.az{position:sticky;top:0;z-index:40;background:var(--paper)}
 .az a{padding:5px 10px;border:1px solid var(--line);border-radius:4px;background:#fff;font-size:.85em}
 .pgln{font-family:Arial,sans-serif;font-size:.88em}.pgln li{margin:5px 0}
 footer.site{background:#0a1f4d;color:#cdd9f2;padding:22px 18px;font-family:Arial,sans-serif;font-size:.85em;margin-top:30px}
@@ -128,7 +135,7 @@ h2.sec .sectog{font-size:.7em;color:#5b6472;margin-right:8px}
 </head>
 <body>
 <a class="skip" href="#app">Skip to content</a>
-<div class="jahnet"><span class="jahnet-t">THE JAH NETWORK</span><span class="jahnet-here" aria-current="page">YOU ARE HERE: JAH WIKI</span><a href="https://justinahiggins614-cmyk.github.io/jah-ai-models/">The Signature AI Phone Book</a><a href="https://justinahiggins614-cmyk.github.io/jah-calculator/">Calculator</a><a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/">Dictionary</a><a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/">JAH-N Wiki</a><a href="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/">Patent Catalog</a><a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html">Spec Catalog</a><a href="https://justinahiggins614-cmyk.github.io/signature-llama/">Signature Llama</a><a href="https://justinahiggins614-cmyk.github.io/jah-computer-systems/">PC Depository</a><a href="https://justinahiggins614-cmyk.github.io/signature-cyber-mega-mall/">Cyber Mega-Mall</a><a href="https://justinahiggins614-cmyk.github.io/signature-university/">Signature University</a><a href="https://justinahiggins614-cmyk.github.io/signature-books/">Book Depository</a><a href="https://justinahiggins614-cmyk.github.io/signature-comics/">Comic Store</a><a href="https://justinahiggins614-cmyk.github.io/signature-newspapers/">Global Newspaper Archive</a><a href="https://justinahiggins614-cmyk.github.io/signature-3d-print/">3D Print Depository</a><a href="https://justinahiggins614-cmyk.github.io/signature-backend/">Mad Scientist Lab</a><a href="https://justinahiggins614-cmyk.github.io/signature-boundless-generators/">Boundless Generator Archive</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-mixlab/">AI Mix Lab</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-olypics/">AI Olypics</a><a href="https://justinahiggins614-cmyk.github.io/signature-chip-maker/">Chip Maker and Archive</a><a href="https://justinahiggins614-cmyk.github.io/signature-app-archive/">App Archive</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-robot-matcher/">AI Robot Matcher</a><a href="https://justinahiggins614-cmyk.github.io/signature-experiment-solver/">Experiment Solver</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-image-video-maker/">Signature AI Pixel</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-song-maker/">Signature Music Studio</a></div>
+<nav aria-label="JAH Network Global Ecosystem" role="navigation"><div class="jahnet"><span class="jahnet-t">THE JAH NETWORK</span><span class="jahnet-here" aria-current="page">YOU ARE HERE: JAH WIKI</span><a href="https://justinahiggins614-cmyk.github.io/jah-ai-models/">The Signature AI Phone Book</a><a href="https://justinahiggins614-cmyk.github.io/jah-calculator/">Calculator</a><a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/">Dictionary</a><a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/">JAH-N Wiki</a><a href="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/">Patent Catalog</a><a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html">Spec Catalog</a><a href="https://justinahiggins614-cmyk.github.io/signature-llama/">Signature Llama</a><a href="https://justinahiggins614-cmyk.github.io/jah-computer-systems/">PC Depository</a><a href="https://justinahiggins614-cmyk.github.io/signature-cyber-mega-mall/">Cyber Mega-Mall</a><a href="https://justinahiggins614-cmyk.github.io/signature-university/">Signature University</a><a href="https://justinahiggins614-cmyk.github.io/signature-books/">Book Depository</a><a href="https://justinahiggins614-cmyk.github.io/signature-comics/">Comic Store</a><a href="https://justinahiggins614-cmyk.github.io/signature-newspapers/">Global Newspaper Archive</a><a href="https://justinahiggins614-cmyk.github.io/signature-3d-print/">3D Print Depository</a><a href="https://justinahiggins614-cmyk.github.io/signature-backend/">Mad Scientist Lab</a><a href="https://justinahiggins614-cmyk.github.io/signature-boundless-generators/">Boundless Generator Archive</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-mixlab/">AI Mix Lab</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-olypics/">AI Olypics</a><a href="https://justinahiggins614-cmyk.github.io/signature-chip-maker/">Chip Maker and Archive</a><a href="https://justinahiggins614-cmyk.github.io/signature-app-archive/">App Archive</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-robot-matcher/">AI Robot Matcher</a><a href="https://justinahiggins614-cmyk.github.io/signature-experiment-solver/">Experiment Solver</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-image-video-maker/">Signature AI Pixel</a><a href="https://justinahiggins614-cmyk.github.io/signature-ai-song-maker/">Signature Music Studio</a></div></nav>
 <div class="topbar">
   <a href="?" style="text-decoration:none"><div class="brand">JAH WIKI<small>THE ENCYCLOPEDIA OF THE JAH SYSTEM</small></div></a>
   <div class="navlinks" role="navigation" aria-label="Wiki sections">
@@ -147,11 +154,12 @@ h2.sec .sectog{font-size:.7em;color:#5b6472;margin-right:8px}
 <h1 class="at">Welcome to JAH Wiki</h1>
 <p class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</p>
 <p class="sub" style="color:#1a4d2e"><strong>475,897 articles indexed</strong>, as of 2026-10-01. What counts as an article: one record — a spec-derived article (a Signature draft specification), a patent-derived article (a public patent record), or a subject article (a JAH-N subject file). The number above is a snapshot; the live count refreshes from the catalog indexes every time this page loads.</p>
+<details class="statdrawer" open><summary>Article counts</summary>
 <div class="stats">
 <div class="stat"><div class="n">438,346</div><div class="l">spec-derived articles</div></div>
 <div class="stat"><div class="n">37,431</div><div class="l">patent-derived articles</div></div>
 <div class="stat"><div class="n">120</div><div class="l">subject articles</div></div>
-</div>
+</div></details>
 <h2 class="sec">Browse the encyclopedia</h2>
 <ul class="pgln">
 <li><a href="?all=SPEC">All spec-derived articles</a> — alphabetical, 200 per page</li>
@@ -463,10 +471,10 @@ function homeHTML(){
  h+='<h1 class="at">Welcome to JAH Wiki</h1><div class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</div>';
  h+='<p class="sub" style="color:#1a4d2e">Encyclopedia ready — '+(ns+np+nb).toLocaleString()+' articles indexed.</p>';
  if(DB.shardErrors||DB.patErrors)h+='<p class="sub" style="color:#a00">Note: '+(DB.shardErrors||0)+' spec index and '+(DB.patErrors||0)+' patent index file(s) failed to load — counts below may be incomplete. <a href="?">Reload to retry</a>.</p>';
- h+='<div class="stats"><div class="stat"><div class="n">'+ns.toLocaleString()+'</div><div class="l">spec articles</div></div>';
+ h+='<details class="statdrawer" open><summary>Article counts</summary><div class="stats"><div class="stat"><div class="n">'+ns.toLocaleString()+'</div><div class="l">spec articles</div></div>';
  h+='<div class="stat"><div class="n">'+np.toLocaleString()+'</div><div class="l">patent articles</div></div>';
  h+='<div class="stat"><div class="n">'+nb+'</div><div class="l">subject files</div></div>';
- h+='<div class="stat"><div class="n">'+(ns+np+nb).toLocaleString()+'</div><div class="l">articles total</div></div></div>';
+ h+='<div class="stat"><div class="n">'+(ns+np+nb).toLocaleString()+'</div><div class="l">articles total</div></div></div></details>';
  h+='<p class="sub" style="color:#1a4d2e;margin-top:10px">Articles mirror Signature specs, public patent records, and JAH-N subjects — one article per record.</p>';
  var _du=dataUpdated();
  h+='<p class="sub" style="color:#5b6472;margin-top:-8px"><span title="When the underlying index files were last published">\uD83D\uDD52 Index data last updated: '+esc(fmtTs(_du||Date.now()))+(_du?"":" (this visit)")+'</span></p>';
@@ -1431,6 +1439,10 @@ async function init(){
  }catch(e){nav(unableHTML(false));wireRetry()}
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+</script>
+<script>
+/* FIX-03: stat drawers collapse on mobile (<768px), expanded on desktop; auto-syncs dynamic renders */
+(function(){function jahStatSync(){var w=window.innerWidth||document.documentElement.clientWidth;var ds=document.querySelectorAll('details.statdrawer');for(var i=0;i<ds.length;i++){if(w<768){ds[i].removeAttribute('open')}else{ds[i].setAttribute('open','')}}}if(document.addEventListener){window.addEventListener('resize',jahStatSync);if(window.MutationObserver){new MutationObserver(jahStatSync).observe(document.documentElement,{childList:true,subtree:true})}jahStatSync()}})();
 </script>
 </body>
 </html>
