@@ -41,7 +41,9 @@ function curlCode(u) {
   }
   for (const u of PAT_RECORDS) recordLocs.push(u);
 
-  const keep = [WIKI + "sitemap-pages.xml"];
+  const keep = [WIKI + "sitemap-pages.xml",
+    WIKI + "sitemap-wiki-spec.xml", WIKI + "sitemap-wiki-pat.xml",
+    WIKI + "sitemap-wiki-sub.xml", WIKI + "sitemap-wiki-word.xml"];
   const skipped = [];
   for (const u of recordLocs) {
     const c = await curlCode(u);

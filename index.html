@@ -113,6 +113,7 @@ h2.sec .sectog{font-size:.7em;color:#5b6472;margin-right:8px}
 .loadstate button{padding:10px 22px;background:#0b3d91;color:#fff;border:none;border-radius:4px;font-weight:bold;cursor:pointer;margin-top:14px;font-size:1em}
 @media(max-width:700px){.ibox{float:none;margin:0 0 14px;width:100%}}
 
+/* Site #4 diagnostic: quick-jump sidebar styles below; qjumpHTML() lives in the main script. */
 /* Finder AI + article helper (additive) */
 .finderbar{background:#f6f8fd;border:1px solid #0b3d91;border-radius:8px;padding:12px 14px;margin:0 0 12px}
 .finder-kicker{color:#0b3d91;font-weight:bold;letter-spacing:1px;font-size:.85em;font-family:Arial,sans-serif}
@@ -130,6 +131,28 @@ h2.sec .sectog{font-size:.7em;color:#5b6472;margin-right:8px}
 .fh-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
 .fh-row button{font-family:Arial,sans-serif;font-size:.85em;padding:7px 12px;border:1px solid #9db3d8;background:#fff;border-radius:4px;cursor:pointer;color:#0b3d91;font-weight:bold}
 .fh-a{font-family:Arial,sans-serif;font-size:.92em;background:#fff;border:1px solid #9db3d8;border-radius:6px;padding:10px 12px;min-height:1.4em}
+/* Site #4 diagnostic: reading measure, cross-ref links, quick-jump sidebar */
+nav.crumb{margin-bottom:8px}
+#articlebody p,#articlebody li{max-width:74ch}
+#articlebody a{color:#0a2c7a;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
+#articlebody a:hover,#articlebody a:focus{color:#0b3d91;background:#eaf0ff;text-decoration-thickness:2px}
+#articlebody a:focus{outline:2px solid #9db3d8;outline-offset:1px}
+.artlay{display:flex;gap:22px;align-items:flex-start}
+.artmain{flex:1;min-width:0}
+.qjump{flex:0 0 196px;position:sticky;top:66px;background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:12px 14px;font-family:Arial,sans-serif;font-size:.85em}
+.qjump b{display:block;margin-bottom:6px;color:#0b3d91}
+.qjump a{display:block;padding:5px 0;color:var(--accent);text-decoration:none}
+.qjump a:hover{text-decoration:underline}
+.qjump-m{display:none}
+@media(max-width:900px){.artlay{display:block}.qjump{display:none}.qjump-m{display:block;margin:6px 0 12px}}
+/* Gemini follow-up: source badges, source buttons, result type badges */
+.srcbadge{display:inline-block;background:#0b3d91;color:#fff;font-family:Arial,sans-serif;font-weight:bold;font-size:.82em;letter-spacing:1px;padding:5px 12px;border-radius:4px;margin-bottom:8px}
+.arttype.pat .srcbadge{background:#7a4a00}
+.arttype.sub .srcbadge{background:#5b2a86}
+.arttype.word .srcbadge{background:#1a4d2e}
+.srcbtn{display:inline-block;margin-top:10px;background:#0b3d91;color:#fff !important;font-family:Arial,sans-serif;font-weight:bold;font-size:.9em;padding:10px 20px;border-radius:5px;text-decoration:none !important}
+.srcbtn:hover{background:#082c6b}
+.rtbadge{display:inline-block;background:#0b3d91;color:#fff;font-family:Arial,sans-serif;font-size:.66em;font-weight:bold;padding:2px 7px;border-radius:3px;margin-right:7px;letter-spacing:.5px;vertical-align:middle}
 </style>
 <style>.jahnet{background:#101418;color:#9aa4b2;font-size:.76em;padding:6px 10px;text-align:center;line-height:2;letter-spacing:.02em}.jahnet-t{color:#e8c766;font-weight:700;letter-spacing:.25em;margin-right:10px}.jahnet-here{color:#e8c766;font-weight:700;margin-right:10px;white-space:nowrap;border:1px solid #e8c766;border-radius:3px;padding:1px 8px}.jahnet a{color:#9fc2ff;text-decoration:none;margin:0 7px;white-space:nowrap}.jahnet a:hover{text-decoration:underline}</style>
 </head>
@@ -139,7 +162,7 @@ h2.sec .sectog{font-size:.7em;color:#5b6472;margin-right:8px}
 <div class="topbar">
   <a href="?" style="text-decoration:none"><div class="brand">JAH WIKI<small>THE ENCYCLOPEDIA OF THE JAH SYSTEM</small></div></a>
   <div class="navlinks" role="navigation" aria-label="Wiki sections">
-    <a href="?">Home</a><a href="?all=SPEC">All pages</a><a href="#" id="randlink">Random article</a>
+    <a href="?">Home</a><a href="?all=SPEC">All pages</a><a href="?all=WORD">Word articles</a><a href="#" id="randlink">Random article</a>
     <a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/" target="_blank" rel="noopener">The Signature Dictionary</a>
     <a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/" target="_blank" rel="noopener">JAH-N Wiki</a>
     <a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html" target="_blank" rel="noopener">Signature Spec Catalog Pending Patents</a>
@@ -165,8 +188,16 @@ h2.sec .sectog{font-size:.7em;color:#5b6472;margin-right:8px}
 <li><a href="?all=SPEC">All spec-derived articles</a> — alphabetical, 200 per page</li>
 <li><a href="?all=PAT">All patent-derived articles</a> — alphabetical, 200 per page</li>
 <li><a href="?all=SUB">All subject articles</a> — browsable by category</li>
+<li><a href="?all=WORD">All word articles</a> — every dictionary word as an encyclopedia article, A&ndash;Z</li>
 <li><a href="?random=1">Random article</a> — one article, picked fresh on every visit</li>
 </ul>
+<nav aria-label="Category hubs" style="font-family:Arial,sans-serif;font-size:.85em;margin:12px 0;line-height:2">
+<b>Category hubs — no search needed:</b><br>
+Spec articles A&ndash;Z: <a href="?all=SPEC&L=A">A</a> <a href="?all=SPEC&L=B">B</a> <a href="?all=SPEC&L=C">C</a> <a href="?all=SPEC&L=D">D</a> <a href="?all=SPEC&L=E">E</a> <a href="?all=SPEC&L=F">F</a> <a href="?all=SPEC&L=G">G</a> <a href="?all=SPEC&L=H">H</a> <a href="?all=SPEC&L=I">I</a> <a href="?all=SPEC&L=J">J</a> <a href="?all=SPEC&L=K">K</a> <a href="?all=SPEC&L=L">L</a> <a href="?all=SPEC&L=M">M</a> <a href="?all=SPEC&L=N">N</a> <a href="?all=SPEC&L=O">O</a> <a href="?all=SPEC&L=P">P</a> <a href="?all=SPEC&L=Q">Q</a> <a href="?all=SPEC&L=R">R</a> <a href="?all=SPEC&L=S">S</a> <a href="?all=SPEC&L=T">T</a> <a href="?all=SPEC&L=U">U</a> <a href="?all=SPEC&L=V">V</a> <a href="?all=SPEC&L=W">W</a> <a href="?all=SPEC&L=X">X</a> <a href="?all=SPEC&L=Y">Y</a> <a href="?all=SPEC&L=Z">Z</a> <br>
+Patent articles A&ndash;Z: <a href="?all=PAT&L=A">A</a> <a href="?all=PAT&L=B">B</a> <a href="?all=PAT&L=C">C</a> <a href="?all=PAT&L=D">D</a> <a href="?all=PAT&L=E">E</a> <a href="?all=PAT&L=F">F</a> <a href="?all=PAT&L=G">G</a> <a href="?all=PAT&L=H">H</a> <a href="?all=PAT&L=I">I</a> <a href="?all=PAT&L=J">J</a> <a href="?all=PAT&L=K">K</a> <a href="?all=PAT&L=L">L</a> <a href="?all=PAT&L=M">M</a> <a href="?all=PAT&L=N">N</a> <a href="?all=PAT&L=O">O</a> <a href="?all=PAT&L=P">P</a> <a href="?all=PAT&L=Q">Q</a> <a href="?all=PAT&L=R">R</a> <a href="?all=PAT&L=S">S</a> <a href="?all=PAT&L=T">T</a> <a href="?all=PAT&L=U">U</a> <a href="?all=PAT&L=V">V</a> <a href="?all=PAT&L=W">W</a> <a href="?all=PAT&L=X">X</a> <a href="?all=PAT&L=Y">Y</a> <a href="?all=PAT&L=Z">Z</a> <br>
+Subject files: <a href="?all=SUB">browse by category</a> &middot; <a href="?random=1">Random article</a><br>
+Word articles A&ndash;Z: <a href="?all=WORD&L=A">A</a> <a href="?all=WORD&L=B">B</a> <a href="?all=WORD&L=C">C</a> <a href="?all=WORD&L=D">D</a> <a href="?all=WORD&L=E">E</a> <a href="?all=WORD&L=F">F</a> <a href="?all=WORD&L=G">G</a> <a href="?all=WORD&L=H">H</a> <a href="?all=WORD&L=I">I</a> <a href="?all=WORD&L=J">J</a> <a href="?all=WORD&L=K">K</a> <a href="?all=WORD&L=L">L</a> <a href="?all=WORD&L=M">M</a> <a href="?all=WORD&L=N">N</a> <a href="?all=WORD&L=O">O</a> <a href="?all=WORD&L=P">P</a> <a href="?all=WORD&L=Q">Q</a> <a href="?all=WORD&L=R">R</a> <a href="?all=WORD&L=S">S</a> <a href="?all=WORD&L=T">T</a> <a href="?all=WORD&L=U">U</a> <a href="?all=WORD&L=V">V</a> <a href="?all=WORD&L=W">W</a> <a href="?all=WORD&L=X">X</a> <a href="?all=WORD&L=Y">Y</a> <a href="?all=WORD&L=Z">Z</a> 
+</nav>
 </div></div>
 <section class="wrap" id="methodology" aria-label="Data and methodology" style="padding-top:0">
 <h2 class="sec">Data &amp; methodology</h2>
@@ -175,7 +206,7 @@ h2.sec .sectog{font-size:.7em;color:#5b6472;margin-right:8px}
 <li><b>Article IDs.</b> Every article carries a permanent ID — <code>JAH-WIKI-SPEC-######</code> (spec-derived), <code>JAH-WIKI-PAT-&lt;pub-no&gt;</code> (patent-derived), <code>JAH-WIKI-W-&lt;word&gt;</code> (word articles), <code>JAH-WIKI-SUB-&lt;slug&gt;</code> (subject articles) — derived deterministically from the record's own permanent key (spec number, patent publication number, dictionary word, subject slug). The ID is stable across rebuilds and unique at any scale, and it resolves as <code>?page=&lt;ID&gt;</code>, the article's canonical URL.</li>
 <li><b>Source classification.</b> Spec-derived articles are JAH original designs. Patent-derived articles are public patent records — the invention belongs to its listed owner. Subject articles blend verified public-record material with the system's simulation layer; each block is marked. Word articles pair original IWB Dictionary definitions with computed JAH data.</li>
 <li><b>Draft vs granted — read carefully.</b> Spec-derived articles are <b>draft specifications, ready to review and file — NOT granted patents</b>. Only patent-derived articles describe issued or granted patents, and only where the public record says so. A machine asked "is this an issued patent?" must answer NO for any spec-derived or subject article.</li>
-<li><b>How crawlers find articles (sitemap strategy).</b> The sitemap index (<a href="sitemap.xml">sitemap.xml</a>) lists (a) this wiki's own top-level and browse pages — home, the <code>?all=SPEC</code>, <code>?all=PAT</code>, <code>?all=SUB</code> listings with their A–Z partitions, and the random-article route — and (b) the Spec Catalog's and Patent Catalog's own record sitemaps, where the 460,000+ underlying record URLs live with the catalogs that own them and can keep them fresh. This wiki deliberately does not duplicate hundreds of thousands of record URLs in files it cannot refresh; every URL it lists returns 200. Every browse page above is a real link, so every article is reachable without search.</li>
+<li><b>How crawlers find articles (sitemap strategy).</b> The sitemap index (<a href="sitemap.xml">sitemap.xml</a>) lists (a) this wiki's own top-level and browse pages — home, the <code>?all=SPEC</code>, <code>?all=PAT</code>, <code>?all=SUB</code> listings with their A–Z partitions, and the random-article route — and (b) the Spec Catalog's and Patent Catalog's own record sitemaps, where the 460,000+ underlying record URLs live with the catalogs that own them and can keep them fresh. This wiki deliberately does not duplicate hundreds of thousands of record URLs in files it cannot refresh; every URL it lists returns 200. Category-level sitemap indexes (<a href="sitemap-wiki-spec.xml">sitemap-wiki-spec.xml</a>, <a href="sitemap-wiki-pat.xml">sitemap-wiki-pat.xml</a>, <a href="sitemap-wiki-sub.xml">sitemap-wiki-sub.xml</a>, <a href="sitemap-wiki-word.xml">sitemap-wiki-word.xml</a>) partition the browse hubs by letter and category for crawlers. Every browse page above is a real link, so every article is reachable without search.</li>
 </ul>
 </section>
 <footer class="site"><div class="wrap" style="padding:0">
@@ -196,6 +227,7 @@ function prng(seed){var a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;var t
 /* index-data freshness: last-modified of every index file fetched, for the honest "last updated" line */
 var LASTMOD={};
 function noteMod(url,r){try{var lm=r.headers.get("last-modified");if(lm){var t=Date.parse(lm);if(t>0)LASTMOD[url]=t}}catch(e){}}
+function noteFail(url,label){(DB.failUrls=DB.failUrls||[]).push({url:url,label:label})}
 function dataUpdated(){var mx=0;for(var k in LASTMOD)if(LASTMOD[k]>mx)mx=LASTMOD[k];return mx}
 function fmtTs(t){try{return new Date(t).toLocaleString()}catch(e){return String(t)}}
 async function fetchGz(url){var r=await fetch(url);if(!r.ok)throw new Error("HTTP "+r.status);noteMod(url,r);var b=r.body;var ds=new DecompressionStream("gzip");var t=await new Response(b.pipeThrough(ds)).text();return t}
@@ -221,12 +253,18 @@ function wikiId(kind,id){
  var sb=s.replace(/^SUB:/i,"").replace(/[^A-Za-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60);return "JAH-WIKI-SUB-"+(sb||"X"+hashStr("sub:"+s).toString(36))
 }
 function classBanner(kind,meta){
- var label={spec:["SPECIFICATION","JAH ORIGINAL","STATUS: DRAFT — ready to review and file. <b>NOT A GRANTED PATENT.</b>"],
-  pat:["PUBLIC PATENT RECORD","PUBLIC RECORD","Descriptions reflect the public filing — the invention belongs to its listed owner."],
-  sub:["SUBJECT FILE","MIXED: PUBLIC-RECORD MATERIAL + JAH SIMULATION","Public-record blocks and simulation blocks are each marked. Nothing simulated is a public fact."],
-  word:["WORD ARTICLE","IWB DICTIONARY (ORIGINAL DEFINITIONS)","The JAH system's instruments on one word."]}[kind]||["ARTICLE","—",""];
- return '<div class="arttype '+kind+'"><b>ARTICLE TYPE: '+label[0]+'</b> &middot; SOURCE: '+label[1]+'<br>'+label[2]+
- '<br><span style="color:#5b6472">Article ID: <b>'+meta.article_id+'</b> &middot; Version v'+meta.version+' &middot; Updated '+esc(meta.updated||"—")+'</span></div>';
+ var label={spec:["SIGNATURE ORIGINAL SPEC","<b>DRAFT SPECIFICATION — NOT a granted patent.</b> Ready to review and file. An original design by Justin Addam Higgins."],
+  pat:["PUBLIC PATENT RECORD","<b>PUBLIC PATENT RECORD — NOT a JAH draft.</b> Descriptions reflect the public filing; the invention belongs to its listed owner."],
+  sub:["JAH-N SUBJECT FILE","<b>SUBJECT FILE.</b> Mixed: public-record material plus the JAH system's marked simulation layer."],
+  word:["DICTIONARY RECORD","<b>DICTIONARY RECORD.</b> IWB Dictionary original definitions, plus the JAH system's instruments."]}[kind]||["ARTICLE",""];
+ var cu=WIKI_HOME+"?page="+encodeURIComponent(meta.page_param||"");
+ var pv=(meta.provenance&&meta.provenance[0])||{};
+ var srcUrl=pv.source_url||"",srcId=String(pv.source_id||"");
+ if(kind==="pat"&&meta.xrefs&&meta.xrefs.publication_no){srcUrl=PAT_SITE+"/?patent="+encodeURIComponent(meta.xrefs.publication_no);srcId=meta.xrefs.publication_no}
+ return '<div class="arttype '+kind+'"><span class="srcbadge">'+label[0]+'</span><br>'+label[1]+
+ '<br><span style="color:#5b6472">Article ID: <b>'+meta.article_id+'</b> &middot; Version v'+meta.version+' &middot; Updated '+esc(meta.updated||"—")+'</span>'+
+ '<br><span style="color:#5b6472">Canonical URL: '+esc(cu)+'</span>'+
+ (srcUrl?'<br><a class="srcbtn" href="'+esc(srcUrl)+'" target="_blank" rel="noopener">Open original source record'+(srcId?' — '+esc(srcId.slice(0,60)):"")+'</a>':"")+'</div>';
 }
 /* machine-readable provenance tags that render beside each factual block */
 function provHTML(sourceType,verified,note){
@@ -270,10 +308,15 @@ function wikiMeta(kind,L,src){
  return m;
 }
 function jsonldHTML(meta){
+ var c=meta.classification||{};
  return '<script type="application/ld+json">'+JSON.stringify({["@context"]:"https://schema.org",["@type"]:"Article",
   identifier:meta.article_id,headline:meta.title,url:WIKI_HOME+"?page="+encodeURIComponent(meta.page_param),
-  version:meta.version,dateModified:meta.updated||undefined,
-  additionalProperty:[{name:"article_type",value:meta.classification.article_type},{name:"issued_patent",value:String(meta.issued_patent)},{name:"draft_spec",value:String(meta.draft_spec)},{name:"simulation_present",value:String(meta.simulation_present)}],
+  version:meta.version,datePublished:meta.created||undefined,dateModified:meta.updated||undefined,
+  author:{["@type"]:"Person",name:"Justin Addam Higgins"},
+  publisher:{["@type"]:"Person",name:"Justin Addam Higgins"},
+  about:{["@type"]:"Thing",name:c.article_type||"ARTICLE",description:c.source||""},
+  keywords:[meta.article_id,c.article_type,c.source,c.status].filter(Boolean).join(", "),
+  additionalProperty:[{name:"article_type",value:c.article_type},{name:"issued_patent",value:String(meta.issued_patent)},{name:"draft_spec",value:String(meta.draft_spec)},{name:"simulation_present",value:String(meta.simulation_present)}],
   citation:meta.source_list})+'<\/script>';
 }
 /* per-article head metadata: canonical link + descriptive meta, refreshed on every article view.
@@ -356,27 +399,27 @@ var LEAK_SITE="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks";
 var WIKI_HOME="https://justinahiggins614-cmyk.github.io/jah-wiki/";
 var PHONE_SITE="https://justinahiggins614-cmyk.github.io/jah-ai-models";
 var PC_SITE="https://justinahiggins614-cmyk.github.io/jah-computer-systems";
-var DB={specIdx:[],patIdx:[],subjects:[],shards:[],sigline:[],ready:false};
+var DB={specIdx:[],patIdx:[],subjects:[],shards:[],sigline:[],ready:false,failUrls:[]};
 function shardBase(s){var b=(s&&s.base)||"";return b?b.replace(/\/?$/,""):SPEC_SITE}
 async function loadDB(){
  if(DB.ready)return DB;
  var jobs=[];
  jobs.push(fetch(SPEC_SITE+"/data/index/shards.json").then(function(r){noteMod(SPEC_SITE+"/data/index/shards.json",r);return r.json()}).then(function(j){
    DB.shards=Array.isArray(j)?j:((j&&j.shards)||[]);
- }).catch(function(){DB.shardErrors=(DB.shardErrors||0)+1}));
+ }).catch(function(){DB.shardErrors=(DB.shardErrors||0)+1;noteFail(SPEC_SITE+"/data/index/shards.json","Spec Catalog shard registry")}));
  /* Compact search index: one row per spec as [spec_id, title, chunk, shard_n,
     category] — ~12MB instead of the ~31MB full per-shard indexes, so search
     works on phones. Full records load on demand per opened article. */
  jobs.push(fetchGz(SPEC_SITE+"/data/index/specs.search.json.gz").then(function(t){
    DB.specIdx=t.trim().split("\n").map(function(l){return JSON.parse(l)});
- }).catch(function(){DB.shardErrors=(DB.shardErrors||0)+1}));
+ }).catch(function(){DB.shardErrors=(DB.shardErrors||0)+1;noteFail(SPEC_SITE+"/data/index/specs.search.json.gz","Spec Catalog compact search index")}));
  /* Signature-line lookup table: [pub, spec_id, title] — lets patent articles
     link the Signature-line version without scanning the full index. */
  jobs.push(fetchGz(SPEC_SITE+"/data/index/specs.sigline.json.gz").then(function(t){
    DB.sigline=JSON.parse(t);
  }).catch(function(){DB.sigline=[]}));
- jobs.push(fetchGz(PAT_SITE+"/data/patents.idx.json.gz").then(function(t){DB.patIdx=JSON.parse(t)}).catch(function(){DB.patErrors=(DB.patErrors||0)+1}));
- jobs.push(fetch(LEAK_SITE+"/data/bizarre.json").then(function(r){noteMod(LEAK_SITE+"/data/bizarre.json",r);return r.json()}).then(function(j){DB.subjects=j}).catch(function(){}));
+ jobs.push(fetchGz(PAT_SITE+"/data/patents.idx.json.gz").then(function(t){DB.patIdx=JSON.parse(t)}).catch(function(){DB.patErrors=(DB.patErrors||0)+1;noteFail(PAT_SITE+"/data/patents.idx.json.gz","Patent Catalog record index")}));
+ jobs.push(fetch(LEAK_SITE+"/data/bizarre.json").then(function(r){noteMod(LEAK_SITE+"/data/bizarre.json",r);return r.json()}).then(function(j){DB.subjects=j}).catch(function(){noteFail(LEAK_SITE+"/data/bizarre.json","JAH-N Wiki subject files")}));
  await Promise.all(jobs);DB.ready=true;return DB;
 }
 function findSpec(id){id=String(id).toUpperCase();for(var i=0;i<DB.specIdx.length;i++)if(String(DB.specIdx[i][0]).toUpperCase()===id)return DB.specIdx[i];return null}
@@ -463,6 +506,13 @@ function wireHelper(){
   if(a&&t!=null)a.textContent=t;
  });
 }
+/* Site #4 diagnostic: sticky quick-jump sidebar (desktop) + collapsible drawer (mobile).
+   Instant pivots between the wiki's knowledge domains on every article view. */
+function qjumpHTML(){
+ var links='<a href="?">Home</a><a href="?all=SPEC">Spec articles</a><a href="?all=PAT">Patent articles</a><a href="?all=SUB">Subject files</a><a href="?all=WORD">Word articles</a><a href="?random=1">Random article</a>';
+ return '<aside class="qjump" aria-label="Knowledge domains"><b>Knowledge domains</b>'+links+'</aside>'+
+  '<details class="qjump-m"><summary>Jump to a knowledge domain</summary><div style="padding:8px 2px">'+links+'</div></details>';
+}
 function nav(html){document.getElementById("app").innerHTML=html;window.scrollTo(0,0);wireFinder();wireHelper();}
 function homeHTML(){
  var ns=DB.specIdx.length,np=DB.patIdx.length,nb=DB.subjects.length;
@@ -470,7 +520,7 @@ function homeHTML(){
  var h='<div class="crumb">Main page</div>';
  h+='<h1 class="at">Welcome to JAH Wiki</h1><div class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</div>';
  h+='<p class="sub" style="color:#1a4d2e">Encyclopedia ready — '+(ns+np+nb).toLocaleString()+' articles indexed.</p>';
- if(DB.shardErrors||DB.patErrors)h+='<p class="sub" style="color:#a00">Note: '+(DB.shardErrors||0)+' spec index and '+(DB.patErrors||0)+' patent index file(s) failed to load — counts below may be incomplete. <a href="?">Reload to retry</a>.</p>';
+ if(DB.failUrls&&DB.failUrls.length)h+='<p class="sub" style="color:#a00"><b>Some source indexes failed to load</b> — the exact affected sources:<br>'+DB.failUrls.map(function(f){return '&bull; '+esc(f.label)+' (<span style="font-family:monospace">'+esc(f.url)+'</span>)'}).join('<br>')+'<br>Counts below may be incomplete. <a href="?">Reload to retry</a>.</p>';
  h+='<details class="statdrawer" open><summary>Article counts</summary><div class="stats"><div class="stat"><div class="n">'+ns.toLocaleString()+'</div><div class="l">spec articles</div></div>';
  h+='<div class="stat"><div class="n">'+np.toLocaleString()+'</div><div class="l">patent articles</div></div>';
  h+='<div class="stat"><div class="n">'+nb+'</div><div class="l">subject files</div></div>';
@@ -483,6 +533,7 @@ function homeHTML(){
  h+='<div class="card"><h3>Spec articles</h3><p>Encyclopedia entries for every draft specification in the Spec Catalog — definition, history, lenses, patent draft, program, and a personal AI for each.</p><p><a href="?all=SPEC">Browse all &rarr;</a></p></div>';
  h+='<div class="card"><h3>Patent articles</h3><p>Every public patent record in the Patent Catalog, written up wiki-style with history, analysis lenses, and a working demo program.</p><p><a href="?all=PAT">Browse all &rarr;</a></p></div>';
  h+='<div class="card"><h3>Subject files</h3><p>Bizarre subjects, cryptids, UFO cases, dream figures and more — each with witnesses, investigations, sources, and the full lens treatment.</p><p><a href="?all=SUB">Browse all &rarr;</a></p></div>';
+ h+='<div class="card"><h3>Word articles</h3><p>Every word in the IWB Dictionary gets a full encyclopedia article — definition, JAH data, analysis lenses, working program, and AI persona.</p><p><a href="?all=WORD">Browse all &rarr;</a></p></div>';
  h+='<div class="card"><h3>Partner site</h3><p><b>JAH-N Wiki</b> is the classified partner archive — every wiki article links to its full dossier and back.</p><p><a href="'+LEAK_SITE+'/" target="_blank" rel="noopener">Open JAH-N Wiki &rarr;</a></p></div>';
  h+='</div>';
  h+='<h2 class="sec">About this wiki</h2><p>Just like a normal encyclopedia, each article carries a <b>definition</b>, <b>history</b>, how-it-works, data tables, and references. On top of that, every JAH Wiki article carries the system\'s own instruments: <b>eleven analysis lenses</b> (deterministic, probabilistic, geometric, hash, neural, evolutionary, fuzzy, swarm, decision-tree, cellular-automata, and a hybrid of them all), a <b>patent draft</b>, a downloadable <b>working program</b> with an in-browser demo, and a <b>personal AI persona</b> of the item that answers questions. Use <b>Copy article</b> to paste anywhere, or <b>Read aloud</b> to listen.</p>';
@@ -509,12 +560,12 @@ async function doSearch(q){q=q.trim();if(!q)return nav(homeHTML());
  function snip(t){t=String(t||"").replace(/\s+/g," ").trim();return t?'<br><span style="color:#5b6472;font-size:.85em">'+esc(t.slice(0,160))+'</span>':""}
  /* exact article match: an ID typed verbatim jumps straight to its article */
  var exr=findSpec(q.toUpperCase()),exp=exr?null:findPat(q.toUpperCase());
- if(exr)h+='<h2 class="sec">Exact article</h2><ul class="pgln"><li><a href="?page='+exr[0]+'"><b>'+esc(exr[1])+'</b></a> <span style="color:#888">'+esc(exr[0])+'</span> — draft specification</li></ul>';
- else if(exp)h+='<h2 class="sec">Exact article</h2><ul class="pgln"><li><a href="?page=PAT:'+encodeURIComponent(exp[0])+'"><b>'+esc(String(exp[1]).replace(/&hellip;/g,"..."))+'</b></a> <span style="color:#888">'+esc(exp[0])+'</span> — public patent record</li></ul>';
+ if(exr)h+='<h2 class="sec">Exact article</h2><ul class="pgln"><li><span class="rtbadge">SPECIFICATION</span><a href="?page='+exr[0]+'"><b>'+esc(exr[1])+'</b></a> <span style="color:#888">'+esc(exr[0])+'</span> — draft specification</li></ul>';
+ else if(exp)h+='<h2 class="sec">Exact article</h2><ul class="pgln"><li><span class="rtbadge">PUBLIC PATENT RECORD</span><a href="?page=PAT:'+encodeURIComponent(exp[0])+'"><b>'+esc(String(exp[1]).replace(/&hellip;/g,"..."))+'</b></a> <span style="color:#888">'+esc(exp[0])+'</span> — public patent record</li></ul>';
  h+=dictTop;
- h+=sec("Spec articles",rs,function(r){return '<li><a href="?page='+r[0]+'">'+esc(r[1])+'</a> <span style="color:#888">'+esc(r[0])+'</span>'+(r[4]?'<br><span style="color:#5b6472;font-size:.85em">'+esc(r[4])+'</span>':"")+'</li>'});
- h+=sec("Patent articles",rp,function(p){return '<li><a href="?page=PAT:'+encodeURIComponent(p[0])+'">'+esc(String(p[1]).replace(/&hellip;/g,"..."))+'</a> <span style="color:#888">'+esc(p[0])+'</span>'+snip(firstPara(((p[3]?p[3]+" \u2014 ":"")+"public patent record "+p[0]),160))+'</li>'});
- h+=sec("Subject files",rb,function(d){return '<li><a href="?page='+subjSlug(d)+'">'+esc(d.subject)+'</a>'+snip(firstPara(d.overview||d.summary||"",160))+'</li>'});
+ h+=sec("Spec articles",rs,function(r){return '<li><span class="rtbadge">SPECIFICATION</span><a href="?page='+r[0]+'">'+esc(r[1])+'</a> <span style="color:#888">'+esc(r[0])+'</span>'+(r[4]?'<br><span style="color:#5b6472;font-size:.85em">'+esc(r[4])+'</span>':"")+'</li>'});
+ h+=sec("Patent articles",rp,function(p){return '<li><span class="rtbadge">PUBLIC PATENT RECORD</span><a href="?page=PAT:'+encodeURIComponent(p[0])+'">'+esc(String(p[1]).replace(/&hellip;/g,"..."))+'</a> <span style="color:#888">'+esc(p[0])+'</span>'+snip(firstPara(((p[3]?p[3]+" \u2014 ":"")+"public patent record "+p[0]),160))+'</li>'});
+ h+=sec("Subject files",rb,function(d){return '<li><span class="rtbadge">SUBJECT FILE</span><a href="?page='+subjSlug(d)+'">'+esc(d.subject)+'</a>'+snip(firstPara(d.overview||d.summary||"",160))+'</li>'});
  var hasOther=rs.length||rp.length||rb.length;
  if(!single){
   /* multi-word query: dictionary section still loads after, so search stays instant */
@@ -535,11 +586,11 @@ async function dictSec(q){
   var di=dictFind(q),dh="";
   if(di>=0){var de=await dictEntry(q);
    if(de&&de.k==="w"){var senses=(Array.isArray(de.d)?de.d:[]).slice(0,2).map(function(s){return esc(String(s).replace(/^\d+\.\s*/,"").slice(0,300))});
-    dh='<h2 class="sec">From the IWB Dictionary</h2><div class="feat"><h3 style="margin:0 0 6px">'+esc(de.w)+' <span class="stamp">'+esc(de.st)+'</span></h3><p style="font-family:Arial;font-size:.9em">'+senses.join("<br><br>")+'</p><p style="font-family:Arial"><a href="?page='+encodeURIComponent(de.w)+'"><b>Read the encyclopedia article &ldquo;'+esc(de.w)+'&rdquo; &rarr;</b></a><br><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Open the full dictionary entry &rarr;</a> &middot; <a href="'+SPEC_SITE+'/specs.html?word='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Word patent &rarr;</a></p></div>'}
+    dh='<h2 class="sec">From the IWB Dictionary</h2><div class="feat"><h3 style="margin:0 0 6px"><span class="rtbadge">DICTIONARY RECORD</span>'+esc(de.w)+' <span class="stamp">'+esc(de.st)+'</span></h3><p style="font-family:Arial;font-size:.9em">'+senses.join("<br><br>")+'</p><p style="font-family:Arial"><a href="?page='+encodeURIComponent(de.w)+'"><b>Read the encyclopedia article &ldquo;'+esc(de.w)+'&rdquo; &rarr;</b></a><br><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Open the full dictionary entry &rarr;</a> &middot; <a href="'+SPEC_SITE+'/specs.html?word='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Word patent &rarr;</a></p></div>'}
   }else{
    var pm=[],li=dictLower(q);
    while(li<DICT.idx.length&&pm.length<8){var k2=DICT.idx[li][0];if(k2.indexOf(q)!==0)break;pm.push(k2);li++}
-   if(pm.length)dh='<h2 class="sec">From the IWB Dictionary</h2><ul class="pgln">'+pm.map(function(kx){return '<li><a href="'+DICT_SITE+'/?w='+encodeURIComponent(kx)+'" target="_blank" rel="noopener">'+esc(kx)+'</a></li>'}).join("")+'</ul>';
+   if(pm.length)dh='<h2 class="sec">From the IWB Dictionary</h2><ul class="pgln">'+pm.map(function(kx){return '<li><span class="rtbadge">DICTIONARY RECORD</span><a href="'+DICT_SITE+'/?w='+encodeURIComponent(kx)+'" target="_blank" rel="noopener">'+esc(kx)+'</a></li>'}).join("")+'</ul>';
   }
   return dh;
  }catch(e){return ""}
@@ -547,7 +598,7 @@ async function dictSec(q){
 function allPages(){
  var kind=(qp("all")||"SPEC").toUpperCase(),pg=parseInt(qp("pg")||"1",10),per=200,letter=(qp("L")||"").toUpperCase();
  var h='<div class="crumb"><a href="?">Home</a> &rsaquo; All pages</div><h1 class="at">All pages</h1>';
- h+='<p style="font-family:Arial"><a href="?all=SPEC">Specs</a> &middot; <a href="?all=PAT">Patents</a> &middot; <a href="?all=SUB">Subjects</a></p>';
+ h+='<p style="font-family:Arial"><a href="?all=SPEC">Specs</a> &middot; <a href="?all=PAT">Patents</a> &middot; <a href="?all=SUB">Subjects</a> &middot; <a href="?all=WORD">Word articles</a></p>';
  if(kind==="SUB"){
   var ds=DB.subjects.slice().sort(function(a,b){return String(a.subject).localeCompare(String(b.subject))});
   /* category browse: real links so crawlers and readers can reach every subject without searching */
@@ -574,6 +625,27 @@ function allPages(){
  h+='<p style="font-family:Arial">Page '+pg+' of '+pages.toLocaleString();
  if(pg>1)h+=' &middot; <a href="?all='+kind+(letter?'&L='+letter:"")+'&pg='+(pg-1)+'">&larr; prev</a>';
  if(pg<pages)h+=' &middot; <a href="?all='+kind+(letter?'&L='+letter:"")+'&pg='+(pg+1)+'">next &rarr;</a>';
+ h+="</p>";nav(h);
+}
+/* Site #4 diagnostic (Gemini): obvious Word Articles browse path — every dictionary
+   word as an encyclopedia article, A–Z partitions, 200 per page. */
+async function wordPages(){
+ var letter=(qp("L")||"").toUpperCase(),pg=parseInt(qp("pg")||"1",10),per=200;
+ var h='<nav aria-label="Breadcrumb" class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=WORD">Word articles</a></nav><h1 class="at">Word articles</h1>';
+ h+='<p style="font-family:Arial"><a href="?all=SPEC">Specs</a> &middot; <a href="?all=PAT">Patents</a> &middot; <a href="?all=SUB">Subjects</a> &middot; <b>Word articles</b></p>';
+ h+='<p class="sub">Every word in the IWB Dictionary gets a full encyclopedia article — definition, JAH data, analysis lenses, working program, and AI persona.</p>';
+ var words=[];
+ try{await dictIdx();}catch(e){}
+ if(DICT.idx){for(var i=0;i<DICT.idx.length;i++){var w=String(DICT.idx[i][0]);if(/^[a-z][a-z'-]{0,40}$/i.test(w)&&(!letter||w.charAt(0).toUpperCase()===letter))words.push(w)}}
+ var pages=Math.max(1,Math.ceil(words.length/per));if(pg<1)pg=1;if(pg>pages)pg=pages;
+ var az="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(function(c){return '<a href="?all=WORD&L='+c+'"'+(c===letter?' style="background:#0b3d91;color:#fff"':"")+'>'+c+"</a>"}).join("");
+ h+='<h2 class="sec">Word articles ('+words.length.toLocaleString()+')</h2><div class="az">'+az+' <a href="?all=WORD">all</a></div>';
+ if(!words.length){h+='<p class="sub">The dictionary index did not load — the exact failed source is listed on the <a href="?">home page</a>. <a href="?all=WORD">Retry</a>.</p>';nav(h);return}
+ var slice=words.slice((pg-1)*per,pg*per);
+ h+='<ul class="pgln">'+slice.map(function(w){return '<li><span class="rtbadge">DICTIONARY RECORD</span><a href="?page='+encodeURIComponent(w)+'">'+esc(w)+'</a></li>'}).join("")+"</ul>";
+ h+='<p style="font-family:Arial">Page '+pg+' of '+pages.toLocaleString();
+ if(pg>1)h+=' &middot; <a href="?all=WORD'+(letter?'&L='+letter:"")+'&pg='+(pg-1)+'">&larr; prev</a>';
+ if(pg<pages)h+=' &middot; <a href="?all=WORD'+(letter?'&L='+letter:"")+'&pg='+(pg+1)+'">next &rarr;</a>';
  h+="</p>";nav(h);
 }
 /* ================= analysis lenses: 11 intelligences, one subject ================= */
@@ -896,12 +968,12 @@ function specArticle(d,tab){
   seealso:[LEAK_SITE+"/?dossier="+encodeURIComponent(d.spec_id)+" (JAH-N Wiki dossier)"]});
  var lz=buildLenses(L);L.hybrid=lz.hybrid;L.verdict=lz.verdict;
  var rel=[];for(var i=0;i<DB.specIdx.length&&rel.length<4;i++){var r=DB.specIdx[i];if(r[4]===d.category&&r[0]!==d.spec_id)rel.push(r)}
- var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=SPEC">Spec articles</a> &rsaquo; '+esc(d.spec_id)+'</div>';
+ var h='<nav aria-label="Breadcrumb" class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=SPEC">Spec articles</a> &rsaquo; '+esc(d.spec_id)+'</nav>';
  if(tab==="talk")return talkArticle(L,d.spec_id,h,"spec");
  var WM=wikiMeta("spec",L,{rec:d,page_param:d.spec_id,source_list:"Spec Catalog master record "+d.spec_id});window.__wikiMeta=WM;
  h+=classBanner("spec",WM)+jsonldHTML(WM);
  h+=tabsHTML(d.spec_id,tab);
- h+=iconRowHTML();
+ h+=iconRowHTML();h+='<div class="artlay">'+qjumpHTML()+'<div class="artmain">';
  h+='<h1 class="at">'+esc(d.title)+'</h1>';
  h+=hatnoteHTML('This article is about the draft specification <b>'+esc(d.spec_id)+'</b>. For the classified dossier, see <a href="'+LEAK_SITE+'/?dossier='+encodeURIComponent(d.spec_id)+'" target="_blank" rel="noopener">JAH-N Wiki</a>.');
 h+=wikiHelperHTML([
@@ -932,7 +1004,7 @@ h+=wikiHelperHTML([
  h+='<h2 class="sec" id="ai">AI persona</h2>'+personaHTML(L);
  h+=seeAlsoBlock([[LEAK_SITE+"/?dossier="+encodeURIComponent(d.spec_id),"Classified dossier: "+d.spec_id+" on JAH-N Wiki",1],[SPEC_SITE+"/specs.html","Spec Catalog entry",1]].concat(rel.map(function(r){return["?page="+r[0],r[1]+" ("+r[0]+")",0]})));
  h+=sec("refs","References",citeHTML(WM)+"<p>Autoread block: <code>"+esc(d.autoread_block||"")+"</code></p><p style='font-size:.85em;color:#5b6472'>Master record "+esc(d.spec_id)+" · JAH Wiki article generated from the spec's own data.</p>");
- h+='<div class="note">Draft specification by Justin Addam Higgins (JAH) — ready to review and file. Not a granted patent.</div>';
+ h+='<div class="note">Draft specification by Justin Addam Higgins (JAH) — ready to review and file. Not a granted patent.</div></div></div>';
  h+='</div>';
  nav(h);wireToolbar("spec",L,{rec:d,page_param:d.spec_id});wirePersona(L);fillReport("spec",{d:d});
  document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
@@ -953,12 +1025,12 @@ function patArticle(pub,rec,tab){
   raw:rec,seealso:[PAT_SITE+"/ (Patent Catalog)"]});
  var lz=buildLenses(L);L.hybrid=lz.hybrid;L.verdict=lz.verdict;
  var sig=null;if(pub&&DB.sigline){for(var i=0;i<DB.sigline.length;i++){var se=DB.sigline[i];if(se[0]===pub||se[0].indexOf(pub)===0){sig=[se[1],se[2]];break}}}
- var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=PAT">Patent articles</a> &rsaquo; '+esc(pub)+'</div>';
+ var h='<nav aria-label="Breadcrumb" class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=PAT">Patent articles</a> &rsaquo; '+esc(pub)+'</nav>';
  if(tab==="talk")return talkArticle(L,"PAT:"+pub,h,"pat");
  var WMp=wikiMeta("pat",L,{rec:{pub:pub,publication_date:rec.publication_date,grant_date:rec.grant_date,priority_date:rec.priority_date},sig:(sig?sig[0]:null),page_param:"PAT:"+pub,source_list:"Catalog of Public Patents record "+pub});window.__wikiMeta=WMp;
  h+=classBanner("pat",WMp)+jsonldHTML(WMp);
  h+=tabsHTML("PAT:"+pub,tab);
- h+=iconRowHTML();
+ h+=iconRowHTML();h+='<div class="artlay">'+qjumpHTML()+'<div class="artmain">';
  h+='<h1 class="at">'+esc(rec.title)+'</h1>';
  h+=hatnoteHTML('This article is about the public patent record <b>'+esc(pub)+'</b>. For JAH&rsquo;s original Signature-line version, if one exists, see <b>See also</b> below.');
 h+=wikiHelperHTML([
@@ -983,7 +1055,7 @@ h+=wikiHelperHTML([
  var sa=[[PAT_SITE+"/","Patent Catalog record",1]];if(sig)sa.push(["?page="+sig[0],"JAH Signature-line version: "+sig[1]+" ("+sig[0]+")",0]);
  h+=seeAlsoBlock(sa);
  h+=sec("refs","References",citeHTML(WMp)+"<p style='font-size:.88em'>Public patent record "+esc(pub)+", via the Catalog of Public Patents. JAH Wiki article generated from the public record.</p>");
- h+='<div class="note">Public patent record — not a JAH draft. Descriptions here reflect the public filing.</div></div>';
+ h+='<div class="note">Public patent record — not a JAH draft. Descriptions here reflect the public filing.</div></div></div></div>';
  nav(h);wireToolbar("pat",L,{rec:{pub:pub,title:rec.title,assignee:rec.assignee,inventor:rec.inventor,priority_date:rec.priority_date,filing_date:rec.filing_date,publication_date:rec.publication_date,grant_date:rec.grant_date},sig:(sig?sig[0]:null),page_param:"PAT:"+pub});wirePersona(L);fillReport("pat",{rec:rec,pub:pub,sig:sig});
  document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
  wireIcons("PAT:"+pub);makeCollapsible();
@@ -1002,12 +1074,12 @@ function subArticle(d,tab){
   patentNote:"Defensive publication draft generated from the public record for "+d.subject+" — descriptive, not a filed patent.",
   raw:d,seealso:[LEAK_SITE+"/?dossier="+encodeURIComponent(d.id||d.subject)+" (JAH-N Wiki dossier)"]});
  var lz=buildLenses(L);L.hybrid=lz.hybrid;L.verdict=lz.verdict;
- var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=SUB">Subject files</a> &rsaquo; '+esc(d.subject)+'</div>';
+ var h='<nav aria-label="Breadcrumb" class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=SUB">Subject files</a> &rsaquo; '+esc(d.subject)+'</nav>';
  if(tab==="talk")return talkArticle(L,subjSlug(d),h,"sub");
  var WMs=wikiMeta("sub",L,{rec:d,page_param:subjSlug(d),source_list:"JAH-N Wiki dossier "+(d.id||d.subject)});window.__wikiMeta=WMs;
  h+=classBanner("sub",WMs)+jsonldHTML(WMs);
  h+=tabsHTML(subjSlug(d),tab);
- h+=iconRowHTML();
+ h+=iconRowHTML();h+='<div class="artlay">'+qjumpHTML()+'<div class="artmain">';
  h+='<h1 class="at">'+esc(d.subject)+'</h1>';
  h+=hatnoteHTML('This article is about the subject file. For the full classified dossier, see <a href="'+LEAK_SITE+'/?dossier='+encodeURIComponent(d.id||d.subject)+'" target="_blank" rel="noopener">JAH-N Wiki</a>.');
 h+=wikiHelperHTML([
@@ -1035,7 +1107,7 @@ h+=wikiHelperHTML([
  (d.corroborating_specs||[]).slice(0,5).forEach(function(sid){sa.push(["?page="+sid,"Corroborating spec "+sid,0])});
  h+=seeAlsoBlock(sa);
  h+=sec("refs","Sources & references",citeHTML(WMs)+paras+'<p style="font-size:.85em;color:#5b6472">Full sources, witnesses and references: see the dossier\'s SOURCES section on JAH-N Wiki.</p>');
- h+='<div class="note">Subject file — public-record material plus the JAH system\'s marked simulation layer.</div></div>';
+ h+='<div class="note">Subject file — public-record material plus the JAH system\'s marked simulation layer.</div></div></div></div>';
  nav(h);wireToolbar("sub",L,{rec:d,page_param:subjSlug(d)});wirePersona(L);fillReport("sub",{d:d});
  document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
  wireIcons(subjSlug(d));makeCollapsible();
@@ -1065,12 +1137,12 @@ async function wordArticle(de,tab){
  var wl=w.toLowerCase(),relS=[],relP=[],i,j;
  for(i=0;i<DB.specIdx.length&&relS.length<8;i++){var r=DB.specIdx[i];if(String(r[1]).toLowerCase().indexOf(wl)>=0)relS.push(r)}
  for(j=0;j<DB.patIdx.length&&relP.length<8;j++){var p=DB.patIdx[j];if(String(p[1]).toLowerCase().indexOf(wl)>=0)relP.push(p)}
- var h='<div class="crumb"><a href="?">Home</a> &rsaquo; Word articles &rsaquo; '+esc(w)+'</div>';
+ var h='<nav aria-label="Breadcrumb" class="crumb"><a href="?">Home</a> &rsaquo; Word articles &rsaquo; '+esc(w)+'</nav>';
  if(tab==="talk")return talkArticle(L,w,h,"word");
  var WMw=wikiMeta("word",L,{rec:de,page_param:w,source_list:"IWB Dictionary entry "+w+" ("+(de.st||"unstamped")+")"});window.__wikiMeta=WMw;
  h+=classBanner("word",WMw)+jsonldHTML(WMw);
  h+=tabsHTML(w,tab);
- h+=iconRowHTML();
+ h+=iconRowHTML();h+='<div class="artlay">'+qjumpHTML()+'<div class="artmain">';
  h+='<h1 class="at">'+esc(w)+'</h1>';
  h+=hatnoteHTML('This article is about the word <b>'+esc(w)+'</b> in the JAH system. For the full dictionary treatment, see <a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">the IWB Dictionary</a>.');
  h+='<p class="lead"><b>'+esc(w)+'</b>'+pronHTML(w)+(de.pos?' <span style="font-family:Arial;font-size:.85em;color:#5b6472">'+esc(de.pos)+'</span>':"")+' \u2014 '+esc(dictLeadSense(first)||"a word in the IWB Dictionary")+'</p>';
@@ -1099,7 +1171,7 @@ async function wordArticle(de,tab){
  relP.slice(0,4).forEach(function(p){sa.push(["?page=PAT:"+encodeURIComponent(p[0]),String(p[1]).replace(/&hellip;/g,"...")+" ("+p[0]+")",0])});
  h+=seeAlsoBlock(sa);
  h+=sec("refs","References",citeHTML(WMw)+'<p>[1] IWB Dictionary entry \u201C'+esc(w)+'\u201D ('+esc(de.st||"unstamped")+'), <a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">the IWB Dictionary</a> \u2014 original definitions.</p><p style="font-size:.85em;color:#5b6472">JAH Wiki word article generated from the IWB Dictionary entry and the word\u2019s own computed data. Cross-references checked against the live Spec and Patent catalog indexes.</p>');
- h+='<div class="note">Word article \u2014 the IWB Dictionary definition plus the JAH system\u2019s instruments. Definitions are original to the IWB Dictionary.</div></div>';
+ h+='<div class="note">Word article \u2014 the IWB Dictionary definition plus the JAH system\u2019s instruments. Definitions are original to the IWB Dictionary.</div></div></div></div>';
  nav(h);wireToolbar("word",L,{rec:de,page_param:w});wirePersona(L);wirePronSpk();fillReport("word",{de:de,relS:relS,relP:relP});
  document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
  document.getElementById("copydemo").onclick=function(e){copyText(makeProgram(L),e.target)};
@@ -1413,7 +1485,8 @@ function randomPage(seed){
 }
 /* terminal loading states: Loading -> Ready, or Loading -> Unable to load -> Retry. No infinite spinner. */
 function unableHTML(off){
- return '<div class="crumb"><a href="?">Home</a></div><div class="loadstate"><div class="big">Unable to load the encyclopedia</div>'+
+ var fl=(DB.failUrls&&DB.failUrls.length)?'<p style="color:#a00"><b>Failed sources:</b><br>'+DB.failUrls.map(function(f){return '&bull; '+esc(f.label)+' — <span style="font-family:monospace">'+esc(f.url)+'</span>'}).join('<br>')+'</p>':"";
+ return '<div class="crumb"><a href="?">Home</a></div><div class="loadstate"><div class="big">Unable to load the encyclopedia</div>'+fl+
  (off?'<p>Your device looks <b>offline</b>. The wiki reads its article indexes live — reconnect and retry.</p>'
      :'<p>The article indexes could not be loaded (slow connection, blocked file, or a service hiccup). Nothing is broken on your end.</p>')+
  '<button id="retrybtn">Retry</button><p style="margin-top:14px"><a href="'+SPEC_SITE+'/specs.html" target="_blank" rel="noopener">Spec Catalog</a> &middot; <a href="'+PAT_SITE+'/" target="_blank" rel="noopener">Patent Catalog</a> &middot; <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">Dictionary</a></p></div>';
@@ -1432,7 +1505,7 @@ async function init(){
  try{
   if(sp.has("page"))openPage(qp("page"));
   else if(sp.has("random"))randomPage(qp("seed"));
-  else if(sp.has("all"))allPages();
+  else if(sp.has("all")){if(String(sp.get("all")||"").toUpperCase()==="WORD")await wordPages();else allPages();}
   else if(sp.has("q"))await doSearch(qp("q"));
   else if(sp.has("dict"))dictPage(qp("dict"));
   else nav(homeHTML());
