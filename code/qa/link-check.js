@@ -1,5 +1,5 @@
 // code/qa/link-check.js — full link audit for JAH Wiki.
-// 1) Static: THE JAH NETWORK bar has the 25-site canonical links in canonical order
+// 1) Static: THE JAH NETWORK bar has the 27-site canonical links in canonical order
 //    (wiki's own entry is a "YOU ARE HERE: JAH WIKI" span, so 24 link elements).
 // 2) Live: every external URL referenced by index.html / sitemap.xml / robots.txt /
 //    api.json is fetched (HEAD, GET fallback) and must return 2xx/3xx.
@@ -56,7 +56,7 @@ else {
       fail("nav position " + (i + 1) + ": got [" + got[1] + "](" + got[0] + "), want [" + label + "](" + href + ")");
   });
   if (links.length === expect.length && expect.every(([h, l], i) => links[i][0] === h && links[i][1] === l))
-    ok("25-site canon in canonical order with canonical destinations (self = YOU ARE HERE span)");
+    ok("27-site canon in canonical order with canonical destinations (self = YOU ARE HERE span)");
   if (!/YOU ARE HERE: JAH WIKI/.test(navDiv)) fail("YOU ARE HERE marker missing from nav");
   else ok("YOU ARE HERE: JAH WIKI marker present");
 }
