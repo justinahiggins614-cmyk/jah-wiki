@@ -914,7 +914,7 @@ function jahFinal(raw,profile){
 function personaHTML(L){
  var pid="chat-"+hashStr(L.id).toString(36);
  return '<div class="persona"><b>'+esc(L.title)+'</b> — personal AI persona. Ask it anything about this article; it answers as the item itself.</div>'+
- '<div class="jah-aiid" role="note" aria-label="AI identity card"><b>AI IDENTITY</b> &middot; <b>Name:</b> '+esc(L.title)+' \u2014 personal AI persona &middot; <b>Duties:</b> answers questions about this article, as the item itself &middot; <b>Engine:</b> Signature Llama v1 \u00B7 JAHtalk basic-LLM fallback (on-device)</div>'+
+ '<div class="jah-aiid" role="note" aria-label="AI identity card"><b>AI IDENTITY</b> &middot; <b>Name:</b> '+esc(L.title)+' \u2014 personal AI persona &middot; <b>Duties:</b> answers questions about this article, as the item itself &middot; <b>Engine:</b> Signature Llama v2 (word-level, on-device) \u00B7 JAHtalk basic-LLM fallback (on-device)</div>'+
  '<div class="sub" style="margin:-8px 0 12px"><span class="prov">AI assistant</span><span style="color:#5b6472;font-size:.85em">Answers only from this article\u2019s text.</span></div>'+
  '<div class="chat"><div class="chatlog" id="'+pid+'-log"><div class="msg a"><div class="b">'+(window.JAHtalk?jahHtml(JAHtalk.greet(jahProfile(L))):("I am "+esc(L.title)+". Ask me what I am, how I work, my history, my numbers — anything on this page."))+'</div></div></div>'+
  '<div class="chatin"><input id="'+pid+'-in" placeholder="Ask '+esc(L.title.slice(0,40))+'..." aria-label="Ask the persona"><button id="'+pid+'-go">Ask</button></div></div>'+
