@@ -76,7 +76,7 @@ def main():
         'The numbers above are a snapshot; the live count refreshes from the catalog indexes every time this page loads.</p>'
     )
     s2, n1 = re.subn(
-        r'<p class="sub" style="color:#1a4d2e"><strong>[\d,]+ articles indexed</strong>, as of \d{4}-\d{2}-\d{2}\..*?page loads\.</p>',
+        r'<p class="sub" style="color:#1a4d2e"><strong>[\d,]+(?: core encyclopedia)? articles indexed</strong>, as of \d{4}-\d{2}-\d{2}\..*?page loads\.</p>',
         new_snap, s, count=1, flags=re.S)
     if n1 != 1:
         sys.exit("ABORT: static snapshot line not found in index.html")
