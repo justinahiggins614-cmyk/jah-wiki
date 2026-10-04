@@ -431,6 +431,34 @@ function getRetired(){try{return JSON.parse(localStorage.getItem("jahwiki-retire
 function retireWikiId(oldId,note){var r=getRetired();r[String(oldId)]={note:String(note||"retired"),at:new Date().toISOString()};
  try{localStorage.setItem("jahwiki-retired",JSON.stringify(r))}catch(e){}}
 window.retireWikiId=retireWikiId;
+/* ==== JAH global read-aloud controller (one per page): no stacked voices, no orphan audio ==== */
+(function(){
+if(window.__JAHREAD)return;
+var R={audios:[],lastTap:0,lastLabel:""};
+R.stopAll=function(){
+ try{if(window.speechSynthesis)window.speechSynthesis.cancel();}catch(e){}
+ try{if(window.responsiveVoice&&window.responsiveVoice.cancel)window.responsiveVoice.cancel();}catch(e){}
+ var i,a;
+ for(i=0;i<R.audios.length;i++){a=R.audios[i];try{a.pause();}catch(e){}try{a.removeAttribute("src");}catch(e){}try{a.load();}catch(e){}}
+ R.audios.length=0;
+ var els=document.querySelectorAll("audio");
+ for(i=0;i<els.length;i++){try{els[i].pause();}catch(e){}}
+};
+R.reg=function(a){if(a&&R.audios.indexOf(a)<0)R.audios.push(a);return a;};
+R.playGuard=function(label){
+ var now=Date.now();
+ if(now-R.lastTap<450&&label===R.lastLabel){R.lastTap=0;R.lastLabel="";R.stopAll();return false;}
+ R.lastTap=now;R.lastLabel=String(label||"");
+ R.stopAll();return true;
+};
+try{
+ var NativeAudio=window.Audio;
+ window.Audio=function(src){var a=src===undefined?new NativeAudio():new NativeAudio(src);R.reg(a);return a;};
+ window.Audio.prototype=NativeAudio.prototype;
+}catch(e){}
+window.__JAHREAD=R;
+})();
+
 /* ================= read aloud: tiered TTS with auto-failover ================= */
 var TTS={speaking:false,stopped:true,queue:[],audio:null,tier:0,chunk:0};
 var TTS_TIERS=[
@@ -443,9 +471,11 @@ function auVoice(){try{var vs=speechSynthesis.getVoices();if(!vs.length)return n
  var en=vs.filter(function(v){return/^en([-_ ]US)?/i.test(v.lang)});
  var f=en.filter(function(v){return fem.test(v.name)});if(f.length)return f[0];
  if(en.length)return en[0];return vs[0]}catch(e){return null}}
-function ttsStop(){TTS.stopped=true;TTS.speaking=false;TTS.queue=[];try{if(TTS.audio){TTS.audio.pause();TTS.audio=null}}catch(e){}
+function ttsStop(){try{if(window.__JAHREAD)window.__JAHREAD.stopAll();}catch(e){}
+ TTS.stopped=true;TTS.speaking=false;TTS.queue=[];try{if(TTS.audio){TTS.audio.pause();TTS.audio=null}}catch(e){}
  try{speechSynthesis.cancel()}catch(e){} var b=document.getElementById("ttsbtn");if(b)b.textContent="\uD83D\uDD0A Read aloud"}
 function ttsSpeak(text){
+ if(window.__JAHREAD&&!window.__JAHREAD.playGuard("ttsSpeak"))return;
  ttsStop();TTS.stopped=false;
  var btn=document.getElementById("ttsbtn");if(btn)btn.textContent="\u23F9 Stop";
  var chunks=ttsChunks(text);TTS.queue=chunks;
