@@ -37,6 +37,22 @@ details.letter .lc{color:#5b6472;font-weight:normal;font-size:.85em}
 .bsearch button{padding:10px 18px;background:#0b3d91;color:#fff;border:0;border-radius:5px;font-weight:bold;cursor:pointer;font-size:1em}
 .bsearch button:hover{background:#082c6b}
 .bstate{font-size:.8em;color:#5b6472;font-weight:normal}
+/* BEST OF THE BEST — Manon's 2026-10-04 archive pattern: the AI's top pick pinned above the A–Z list */
+.bestofbest{border:2px solid #c9a227;border-radius:8px;background:#fffdf4;padding:18px;margin:16px 0}
+.bestofbest h2{margin:0 0 4px;color:#0b3d91;font-family:Arial,sans-serif}
+.bestofbest .whybest{font-size:.92em;background:#fdf6e3;border-left:3px solid #c9a227;padding:8px 12px;border-radius:0 6px 6px 0;margin:10px 0}
+.bestofbest .beststats{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.bestofbest .beststat{background:#fff;border:1px solid #d7dee8;border-radius:6px;padding:6px 12px;font-size:.85em;font-family:Arial,sans-serif}
+.bestofbest .beststat b{color:#0b3d91}
+.bestofbest .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.bestofbest .btn{font-family:Arial,sans-serif;padding:9px 16px;border:1px solid #9db3d8;background:#0b3d91;color:#fff;border-radius:5px;cursor:pointer;font-size:.92em;text-decoration:none;display:inline-block;font-weight:bold}
+.bestofbest .btn:hover{background:#082c6b}
+.bestofbest .btn.ghost{background:#fff;color:#0b3d91}
+.bestofbest .btn.ghost:hover{background:#eef3fc}
+.bestflow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:12px 0;justify-content:center;font-family:Arial,sans-serif;font-size:.82em}
+.bestflow .bnode{background:#fff;border:1px solid #9db3d8;border-radius:6px;padding:8px 12px;text-align:center;max-width:150px}
+.bestflow .bnode b{display:block;color:#0b3d91;margin-bottom:2px}
+.bestflow .barrow{color:#c9a227;font-size:18px;font-weight:700}
 </style>
 """
 
@@ -185,6 +201,187 @@ TOPBAR = """<div class="topbar">
 </div>
 """
 
+# JAH TAB BAR — Manon's 2026-10-04 order (calculator screenshot as spec).
+# Same tabs, same order as index.html; on the archive page "1 Million Archive" is on.
+TABBAR = """<!-- JAH TAB BAR — Manon's 2026-10-04 order (calculator screenshot as spec).
+     Paste right after </header> (or after the hero/title block) on index.html AND on the archive page.
+     On index.html: "Front Door" carries class "on". On the archive page: "1 Million Archive" carries "on".
+     Replace  with <a class="jtab" href="...">Label</a> items (may be empty). -->
+<style>
+.jtabbar{display:flex;gap:8px;overflow-x:auto;padding:10px 12px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;border-bottom:1px solid rgba(128,128,128,.25)}
+.jtabbar a.jtab{flex:0 0 auto;text-decoration:none;border:1px solid rgba(160,160,160,.45);border-radius:999px;padding:9px 16px;font-size:.92em;color:inherit;background:rgba(127,127,127,.08);white-space:nowrap;font-family:inherit}
+.jtabbar a.jtab.on{background:#f5c518;border-color:#f5c518;color:#191919;font-weight:700}
+</style>
+<nav class="jtabbar" aria-label="Site sections">
+<a class="jtab" href="index.html">🏠 Front Door</a>
+<a class="jtab on" href="browse.html">📚 1 Million Archive</a>
+
+</nav>
+"""
+
+# ASK THE AI — archive-page widget (Manon's 2026-10-04 order). Lives in the
+# generator so rebuilds keep it; content mirrors the 2026-10-04 hand-built block.
+ASKAI_HTML = r"""
+<!-- ASK THE AI — Manon's 2026-10-04 order. Paste on the archive page, directly under the
+     search/filter area (or at the top of the archive section if there is no search box).
+     It FINDS records by scanning the page's own archive list, and ANSWERS with his real
+     Signature Llama (same loader as the phone book). Never fake: if the Llama can't load,
+     the found records are still shown honestly. Replace JAH Wiki and the article archive (every encyclopedia article). -->
+<div class="jah-askai" id="jah-askai">
+<style>
+.jah-askai{border:1px solid rgba(160,160,160,.4);border-radius:12px;padding:14px;margin:14px 0;background:rgba(127,127,127,.06)}
+.jah-askai h2{margin:0 0 4px;font-size:1.15em}
+.jah-askai .jah-askai-sub{margin:0 0 10px;font-size:.9em;opacity:.85}
+.jah-askai .jah-askai-row{display:flex;gap:8px}
+.jah-askai input#jah-askai-q{flex:1;min-width:0;padding:10px 12px;border-radius:8px;border:1px solid rgba(160,160,160,.5);font-size:1em;background:#fff;color:#111}
+.jah-askai button#jah-askai-go{padding:10px 18px;border-radius:8px;border:1px solid #f5c518;background:#f5c518;color:#191919;font-weight:700;font-size:1em;cursor:pointer}
+.jah-askai #jah-askai-out{margin-top:10px;font-size:.95em}
+.jah-askai #jah-askai-out ul{margin:6px 0;padding-left:20px}
+.jah-askai .jah-askai-ans{border-left:3px solid #f5c518;padding-left:10px;margin-top:8px}
+.jah-askai .jah-askai-thinking{opacity:.7;font-style:italic}
+</style>
+<h2>🤖 Ask the AI</h2>
+<p class="jah-askai-sub">Ask about anything in this archive — the AI searches the records and answers.</p>
+<div class="jah-askai-row">
+<input id="jah-askai-q" type="text" autocomplete="off" placeholder="Ask about this archive…" aria-label="Ask about this archive">
+<button id="jah-askai-go" type="button">Ask</button>
+</div>
+<div id="jah-askai-out" aria-live="polite"></div>
+<script>
+(function(){
+var SITE="JAH Wiki", DESC="the article archive (every encyclopedia article)";
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+/* Real Signature Llama loader — same pattern as the phone book. */
+var LLAMA_BASE="https://justinahiggins614-cmyk.github.io/signature-backend/sigllama/";
+var LLAMA_VOCAB="vocab2.json", LLAMA_BIN="sigllama-v2.bin";
+var net={loading:null,ready:false};
+function llamaEnsure(){
+  if(net.ready) return Promise.resolve(true);
+  if(net.loading) return net.loading;
+  net.loading=new Promise(function(resolve){
+    function fin(ok){net.ready=!!ok;resolve(net.ready);}
+    function boot(){try{
+      if(typeof SigLlama==="undefined"){fin(false);return;}
+      SigLlama.load(LLAMA_BASE,LLAMA_VOCAB,LLAMA_BIN).then(function(){fin(true);},function(){fin(false);});
+    }catch(e){fin(false);}}
+    if(typeof SigLlama!=="undefined"){boot();return;}
+    var s=document.createElement("script");s.src=LLAMA_BASE+"sigllama.js";s.async=true;
+    s.onload=boot;s.onerror=function(){fin(false);};document.head.appendChild(s);
+  });
+  return net.loading;
+}
+/* FIND: keyword scan over the page's own archive list links. */
+function findRecords(q){
+  var words=String(q).toLowerCase().split(/[^a-z0-9]+/).filter(function(w){return w.length>2;});
+  if(!words.length) return [];
+  var scope=document.getElementById("jah-askai-scope")||document.getElementById("bstrip")||document.body;
+  var links=scope.getElementsByTagName("a"),out=[],seen={};
+  for(var i=0;i<links.length;i++){
+    var a=links[i];
+    if(a.closest("nav")||a.closest("header")||a.closest("footer")||a.closest(".jah-askai")) continue;
+    var t=(a.textContent||"").replace(/\s+/g," ").trim();
+    if(t.length<3||t.length>160) continue;
+    var tl=t.toLowerCase(),score=0;
+    for(var j=0;j<words.length;j++) if(tl.indexOf(words[j])>=0) score++;
+    if(score>0&&!seen[a.href]){seen[a.href]=1;out.push({t:t,h:a.href,s:score});}
+    if(out.length>=60) break;
+  }
+  out.sort(function(x,y){return y.s-x.s;});
+  return out.slice(0,5);
+}
+function ask(){
+  var q=document.getElementById("jah-askai-q").value.trim();
+  var out=document.getElementById("jah-askai-out");
+  if(!q){out.innerHTML="<p>Please type a question first.</p>";return;}
+  var found=findRecords(q),html="";
+  if(found.length){
+    html+="<p><b>📎 I found "+found.length+" record"+(found.length>1?"s":"")+" matching your words:</b></p><ul>"+
+      found.map(function(f){return '<li><a href="'+esc(f.h)+'">'+esc(f.t)+"</a></li>";}).join("")+"</ul>";
+  }else{
+    html+="<p>No record titles matched those words — asking the AI anyway.</p>";
+  }
+  html+='<p class="jah-askai-thinking">🤖 thinking…</p>';
+  out.innerHTML=html;
+  var think=out.querySelector(".jah-askai-thinking");
+  llamaEnsure().then(function(ok){
+    if(!ok||typeof SigLlama==="undefined"||!SigLlama.loaded||!SigLlama.loaded()){
+      think.textContent="The AI voice could not load right now — the records above are what matched your words.";return;}
+    var ctx="You are the "+SITE+" archive helper. "+DESC+".\n"+
+      (found.length?("Records matching the question: "+found.map(function(f){return f.t;}).join(" | ")+"\n"):"")+
+      "User: "+q.slice(0,300)+"\nHelper (one to three sentences, plain words):";
+    var done=false;
+    function show(t){
+      if(done) return; done=true;
+      t=String(t||"").trim().replace(/^Helper\s*:\s*/i,"");
+      if(t.length<8||/User\s*:/.test(t)) t="I searched the archive for you — the matching records are listed above.";
+      think.outerHTML='<p class="jah-askai-ans">🤖 '+esc(t)+"</p>";
+    }
+    try{
+      SigLlama.generate(ctx,{maxTokens:90,temperature:0.5,topK:40}).then(show,function(){show("");});
+      setTimeout(function(){show("");},25000);
+    }catch(e){show("");}
+  });
+}
+document.getElementById("jah-askai-go").addEventListener("click",ask);
+document.getElementById("jah-askai-q").addEventListener("keydown",function(e){if(e.key==="Enter")ask();});
+})();
+</script>
+</div>
+"""
+
+# BEST OF THE BEST — Manon's 2026-10-04 archive pattern. Count spots use the
+# %%N_CORE%% token so code/restamp_counts.py stamps them with the live number.
+BESTOFBEST_HTML = r"""
+<section class="bestofbest" aria-labelledby="besth">
+<h2 id="besth">★ Best of the Best</h2>
+<p class="sub" style="margin:4px 0">The AI's top pick from this encyclopedia — the single article that best shows what JAH Wiki does. Popped open for you.</p>
+<details open>
+<summary style="cursor:pointer;font-family:Arial,sans-serif;font-size:1.05em"><b>JAH-SPEC-000001</b> — the genesis article <span style="font-size:.8em;color:#5b6472">spec-derived article · #1 of %%N_CORE%%</span></summary>
+<div style="padding-top:8px">
+<p class="whybest"><b>Why this is the best:</b> it is the first Signature draft specification ever published — and the first article of this encyclopedia. Every one of the %%N_CORE%% articles follows the format this article set: the full encyclopedia treatment of a single record.</p>
+<div class="bestflow" aria-hidden="true"><div class="bnode"><b>One record</b>JAH-SPEC-000001</div><div class="barrow">→</div><div class="bnode"><b>Full article</b>definition · history · how-it-works</div><div class="barrow">→</div><div class="bnode"><b>11 lenses</b>analysis from every angle</div><div class="barrow">→</div><div class="bnode"><b>Working code</b>Python program + demo</div></div>
+<p><b>What this article does:</b> it takes one Signature draft specification and gives it the complete wiki treatment — definition, history, how-it-works, data tables, 11 analysis lenses, a patent-draft section, a working Python program with an in-browser demo, an AI persona Q&amp;A, copy/download, and read-aloud.</p>
+<p><b>Implications:</b> this is the template for the entire encyclopedia. All <b>%%N_CORE%%</b> core articles — every spec, every patent record, every subject file — get exactly this depth. Open it to see the standard every article is held to.</p>
+<div class="beststats"><span class="beststat"><b>%%N_CORE%%</b> core articles</span><span class="beststat">Article <b>#1</b> — the genesis</span><span class="beststat"><b>11</b> analysis lenses</span><span class="beststat">Working <b>Python</b> demo included</span></div>
+<div class="toolbar">
+<button class="btn ghost" id="best-speak" type="button">🔊 Read aloud</button>
+<button class="btn ghost" id="best-copy" type="button">⧉ Copy</button>
+<button class="btn ghost" id="best-dl" type="button">⤓ Download</button>
+<a class="btn" href="./?page=JAH-SPEC-000001">Open the full article →</a>
+</div>
+<p class="sub" style="font-size:.85em;margin-top:10px">The full article page carries its own copy, download, read-aloud, and AI Q&amp;A for the complete entry.</p>
+</div>
+</details>
+</section>
+<script>
+(function(){
+"use strict";
+var plain="Best of the Best — JAH-SPEC-000001, the genesis article. The first Signature draft specification ever published, and the first article of this encyclopedia. Every one of the %%N_CORE%% articles follows the format this article set: definition, history, how-it-works, data tables, 11 analysis lenses, a patent draft section, a working Python program with demo, AI persona Q and A, copy, download, and read-aloud.";
+var dl="JAH-WIKI — BEST OF THE BEST\nJAH-SPEC-000001 — the genesis article (spec-derived article 1 of %%N_CORE%%)\n\nWHY THIS IS THE BEST\nThe first Signature draft specification ever published — and the first article of this encyclopedia. Every one of the %%N_CORE%% articles follows the format this article set.\n\nWHAT THE ARTICLE DOES\nDefinition, history, how-it-works, data tables, 11 analysis lenses, patent-draft section, working Python program with in-browser demo, AI persona Q&A, copy/download, read-aloud.\n\nIMPLICATIONS\nThis is the template for the entire encyclopedia: all %%N_CORE%% core articles get exactly this depth.\n\nFull article: https://justinahiggins614-cmyk.github.io/jah-wiki/?page=JAH-SPEC-000001";
+function copyText(t,btn){function done(ok){var o=btn.textContent;btn.textContent=ok?"Copied ✓":"Copy failed";setTimeout(function(){btn.textContent=o;},1500);}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){done(true);},function(){done(false);});}else{var ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done(true);}catch(e){done(false);}document.body.removeChild(ta);}}
+function download(name,text){try{var url=URL.createObjectURL(new Blob([text],{type:"text/plain"}));var a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){document.body.removeChild(a);try{URL.revokeObjectURL(url);}catch(e){}},800);}catch(e){}}
+var speakTimer=null;
+function speakStop(){try{if(window.speechSynthesis)window.speechSynthesis.cancel();}catch(e){}if(speakTimer){clearTimeout(speakTimer);speakTimer=null;}}
+var speakBtn=document.getElementById("best-speak");
+speakBtn.onclick=function(){
+  speakStop();
+  try{
+    if(!("speechSynthesis" in window)){speakBtn.textContent="No voice on this device";setTimeout(function(){speakBtn.textContent="🔊 Read aloud";},1800);return;}
+    if(window.speechSynthesis.speaking){speakBtn.textContent="🔊 Read aloud";return;}
+    var u=new SpeechSynthesisUtterance(plain);
+    speakBtn.textContent="⏹ Stop";
+    u.onend=function(){speakBtn.textContent="🔊 Read aloud";};
+    u.onerror=function(){speakBtn.textContent="🔊 Read aloud";};
+    window.speechSynthesis.speak(u);
+    speakTimer=setTimeout(function(){speakBtn.textContent="🔊 Read aloud";},30000);
+  }catch(e){speakBtn.textContent="🔊 Read aloud";}
+};
+document.getElementById("best-copy").onclick=function(){copyText(dl,this);};
+document.getElementById("best-dl").onclick=function(){download("JAH-SPEC-000001-best.txt",dl);};
+})();
+</script>
+"""
+
 
 def build():
     idx = open(ROOT + "/index.html", encoding="utf-8").read()
@@ -211,7 +408,7 @@ def build():
     )
 
     body = (
-        '<a class="skip" href="#app">Skip to content</a>\n' + jahnet + "\n" + TOPBAR + "\n"
+        '<a class="skip" href="#app">Skip to content</a>\n' + TOPBAR + "\n" + TABBAR + "\n"
         '<div class="wrap"><div id="app">\n'
         "<!-- STATIC CRAWLABLE FALLBACK (no-JS / crawler view). The live app replaces the counts\n"
         '     below with the live catalog count on load. Snapshot stamped by code/restamp_counts.py. -->\n'
@@ -237,7 +434,7 @@ def build():
         '<div class="bsearch"><label class="vh" for="bsq">Search the article catalog</label>'
         '<input id="bsq" placeholder="Type an article title or keyword&hellip;" aria-label="Search the article catalog">'
         '<button id="bsgo" type="button">Search</button></div>\n'
-        '<div id="bsres" aria-live="polite"></div>\n'
+        '<div id="bsres" aria-live="polite"></div>\n' + ASKAI_HTML + "\n" + BESTOFBEST_HTML + "\n"
         '<h2 class="sec">A&ndash;Z article lists</h2>\n'
         '<p class="sub" id="bstatus">Loading the article catalog&hellip;</p>\n'
         '<div class="bstrip" id="bstrip" role="navigation" aria-label="Article lists by letter">\n' + strip + "\n</div>\n"
@@ -262,7 +459,7 @@ def build():
         '<li><b>Article IDs.</b> Every article carries a permanent ID — <code>JAH-WIKI-SPEC-######</code>, '
         "<code>JAH-WIKI-PAT-&lt;pub-no&gt;</code>, <code>JAH-WIKI-W-&lt;word&gt;</code>, "
         "<code>JAH-WIKI-SUB-&lt;slug&gt;</code> — resolving as <code>?page=&lt;ID&gt;</code>, the article's canonical URL.</li>"
-        "</ul></section>\n" + footer + "\n" + tail
+        "</ul></section>\n" + "<!-- JAH NETWORK: site list moved to page bottom, above footer -->\n" + jahnet + "\n" + footer + "\n" + tail
     )
     open(ROOT + "/browse.html", "w", encoding="utf-8").write(html)
     print("wrote browse.html (%d bytes)" % len(html))

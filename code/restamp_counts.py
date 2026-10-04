@@ -153,6 +153,19 @@ def main():
             if mn != 1:
                 sys.exit("ABORT: stat card '%s' not found in browse.html" % bid)
             bs = bs2
+        # Best-of-the-Best panel count spots (baked by code/build_browse.py via %%N_CORE%%)
+        for pat, want, desc in [
+            (r'(spec-derived article · #1 of )[\d,]+(</span></summary>)', 1, 'bestofbest summary'),
+            (r'(All <b>)[\d,]+(</b> core articles — every spec)', 1, 'bestofbest implications'),
+            (r'(<span class="beststat"><b>)[\d,]+(</b> core articles</span>)', 1, 'bestofbest stat'),
+            (r'(Every one of the )[\d,]+( articles follows the format)', 3, 'bestofbest format line'),
+            (r'(\(spec-derived article 1 of )[\d,]+(\))', 1, 'bestofbest download text'),
+            (r'(encyclopedia: all )[\d,]+( core articles get exactly this depth)', 1, 'bestofbest download text 2'),
+        ]:
+            bs2, mn = re.subn(pat, r'\g<1>' + f(n_core) + r'\g<2>', bs, count=want)
+            if mn != want:
+                sys.exit("ABORT: %s not found %dx in browse.html" % (desc, want))
+            bs = bs2
     open(bp, "w", encoding="utf-8").write(bs)
     print("stamped browse.html: core=%s (spec=%s pat=%s sub=%s words=%s)" % (
         f(n_core), f(n_spec), f(n_pat), f(n_sub), f(n_words)))
