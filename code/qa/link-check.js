@@ -30,7 +30,7 @@ const CANON = [
   ["https://justinahiggins614-cmyk.github.io/signature-books/", "Book Depository"],
   ["https://justinahiggins614-cmyk.github.io/signature-comics/", "Comic Store"],
   ["https://justinahiggins614-cmyk.github.io/signature-newspapers/", "Global Newspaper Archive"],
-  ["https://justinahiggins614-cmyk.github.io/signature-3d-print/", "3D Print Depository"],
+  ["https://justinahiggins614-cmyk.github.io/signature-3d-print/", "3D Print Mega Mall"],
   ["https://justinahiggins614-cmyk.github.io/signature-backend/", "Mad Scientist Lab"],
   ["https://justinahiggins614-cmyk.github.io/signature-boundless-generators/", "Boundless Generator Archive"],
   ["https://justinahiggins614-cmyk.github.io/signature-ai-mixlab/", "AI Mix Lab"],
