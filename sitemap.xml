@@ -6,13 +6,14 @@
          where the 460,000+ underlying record URLs live with the catalogs that own
          them and keep them fresh. This wiki never duplicates record-level URLs it
          cannot refresh. Re-run code/build_sitemap_index.js to pick up new shards.
-     Built 2026-10-03 -->
+     Built 2026-10-04 -->
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap><loc>https://justinahiggins614-cmyk.github.io/jah-wiki/sitemap-pages.xml</loc></sitemap>
   <sitemap><loc>https://justinahiggins614-cmyk.github.io/jah-wiki/sitemap-wiki-spec.xml</loc></sitemap>
   <sitemap><loc>https://justinahiggins614-cmyk.github.io/jah-wiki/sitemap-wiki-pat.xml</loc></sitemap>
   <sitemap><loc>https://justinahiggins614-cmyk.github.io/jah-wiki/sitemap-wiki-sub.xml</loc></sitemap>
   <sitemap><loc>https://justinahiggins614-cmyk.github.io/jah-wiki/sitemap-wiki-word.xml</loc></sitemap>
+  <sitemap><loc>https://justinahiggins614-cmyk.github.io/jah-wiki/sitemap-wiki-browse.xml</loc></sitemap>
   <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive-shard-2/sitemap-specs-1.xml</loc></sitemap>
   <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive-shard-2/sitemap-specs-2.xml</loc></sitemap>
   <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive-shard-3/sitemap-specs.xml</loc></sitemap>
@@ -38,6 +39,15 @@
   <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive-shard-23/sitemap-specs.xml</loc></sitemap>
   <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive-shard-24/sitemap-specs.xml</loc></sitemap>
   <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive-shard-25/sitemap-specs.xml</loc></sitemap>
+  <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive-shard-26/sitemap-specs.xml</loc></sitemap>
+  <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive-shard-27/sitemap-specs.xml</loc></sitemap>
+  <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive-shard-28/sitemap-specs.xml</loc></sitemap>
+  <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive-shard-29/sitemap-specs.xml</loc></sitemap>
+  <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive-shard-30/sitemap-specs.xml</loc></sitemap>
+  <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive-shard-31/sitemap-specs.xml</loc></sitemap>
+  <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive-shard-32/sitemap-specs.xml</loc></sitemap>
+  <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive-shard-33/sitemap-specs.xml</loc></sitemap>
+  <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive-shard-34/sitemap-specs.xml</loc></sitemap>
   <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive/sitemap-main-1.xml</loc></sitemap>
   <sitemap><loc>https://justinahiggins614-cmyk.github.io/signature-one-archive/sitemap-main-2.xml</loc></sitemap>
   <sitemap><loc>https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/sitemap-records-1.xml</loc></sitemap>
