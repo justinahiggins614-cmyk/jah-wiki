@@ -49,6 +49,30 @@ else {
   var fbN = fbCount; // used by the live comparison below
 }
 
+console.log("[static] browse.html (A-Z archive catalog) snapshot");
+const browsePath = path.join(ROOT, "browse.html");
+if (!fs.existsSync(browsePath)) fail("browse.html missing");
+else {
+  const bh = fs.readFileSync(browsePath, "utf8");
+  const bs = bh.match(/<p class="sub" id="browse-snap"[^>]*><strong>([\d,]+) core encyclopedia articles<\/strong>, as of (\d{4}-\d{2}-\d{2})/);
+  if (!bs) fail("browse.html snapshot line not found or malformed");
+  else {
+    const bCount = parseInt(bs[1].replace(/,/g, ""), 10);
+    ok("browse.html snapshot count present: " + bCount.toLocaleString() + " (as of " + bs[2] + ")");
+    if (bCount === api.records_approx) ok("browse.html snapshot matches api.json records_approx");
+    else fail("browse.html snapshot " + bCount + " != api.json records_approx " + api.records_approx + " — run code/restamp_counts.py");
+    for (const [id, key] of [["bn-spec", "spec_articles"], ["bn-pat", "patent_articles"], ["bn-sub", "subject_files"]]) {
+      const m = bh.match(new RegExp('<div class="stat"><div class="n" id="' + id + '">([\\d,]+)</div>'));
+      const want = bkey ? api[bkey][key] : null;
+      if (!m) fail("browse.html stat card " + id + " not found");
+      else if (want != null && parseInt(m[1].replace(/,/g, ""), 10) === want) ok("browse.html " + id + " matches breakdown (" + want.toLocaleString() + ")");
+      else fail("browse.html " + id + " mismatch — run code/restamp_counts.py");
+    }
+  }
+  if (bh.indexOf("%%N_CORE%%") >= 0) fail("browse.html still carries unstamped %%N_*%% tokens");
+  else ok("browse.html tokens fully stamped");
+}
+
 (async () => {
   if (STATIC_ONLY) { console.log("[live] skipped (--static-only)"); }
   else {

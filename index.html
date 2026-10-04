@@ -193,7 +193,7 @@ nav.crumb{margin-bottom:8px}
 <div class="topbar">
   <a href="?" style="text-decoration:none"><div class="brand">JAH WIKI<small>THE ENCYCLOPEDIA OF THE JAH SYSTEM</small></div></a>
   <div class="navlinks" role="navigation" aria-label="Wiki sections">
-    <a href="?">Home</a><a href="?all=SPEC">All pages</a><a href="?all=WORD">Word articles</a><a href="#" id="randlink">Random article</a>
+    <a href="?">Home</a><a href="?all=SPEC">All pages</a><a href="?all=WORD">Word articles</a><a href="#" id="randlink">Random article</a><a href="browse.html"><b>Browse the archive</b></a>
     <a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/" target="_blank" rel="noopener">The Signature Dictionary</a>
     <a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/" target="_blank" rel="noopener">Wiki Leaks</a>
     <a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html" target="_blank" rel="noopener">Signature Spec Catalog Pending Patents</a>
@@ -207,15 +207,16 @@ nav.crumb{margin-bottom:8px}
 <div class="crumb">Main page</div>
 <h1 class="at">Welcome to JAH Wiki</h1>
 <p class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</p>
-<p class="sub" style="color:#1a4d2e"><strong>722,004 core encyclopedia articles indexed</strong>, as of 2026-10-03. What counts as a core article: one record — a spec-derived article (a Signature draft specification), a patent-derived article (a public patent record), or a subject article (a JAH-N subject file). Dictionary word articles (807,348 as of 2026-10-03) resolve live from the Signature Dictionary and are counted separately, never folded into the core total. The numbers above are a snapshot; the live count refreshes from the catalog indexes every time this page loads.</p>
+<p class="sub" style="color:#1a4d2e"><strong>784,784 core encyclopedia articles indexed</strong>, as of 2026-10-04. What counts as a core article: one record — a spec-derived article (a Signature draft specification), a patent-derived article (a public patent record), or a subject article (a JAH-N subject file). Dictionary word articles (870,129 as of 2026-10-04) resolve live from the Signature Dictionary and are counted separately, never folded into the core total. The numbers above are a snapshot; the live count refreshes from the catalog indexes every time this page loads.</p>
 <details class="statdrawer" open><summary>Article counts</summary>
 <div class="stats">
-<div class="stat"><div class="n">666,199</div><div class="l">spec-derived articles</div></div>
-<div class="stat"><div class="n">55,685</div><div class="l">patent-derived articles</div></div>
+<div class="stat"><div class="n">723,840</div><div class="l">spec-derived articles</div></div>
+<div class="stat"><div class="n">60,824</div><div class="l">patent-derived articles</div></div>
 <div class="stat"><div class="n">120</div><div class="l">subject articles</div></div>
 </div></details>
 <h2 class="sec">Browse the encyclopedia</h2>
 <ul class="pgln">
+<li><a href="browse.html"><b>Browse the archive</b></a> — the full article catalog as A&ndash;Z collapsible lists, with search</li>
 <li><a href="?all=SPEC">All spec-derived articles</a> — alphabetical, 200 per page</li>
 <li><a href="?all=PAT">All patent-derived articles</a> — alphabetical, 200 per page</li>
 <li><a href="?all=SUB">All subject articles</a> — browsable by category</li>
@@ -616,6 +617,7 @@ function homeHTML(){
  h+='<div class="card"><h3>Patent articles</h3><p>Every public patent record in the Patent Catalog, written up wiki-style with history, analysis lenses, and a working demo program.</p><p><a href="?all=PAT">Browse all &rarr;</a></p></div>';
  h+='<div class="card"><h3>Subject files</h3><p>Bizarre subjects, cryptids, UFO cases, dream figures and more — each with witnesses, investigations, sources, and the full lens treatment.</p><p><a href="?all=SUB">Browse all &rarr;</a></p></div>';
  h+='<div class="card"><h3>Word articles</h3><p>Every word in the Signature Dictionary gets a full encyclopedia article — definition, JAH data, analysis lenses, working program, and AI persona.</p><p><a href="?all=WORD">Browse all &rarr;</a></p></div>';
+ h+='<div class="card"><h3>Browse the archive</h3><p>The full article catalog as A&ndash;Z collapsible lists — every spec, patent record, and subject file, one click from its article, with catalog-wide search.</p><p><a href="browse.html">Open the archive &rarr;</a></p></div>';
  h+='<div class="card"><h3>Partner site</h3><p><b>Wiki Leaks</b> is the classified partner archive — every wiki article links to its full dossier and back.</p><p><a href="'+LEAK_SITE+'/" target="_blank" rel="noopener">Open Wiki Leaks &rarr;</a></p></div>';
  h+='</div>';
  h+='<h2 class="sec">About this wiki</h2><p>Just like a normal encyclopedia, each article carries a <b>definition</b>, <b>history</b>, how-it-works, data tables, and references. On top of that, every JAH Wiki article carries the system\'s own instruments: <b>eleven analysis lenses</b> (deterministic, probabilistic, geometric, hash, neural, evolutionary, fuzzy, swarm, decision-tree, cellular-automata, and a hybrid of them all), a <b>patent draft</b>, a downloadable <b>working program</b> with an in-browser demo, and a <b>personal AI persona</b> of the item that answers questions. Use <b>Copy article</b> to paste anywhere, or <b>Read aloud</b> to listen.</p>';

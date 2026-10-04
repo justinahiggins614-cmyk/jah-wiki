@@ -53,3 +53,16 @@ try {
 }
 write("sitemap-wiki-sub.xml",
   [WIKI + "?all=SUB"].concat(cats.map(function (c) { return WIKI + "?all=SUB&cat=" + encodeURIComponent(c); })));
+
+// Browse-the-archive page: the page itself plus per-kind hubs and per-kind
+// per-letter hubs (browse.html?kind=SPEC&L=A ...). Every ?page= article is one
+// click from a hub, so crawlers reach the full catalog without executing the
+// wiki's client-side router. The wiki never duplicates per-record ?page= URLs
+// here — the record-level URLs live with the Spec/Patent Catalogs that own
+// them (see build_sitemap_index.js).
+var browseUrls = [WIKI + "browse.html"];
+["SPEC", "PAT", "SUB"].forEach(function (k) {
+  browseUrls.push(WIKI + "browse.html?kind=" + k);
+  AZ.forEach(function (c) { browseUrls.push(WIKI + "browse.html?kind=" + k + "&L=" + c); });
+});
+write("sitemap-wiki-browse.xml", browseUrls);
