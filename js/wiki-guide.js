@@ -107,14 +107,14 @@ document.body.appendChild(wrap);
 /* ---------- welcome overlay: open / close (NO scroll, NO spotlight, NO page jumps) ---------- */
 function $(id){return document.getElementById(id)}
 function markSeen(){try{localStorage.setItem(SEEN,"1")}catch(e){}}
-function openWelcome(){$("jah-welcome").hidden=false;try{$("jah-welcome-ok").focus()}catch(e){}}
+function openWelcome(){$("jah-welcome").hidden=false;try{$("jah-welcome-ok").focus({preventScroll:true})}catch(e){}}
 function closeWelcome(){$("jah-welcome").hidden=true;markSeen()}
 $("jah-welcome-ok").onclick=closeWelcome;
 $("jah-welcome-guide").onclick=function(){closeWelcome();openGuide()};
 $("jah-welcome").addEventListener("click",function(e){if(e.target===this)closeWelcome()});
 
 /* ---------- guide open/close ---------- */
-function openGuide(){$("jah-guide").hidden=false;try{$("jah-guide-close").focus()}catch(e){}}
+function openGuide(){$("jah-guide").hidden=false;try{$("jah-guide-close").focus({preventScroll:true})}catch(e){}}
 function closeGuide(){$("jah-guide").hidden=true}
 var gb2=$("jah-guide-btn");if(gb2){gb2.onclick=openWelcome;gb2.setAttribute("aria-label","Open the welcome guide");gb2.title="\u2753 Guide \u2014 show the welcome guide"}
 $("jah-guide-close").onclick=closeGuide;
