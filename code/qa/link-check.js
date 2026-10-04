@@ -16,31 +16,33 @@ function ok(msg) { console.log("  ok   " + msg); }
 
 // ---- 1) nav bar order + destinations ----
 const CANON = [
-  ["https://justinahiggins614-cmyk.github.io/jah-ai-models/", "The Signature AI Phone Book"],
-  ["https://justinahiggins614-cmyk.github.io/jah-calculator/", "Calculator"],
-  ["https://justinahiggins614-cmyk.github.io/jah-dictionary/", "Dictionary"],
-  ["https://justinahiggins614-cmyk.github.io/jah-wiki/", "JAH Wiki"],
-  ["https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/", "JAH-N Wiki"],
-  ["https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/", "Patent Catalog"],
-  ["https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html", "Spec Catalog"],
-  ["https://justinahiggins614-cmyk.github.io/signature-llama/", "Signature Llama"],
-  ["https://justinahiggins614-cmyk.github.io/jah-computer-systems/", "PC Depository"],
-  ["https://justinahiggins614-cmyk.github.io/signature-cyber-mega-mall/", "Cyber Mega-Mall"],
-  ["https://justinahiggins614-cmyk.github.io/signature-university/", "Signature University"],
-  ["https://justinahiggins614-cmyk.github.io/signature-books/", "Book Depository"],
-  ["https://justinahiggins614-cmyk.github.io/signature-comics/", "Comic Store"],
-  ["https://justinahiggins614-cmyk.github.io/signature-newspapers/", "Global Newspaper Archive"],
-  ["https://justinahiggins614-cmyk.github.io/signature-3d-print/", "3D Print Mega Mall"],
-  ["https://justinahiggins614-cmyk.github.io/signature-backend/", "Mad Scientist Lab"],
-  ["https://justinahiggins614-cmyk.github.io/signature-boundless-generators/", "Boundless Generator Archive"],
-  ["https://justinahiggins614-cmyk.github.io/signature-ai-mixlab/", "AI Mix Lab"],
-  ["https://justinahiggins614-cmyk.github.io/signature-ai-olypics/", "AI Olypics"],
-  ["https://justinahiggins614-cmyk.github.io/signature-chip-maker/", "Chip Maker and Archive"],
-  ["https://justinahiggins614-cmyk.github.io/signature-app-archive/", "App Archive"],
-  ["https://justinahiggins614-cmyk.github.io/signature-ai-robot-matcher/", "AI Robot Matcher"],
-  ["https://justinahiggins614-cmyk.github.io/signature-experiment-solver/", "Experiment Solver"],
-  ["https://justinahiggins614-cmyk.github.io/signature-ai-image-video-maker/", "Signature AI Pixel"],
-  ["https://justinahiggins614-cmyk.github.io/signature-ai-song-maker/", "Signature Music Studio"],
+  ["https://justinahiggins614-cmyk.github.io/signature-math/", "1 Signature Math"],
+  ["https://justinahiggins614-cmyk.github.io/jah-calculator/", "2 Signature Universal Paradox Immune Calculator"],
+  ["https://justinahiggins614-cmyk.github.io/jah-dictionary/", "3 The Signature Dictionary"],
+  ["https://justinahiggins614-cmyk.github.io/jah-wiki/", "4 JAH Wiki"],
+  ["https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/", "5 Wiki Leaks"],
+  ["https://justinahiggins614-cmyk.github.io/signature-llama/", "6 Signature Llama: The Fully Cyber Utilizable AI"],
+  ["https://justinahiggins614-cmyk.github.io/jah-ai-models/", "7 The Signature AI Phone Book"],
+  ["https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/", "8 Globally Rejustered Patent Catalog"],
+  ["https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html", "9 Signature Spec Catalog Pending Patents"],
+  ["https://justinahiggins614-cmyk.github.io/jah-computer-systems/", "10 The Signature PC System Depository"],
+  ["https://justinahiggins614-cmyk.github.io/signature-books/", "11 The Signature Book Depository"],
+  ["https://justinahiggins614-cmyk.github.io/signature-comics/", "12 The Signature Comic Store"],
+  ["https://justinahiggins614-cmyk.github.io/signature-newspapers/", "13 The Signature Global Newspaper Archive"],
+  ["https://justinahiggins614-cmyk.github.io/signature-backend/", "14 The Signature AI Mad Scientist Creation Lab"],
+  ["https://justinahiggins614-cmyk.github.io/signature-boundless-generators/", "15 The Signature Boundless Generator Archive"],
+  ["https://justinahiggins614-cmyk.github.io/signature-ai-mixlab/", "16 The Signature AI Mix Lab"],
+  ["https://justinahiggins614-cmyk.github.io/signature-ai-olypics/", "17 AI Olympics"],
+  ["https://justinahiggins614-cmyk.github.io/signature-chip-maker/", "18 The Signature Computer Chip Maker and Archive"],
+  ["https://justinahiggins614-cmyk.github.io/signature-app-archive/", "19 The Signature App Archive"],
+  ["https://justinahiggins614-cmyk.github.io/signature-ai-robot-matcher/", "20 The Signature AI Robot Matcher"],
+  ["https://justinahiggins614-cmyk.github.io/signature-experiment-solver/", "21 The Signature Experiment Solver"],
+  ["https://justinahiggins614-cmyk.github.io/signature-ai-image-video-maker/", "22 Signature AI Pixel"],
+  ["https://justinahiggins614-cmyk.github.io/signature-ai-song-maker/", "23 Signature Music Studio"],
+  ["https://justinahiggins614-cmyk.github.io/signature-fixit/", "24 The Signature Mr Fix-It"],
+  ["https://justinahiggins614-cmyk.github.io/signature-university/", "25 The Signature University"],
+  ["https://justinahiggins614-cmyk.github.io/signature-cyber-mega-mall/", "26 The Signature Cyber Mega-Mall"],
+  ["https://justinahiggins614-cmyk.github.io/signature-3d-print/", "27 The Signature 3D Print Mega Mall"],
 ];
 console.log("[nav] THE JAH NETWORK bar");
 const navDiv = (INDEX_HTML.match(/<div class="jahnet">[\s\S]*?<\/div>/) || [""])[0];
@@ -57,8 +59,8 @@ else {
   });
   if (links.length === expect.length && expect.every(([h, l], i) => links[i][0] === h && links[i][1] === l))
     ok("27-site canon in canonical order with canonical destinations (self = YOU ARE HERE span)");
-  if (!/YOU ARE HERE: JAH WIKI/.test(navDiv)) fail("YOU ARE HERE marker missing from nav");
-  else ok("YOU ARE HERE: JAH WIKI marker present");
+  if (!/4 JAH Wiki — YOU ARE HERE/.test(navDiv)) fail("YOU ARE HERE marker missing from nav");
+  else ok("4 JAH Wiki — YOU ARE HERE marker present");
 }
 
 // ---- 2) collect URLs ----
