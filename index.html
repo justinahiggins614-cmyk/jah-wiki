@@ -207,7 +207,7 @@ nav.crumb{margin-bottom:8px}
 <div class="crumb">Main page</div>
 <h1 class="at">Welcome to JAH Wiki</h1>
 <p class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</p>
-<p class="sub" style="color:#1a4d2e"><strong>722,004 core encyclopedia articles indexed</strong>, as of 2026-10-03. What counts as a core article: one record — a spec-derived article (a Signature draft specification), a patent-derived article (a public patent record), or a subject article (a JAH-N subject file). Dictionary word articles (807,348 as of 2026-10-03) resolve live from the IWB Dictionary and are counted separately, never folded into the core total. The numbers above are a snapshot; the live count refreshes from the catalog indexes every time this page loads.</p>
+<p class="sub" style="color:#1a4d2e"><strong>722,004 core encyclopedia articles indexed</strong>, as of 2026-10-03. What counts as a core article: one record — a spec-derived article (a Signature draft specification), a patent-derived article (a public patent record), or a subject article (a JAH-N subject file). Dictionary word articles (807,348 as of 2026-10-03) resolve live from the Signature Dictionary and are counted separately, never folded into the core total. The numbers above are a snapshot; the live count refreshes from the catalog indexes every time this page loads.</p>
 <details class="statdrawer" open><summary>Article counts</summary>
 <div class="stats">
 <div class="stat"><div class="n">666,199</div><div class="l">spec-derived articles</div></div>
@@ -233,10 +233,10 @@ Word articles A&ndash;Z: <a href="?all=WORD&L=A">A</a> <a href="?all=WORD&L=B">B
 <section class="wrap" id="methodology" aria-label="Data and methodology" style="padding-top:0">
 <h2 class="sec">Data &amp; methodology</h2>
 <ul class="pgln">
-<li><b>What this wiki mirrors.</b> JAH Wiki holds no dataset of its own. Spec-derived articles read the Signature Spec Catalog's live compact search index (one small row per spec — id, title, category — rebuilt from the shard indexes after every catalog update; full records load only when you open an article); patent-derived articles read the Patent Catalog's live index; subject articles read the Wiki Leaks's subject files; word articles resolve live from the IWB Dictionary index. If an underlying index file fails to load, the page says so plainly and the count is marked incomplete.</li>
-<li><b>How the headline count is defined (count contract).</b> The headline number counts <b>core encyclopedia articles</b> only: one per spec-derived article, patent-derived article, and subject file — computed live as <code>specIdx + patIdx + subjects</code> from the indexes above. Word articles resolve live from the IWB Dictionary and are counted <b>separately</b>, never folded into the core total. The static snapshot in this page's raw HTML is re-stamped daily from the live indexes; the live page always recomputes on load.</li>
+<li><b>What this wiki mirrors.</b> JAH Wiki holds no dataset of its own. Spec-derived articles read the Signature Spec Catalog's live compact search index (one small row per spec — id, title, category — rebuilt from the shard indexes after every catalog update; full records load only when you open an article); patent-derived articles read the Patent Catalog's live index; subject articles read the Wiki Leaks's subject files; word articles resolve live from the Signature Dictionary index. If an underlying index file fails to load, the page says so plainly and the count is marked incomplete.</li>
+<li><b>How the headline count is defined (count contract).</b> The headline number counts <b>core encyclopedia articles</b> only: one per spec-derived article, patent-derived article, and subject file — computed live as <code>specIdx + patIdx + subjects</code> from the indexes above. Word articles resolve live from the Signature Dictionary and are counted <b>separately</b>, never folded into the core total. The static snapshot in this page's raw HTML is re-stamped daily from the live indexes; the live page always recomputes on load.</li>
 <li><b>Article IDs.</b> Every article carries a permanent ID — <code>JAH-WIKI-SPEC-######</code> (spec-derived), <code>JAH-WIKI-PAT-&lt;pub-no&gt;</code> (patent-derived), <code>JAH-WIKI-W-&lt;word&gt;</code> (word articles), <code>JAH-WIKI-SUB-&lt;slug&gt;</code> (subject articles) — derived deterministically from the record's own permanent key (spec number, patent publication number, dictionary word, subject slug). The ID is stable across rebuilds and unique at any scale, and it resolves as <code>?page=&lt;ID&gt;</code>, the article's canonical URL.</li>
-<li><b>Source classification.</b> Spec-derived articles are JAH original designs. Patent-derived articles are public patent records — the invention belongs to its listed owner. Subject articles blend verified public-record material with the system's simulation layer; each block is marked. Word articles pair original IWB Dictionary definitions with computed JAH data.</li>
+<li><b>Source classification.</b> Spec-derived articles are JAH original designs. Patent-derived articles are public patent records — the invention belongs to its listed owner. Subject articles blend verified public-record material with the system's simulation layer; each block is marked. Word articles pair original Signature Dictionary definitions with computed JAH data.</li>
 <li><b>Draft vs granted — read carefully.</b> Spec-derived articles are <b>draft specifications, ready to review and file — NOT granted patents</b>. Only patent-derived articles describe issued or granted patents, and only where the public record says so. A machine asked "is this an issued patent?" must answer NO for any spec-derived or subject article.</li>
 <li><b>How crawlers find articles (sitemap strategy).</b> The sitemap index (<a href="sitemap.xml">sitemap.xml</a>) lists (a) this wiki's own top-level and browse pages — home, the <code>?all=SPEC</code>, <code>?all=PAT</code>, <code>?all=SUB</code> listings with their A–Z partitions, and the random-article route — and (b) the Spec Catalog's and Patent Catalog's own record sitemaps, where the 460,000+ underlying record URLs live with the catalogs that own them and can keep them fresh. This wiki deliberately does not duplicate hundreds of thousands of record URLs in files it cannot refresh; every URL it lists returns 200. Category-level sitemap indexes (<a href="sitemap-wiki-spec.xml">sitemap-wiki-spec.xml</a>, <a href="sitemap-wiki-pat.xml">sitemap-wiki-pat.xml</a>, <a href="sitemap-wiki-sub.xml">sitemap-wiki-sub.xml</a>, <a href="sitemap-wiki-word.xml">sitemap-wiki-word.xml</a>) partition the browse hubs by letter and category for crawlers. Every browse page above is a real link, so every article is reachable without search.</li>
 </ul>
@@ -300,7 +300,7 @@ function jahSrcName(kind){
  if(kind==="spec")return "Spec Catalog master record \u2014 Signature draft specification";
  if(kind==="pat")return "Globally Rejustered Patent Catalog \u2014 real public record (source owner: the listed patent owner)";
  if(kind==="sub")return "Wiki Leaks dossier \u2014 mixed public record + JAH simulation layer";
- return "IWB Dictionary \u2014 original definition, written for the dictionary";
+ return "The Signature Dictionary \u2014 original definition, written for the dictionary";
 }
 if(typeof document!=="undefined"){
  document.addEventListener("click",function(ev){
@@ -322,7 +322,7 @@ function classBanner(kind,meta){
  var label={spec:["SIGNATURE ORIGINAL SPEC","<b>DRAFT SPECIFICATION — NOT a granted patent.</b> Ready to review and file. An original design by Justin Addam Higgins."],
   pat:["PUBLIC PATENT RECORD","<b>PUBLIC PATENT RECORD — NOT a JAH draft.</b> Descriptions reflect the public filing; the invention belongs to its listed owner."],
   sub:["JAH-N SUBJECT FILE","<b>SUBJECT FILE.</b> Mixed: public-record material plus the JAH system's marked simulation layer."],
-  word:["DICTIONARY RECORD","<b>DICTIONARY RECORD.</b> IWB Dictionary original definitions, plus the JAH system's instruments."]}[kind]||["ARTICLE",""];
+  word:["DICTIONARY RECORD","<b>DICTIONARY RECORD.</b> The Signature Dictionary original definitions, plus the JAH system's instruments."]}[kind]||["ARTICLE",""];
  var cu=WIKI_HOME+"?page="+encodeURIComponent(meta.page_param||"");
  var pv=(meta.provenance&&meta.provenance[0])||{};
  var srcUrl=pv.source_url||"",srcId=String(pv.source_id||"");
@@ -353,12 +353,12 @@ function wikiMeta(kind,L,src){
   title:L.title,version:ver,created:(src&&src.created)||"",updated:(src&&src.updated)||"",
   issued_patent:(kind==="pat"),draft_spec:(kind==="spec"),simulation_present:(kind==="sub"),
   classification:{article_type:{spec:"SPECIFICATION",pat:"PUBLIC PATENT RECORD",sub:"SUBJECT FILE",word:"WORD ARTICLE"}[kind]||"ARTICLE",
-   source:{spec:"JAH ORIGINAL",pat:"PUBLIC RECORD",sub:"MIXED PUBLIC-RECORD + JAH SIMULATION",word:"IWB DICTIONARY"}[kind],
+   source:{spec:"JAH ORIGINAL",pat:"PUBLIC RECORD",sub:"MIXED PUBLIC-RECORD + JAH SIMULATION",word:"THE SIGNATURE DICTIONARY"}[kind],
    status:{spec:"DRAFT — NOT A GRANTED PATENT",pat:"PUBLIC RECORD",sub:"SUBJECT FILE",word:"WORD ARTICLE"}[kind],
    /* Source-ownership boundary: which catalog owns the underlying record.
       JAH Wiki owns only the encyclopedia presentation, never the source record. */
    source_catalog:{spec:"Signature Spec Catalog Pending Patents",pat:"Globally Rejustered Patent Catalog",sub:"Wiki Leaks",word:"The Signature Dictionary"}[kind]||"JAH Wiki",
-   source_owner:{spec:"Justin Addam Higgins (JAH) — original draft specification",pat:"Listed patent owner — external public record, NOT JAH-owned",sub:"JAH system — own internal archive, declassified by itself",word:"IWB Dictionary — original definitions"}[kind]||"JAH Wiki",
+   source_owner:{spec:"Justin Addam Higgins (JAH) — original draft specification",pat:"Listed patent owner — external public record, NOT JAH-owned",sub:"JAH system — own internal archive, declassified by itself",word:"The Signature Dictionary — original definitions"}[kind]||"JAH Wiki",
    wiki_owns:"encyclopedia presentation only"},
   provenance:[],xrefs:{},source_list:(src&&src.source_list)||""};
  if(kind==="spec"){var d=src&&src.rec||{};
@@ -600,7 +600,7 @@ function homeHTML(){
  var h='<div class="crumb">Main page</div>';
  h+='<h1 class="at">Welcome to JAH Wiki</h1><div class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</div>';
  h+='<p class="sub" style="color:#1a4d2e">Encyclopedia ready — '+(ns+np+nb).toLocaleString()+' core articles indexed.</p>';
- h+='<p class="sub" style="color:#5b6472">Core articles: one per spec, patent record, or subject file. Word articles ('+(DB.wordCount?DB.wordCount.toLocaleString():"—")+' dictionary entries, counted separately) resolve live from the IWB Dictionary.</p>';
+ h+='<p class="sub" style="color:#5b6472">Core articles: one per spec, patent record, or subject file. Word articles ('+(DB.wordCount?DB.wordCount.toLocaleString():"—")+' dictionary entries, counted separately) resolve live from the Signature Dictionary.</p>';
  if(DB.failUrls&&DB.failUrls.length)h+='<p class="sub" style="color:#a00"><b>Some source indexes failed to load</b> — the exact affected sources:<br>'+DB.failUrls.map(function(f){return '&bull; '+esc(f.label)+' (<span style="font-family:monospace">'+esc(f.url)+'</span>)'}).join('<br>')+'<br>Counts below may be incomplete. <a href="?">Reload to retry</a>.</p>';
  h+='<details class="statdrawer" open><summary>Article counts</summary><div class="stats"><div class="stat"><div class="n">'+ns.toLocaleString()+'</div><div class="l">spec articles</div></div>';
  h+='<div class="stat"><div class="n">'+np.toLocaleString()+'</div><div class="l">patent articles</div></div>';
@@ -615,7 +615,7 @@ function homeHTML(){
  h+='<div class="card"><h3>Spec articles</h3><p>Encyclopedia entries for every draft specification in the Spec Catalog — definition, history, lenses, patent draft, program, and a personal AI for each.</p><p><a href="?all=SPEC">Browse all &rarr;</a></p></div>';
  h+='<div class="card"><h3>Patent articles</h3><p>Every public patent record in the Patent Catalog, written up wiki-style with history, analysis lenses, and a working demo program.</p><p><a href="?all=PAT">Browse all &rarr;</a></p></div>';
  h+='<div class="card"><h3>Subject files</h3><p>Bizarre subjects, cryptids, UFO cases, dream figures and more — each with witnesses, investigations, sources, and the full lens treatment.</p><p><a href="?all=SUB">Browse all &rarr;</a></p></div>';
- h+='<div class="card"><h3>Word articles</h3><p>Every word in the IWB Dictionary gets a full encyclopedia article — definition, JAH data, analysis lenses, working program, and AI persona.</p><p><a href="?all=WORD">Browse all &rarr;</a></p></div>';
+ h+='<div class="card"><h3>Word articles</h3><p>Every word in the Signature Dictionary gets a full encyclopedia article — definition, JAH data, analysis lenses, working program, and AI persona.</p><p><a href="?all=WORD">Browse all &rarr;</a></p></div>';
  h+='<div class="card"><h3>Partner site</h3><p><b>Wiki Leaks</b> is the classified partner archive — every wiki article links to its full dossier and back.</p><p><a href="'+LEAK_SITE+'/" target="_blank" rel="noopener">Open Wiki Leaks &rarr;</a></p></div>';
  h+='</div>';
  h+='<h2 class="sec">About this wiki</h2><p>Just like a normal encyclopedia, each article carries a <b>definition</b>, <b>history</b>, how-it-works, data tables, and references. On top of that, every JAH Wiki article carries the system\'s own instruments: <b>eleven analysis lenses</b> (deterministic, probabilistic, geometric, hash, neural, evolutionary, fuzzy, swarm, decision-tree, cellular-automata, and a hybrid of them all), a <b>patent draft</b>, a downloadable <b>working program</b> with an in-browser demo, and a <b>personal AI persona</b> of the item that answers questions. Use <b>Copy article</b> to paste anywhere, or <b>Read aloud</b> to listen.</p>';
@@ -660,7 +660,7 @@ async function doSearch(q){q=q.trim();if(!q)return nav(homeHTML());
  var hasOther=rs.length||rp.length||rb.length;
  if(!single){
   /* multi-word query: dictionary section still loads after, so search stays instant */
-  if(!hasOther)h+='<div id="dictsec"><p style="font-family:Arial;color:#888">Checking the IWB Dictionary...</p></div>';
+  if(!hasOther)h+='<div id="dictsec"><p style="font-family:Arial;color:#888">Checking the Signature Dictionary...</p></div>';
   else h+='<div id="dictsec"></div>';
   nav(h);
   dictSec(ql).then(function(dh){var el=document.getElementById("dictsec");if(el&&dh)el.innerHTML=dh;
@@ -677,11 +677,11 @@ async function dictSec(q){
   var di=dictFind(q),dh="";
   if(di>=0){var de=await dictEntryT(q,8000);
    if(de&&de.k==="w"){var senses=(Array.isArray(de.d)?de.d:[]).slice(0,2).map(function(s){return esc(String(s).replace(/^\d+\.\s*/,"").slice(0,300))});
-    dh='<h2 class="sec">From the IWB Dictionary</h2><div class="feat"><h3 style="margin:0 0 6px"><span class="rtbadge">DICTIONARY RECORD</span>'+esc(de.w)+' <span class="stamp">'+esc(de.st)+'</span></h3><p style="font-family:Arial;font-size:.9em">'+senses.join("<br><br>")+'</p><p style="font-family:Arial"><a href="?page='+encodeURIComponent(de.w)+'"><b>Read the encyclopedia article &ldquo;'+esc(de.w)+'&rdquo; &rarr;</b></a><br><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Open the full dictionary entry &rarr;</a> &middot; <a href="'+SPEC_SITE+'/specs.html?word='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Word patent &rarr;</a></p></div>'}
+    dh='<h2 class="sec">From the Signature Dictionary</h2><div class="feat"><h3 style="margin:0 0 6px"><span class="rtbadge">DICTIONARY RECORD</span>'+esc(de.w)+' <span class="stamp">'+esc(de.st)+'</span></h3><p style="font-family:Arial;font-size:.9em">'+senses.join("<br><br>")+'</p><p style="font-family:Arial"><a href="?page='+encodeURIComponent(de.w)+'"><b>Read the encyclopedia article &ldquo;'+esc(de.w)+'&rdquo; &rarr;</b></a><br><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Open the full dictionary entry &rarr;</a> &middot; <a href="'+SPEC_SITE+'/specs.html?word='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener">Word patent &rarr;</a></p></div>'}
   }else{
    var pm=[],li=dictLower(q);
    while(li<DICT.idx.length&&pm.length<8){var k2=DICT.idx[li][0];if(k2.indexOf(q)!==0)break;pm.push(k2);li++}
-   if(pm.length)dh='<h2 class="sec">From the IWB Dictionary</h2><ul class="pgln">'+pm.map(function(kx){return '<li><span class="rtbadge">DICTIONARY RECORD</span><a href="'+DICT_SITE+'/?w='+encodeURIComponent(kx)+'" target="_blank" rel="noopener">'+esc(kx)+'</a></li>'}).join("")+'</ul>';
+   if(pm.length)dh='<h2 class="sec">From the Signature Dictionary</h2><ul class="pgln">'+pm.map(function(kx){return '<li><span class="rtbadge">DICTIONARY RECORD</span><a href="'+DICT_SITE+'/?w='+encodeURIComponent(kx)+'" target="_blank" rel="noopener">'+esc(kx)+'</a></li>'}).join("")+'</ul>';
   }
   return dh;
  }catch(e){return ""}
@@ -729,7 +729,7 @@ async function wordPages(){
  if(isNaN(pg)||pg<1)pg=1;
  var h='<nav aria-label="Breadcrumb" class="crumb"><a href="?">Home</a> &rsaquo; <a href="?all=WORD">Word articles</a></nav><h1 class="at">Word articles</h1>';
  h+='<p style="font-family:Arial"><a href="?all=SPEC">Specs</a> &middot; <a href="?all=PAT">Patents</a> &middot; <a href="?all=SUB">Subjects</a> &middot; <b>Word articles</b></p>';
- h+='<p class="sub">Every word in the IWB Dictionary gets a full encyclopedia article — definition, JAH data, analysis lenses, working program, and AI persona.</p>';
+ h+='<p class="sub">Every word in the Signature Dictionary gets a full encyclopedia article — definition, JAH data, analysis lenses, working program, and AI persona.</p>';
  var words=[];
  try{await dictIdxT(10000);}catch(e){}
  if(DICT.idx){for(var i=0;i<DICT.idx.length;i++){var w=String(DICT.idx[i][0]);if(/^[a-z][a-z'-]{0,40}$/i.test(w)&&(!letter||w.charAt(0).toUpperCase()===letter))words.push(w)}}
@@ -1229,8 +1229,8 @@ async function wordArticle(de,tab){
             {name:"Senses defined",value:senses.length,unit:""},
             {name:"Definition words",value:defwords,unit:""}],
   steps:[],blurb:first,
-  history:"The IWB Dictionary records no etymology for this word yet; it carries the official deterministic stamp (official within the Signature/JAH system) "+(de.st||"unstamped")+".",
-  how:"The word as the IWB Dictionary defines it: "+first,
+  history:"The Signature Dictionary records no etymology for this word yet; it carries the official deterministic stamp (official within the Signature/JAH system) "+(de.st||"unstamped")+".",
+  how:"The word as the Signature Dictionary defines it: "+first,
   patentNote:"Word patent: the Spec Catalog holds a full draft patent and a working program for the word \u201C"+w+"\u201D — see Cross-references below.",
   raw:de,seealso:[]});
  var lz=buildLenses(L);L.hybrid=lz.hybrid;L.verdict=lz.verdict;
@@ -1239,16 +1239,16 @@ async function wordArticle(de,tab){
  for(j=0;j<DB.patIdx.length&&relP.length<8;j++){var p=DB.patIdx[j];if(String(p[1]).toLowerCase().indexOf(wl)>=0)relP.push(p)}
  var h='<nav aria-label="Breadcrumb" class="crumb"><a href="?">Home</a> &rsaquo; Word articles &rsaquo; '+esc(w)+'</nav>';
  if(tab==="talk")return talkArticle(L,w,h,"word");
- var WMw=wikiMeta("word",L,{rec:de,page_param:w,source_list:"IWB Dictionary entry "+w+" ("+(de.st||"unstamped")+")"});window.__wikiMeta=WMw;
+ var WMw=wikiMeta("word",L,{rec:de,page_param:w,source_list:"The Signature Dictionary entry "+w+" ("+(de.st||"unstamped")+")"});window.__wikiMeta=WMw;
  h+=classBanner("word",WMw)+jsonldHTML(WMw);
  h+=tabsHTML(w,tab);
  h+=iconRowHTML();h+='<div class="artlay">'+qjumpHTML()+'<div class="artmain">';
  h+='<h1 class="at">'+esc(w)+'</h1>';
- h+=hatnoteHTML('This article is about the word <b>'+esc(w)+'</b> in the JAH system. For the full dictionary treatment, see <a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">the IWB Dictionary</a>.');
- h+='<p class="lead"><b>'+esc(w)+'</b>'+pronHTML(w)+(de.pos?' <span style="font-family:Arial;font-size:.85em;color:#5b6472">'+esc(de.pos)+'</span>':"")+' \u2014 '+esc(dictLeadSense(first)||"a word in the IWB Dictionary")+'</p>';
- h+=overviewHTML(w,firstPara(first,170),"Recorded in the IWB Dictionary ("+esc(de.st||"unstamped")+").","Hybrid lens consensus "+lz.hybrid+"% \u2014 "+lz.verdict);
+ h+=hatnoteHTML('This article is about the word <b>'+esc(w)+'</b> in the JAH system. For the full dictionary treatment, see <a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">the Signature Dictionary</a>.');
+ h+='<p class="lead"><b>'+esc(w)+'</b>'+pronHTML(w)+(de.pos?' <span style="font-family:Arial;font-size:.85em;color:#5b6472">'+esc(de.pos)+'</span>':"")+' \u2014 '+esc(dictLeadSense(first)||"a word in the Signature Dictionary")+'</p>';
+ h+=overviewHTML(w,firstPara(first,170),"Recorded in the Signature Dictionary ("+esc(de.st||"unstamped")+").","Hybrid lens consensus "+lz.hybrid+"% \u2014 "+lz.verdict);
  h+=toolbarHTML();
- h+=infobox(w,[["Word",esc(w)],["Pronunciation",esc(syl)],["Part of speech",esc(de.pos||"\u2014")],["IWB stamp",esc(de.st||"\u2014")],["Senses",esc(String(senses.length))],["Definition source",esc(de.defsrc==="iwb"?"IWB Dictionary (original)":"IWB Dictionary")]]);
+ h+=infobox(w,[["Word",esc(w)],["Pronunciation",esc(syl)],["Part of speech",esc(de.pos||"\u2014")],["IWB stamp",esc(de.st||"\u2014")],["Senses",esc(String(senses.length))],["Definition source",esc(de.defsrc==="iwb"?"The Signature Dictionary (original)":"The Signature Dictionary")]]);
  h+='<div id="articlebody">';
  h+='<div id="reportslot" aria-live="polite"><p class="sub">Compiling the network report on this subject&hellip;</p></div>';
  h+=toc([["report","Collective report"],["jahdata","JAH data"],["lenses","Analysis lenses"],["xrefs","Cross-references"],["program","Program"],["definition","Detailed definition"],["history","History"],["ai","Ask AI"],["seealso","See also"],["refs","References"]]);
@@ -1258,20 +1258,20 @@ async function wordArticle(de,tab){
  h+=sec("xrefs","Cross-references",
   (relS.length?'<h3 class="lens">Spec articles mentioning \u201C'+esc(w)+'\u201D</h3><ul class="pgln">'+relS.map(function(r){return '<li><a href="?page='+r[0]+'">'+esc(r[1])+'</a> <span style="color:#888">'+esc(r[0])+'</span>'+(r[4]?'<br><span style="color:#5b6472;font-size:.85em">'+esc(r[4])+'</span>':"")+'</li>'}).join("")+'</ul>':"<p>No spec article titles mention this word.</p>")+
   (relP.length?'<h3 class="lens">Patent articles mentioning \u201C'+esc(w)+'\u201D</h3><ul class="pgln">'+relP.map(function(p){return '<li><a href="?page=PAT:'+encodeURIComponent(p[0])+'">'+esc(String(p[1]).replace(/&hellip;/g,"..."))+'</a> <span style="color:#888">'+esc(p[0])+'</span><br><span style="color:#5b6472;font-size:.85em">'+esc(firstPara(((p[3]?p[3]+" \u2014 ":"")+"public patent record "+p[0]),160))+'</span></li>'}).join("")+'</ul>':"<p>No patent article titles mention this word.</p>")+
-  '<h3 class="lens">Word patent &amp; dictionary</h3><ul class="pgln"><li><a href="'+SPEC_SITE+'/specs.html?word='+encodeURIComponent(w)+'" target="_blank" rel="noopener">Word patent for \u201C'+esc(w)+'\u201D \u2014 full draft + working program (Spec Catalog)</a></li><li><a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">Full IWB Dictionary entry for \u201C'+esc(w)+'\u201D</a></li></ul>');
+  '<h3 class="lens">Word patent &amp; dictionary</h3><ul class="pgln"><li><a href="'+SPEC_SITE+'/specs.html?word='+encodeURIComponent(w)+'" target="_blank" rel="noopener">Word patent for \u201C'+esc(w)+'\u201D \u2014 full draft + working program (Spec Catalog)</a></li><li><a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">Full Signature Dictionary entry for \u201C'+esc(w)+'\u201D</a></li></ul>');
  h+='<h2 class="sec" id="program">Program</h2><p>A working demo program for the word <b>'+esc(w)+'</b> \u2014 download it, run it on any PC or phone with Python 3, or run the in-browser demo below.</p>'+
   '<div class="prog">'+esc(makeProgram(L))+'</div><p style="font-family:Arial"><button id="rundemo" style="padding:8px 16px;background:#0b3d91;color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:bold">\u25B6 Run in-browser demo</button> <button id="copydemo" style="padding:8px 12px">Copy program</button></p><div class="console" id="democon" style="display:none"></div>';
  /* layer 3: detailed definition + history */
- h+=sec("definition","Detailed definition",'<p class="sub">From the IWB Dictionary <span class="stamp">'+esc(de.st||"")+'</span> \u2014 original definitions, written for the IWB Dictionary.</p><ol>'+senses.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ol>');
- h+=sec("history","History",'<p>The IWB Dictionary does not record an etymology for <b>'+esc(w)+'</b> yet \u2014 its editors are still writing the historical record, and nothing is invented here. What the JAH system does record: the word carries the official deterministic stamp (official within the Signature/JAH system) <b>'+esc(de.st||"\u2014")+'</b>'+(de.pos?', is entered as '+esc(de.pos)+',':"")+' and the Spec Catalog holds a full word patent and working program for it (see Cross-references above).</p>');
+ h+=sec("definition","Detailed definition",'<p class="sub">From the Signature Dictionary <span class="stamp">'+esc(de.st||"")+'</span> \u2014 original definitions, written for the Signature Dictionary.</p><ol>'+senses.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ol>');
+ h+=sec("history","History",'<p>The Signature Dictionary does not record an etymology for <b>'+esc(w)+'</b> yet \u2014 its editors are still writing the historical record, and nothing is invented here. What the JAH system does record: the word carries the official deterministic stamp (official within the Signature/JAH system) <b>'+esc(de.st||"\u2014")+'</b>'+(de.pos?', is entered as '+esc(de.pos)+',':"")+' and the Spec Catalog holds a full word patent and working program for it (see Cross-references above).</p>');
  /* layer 5: Ask AI at the bottom */
  h+='<h2 class="sec" id="ai">Ask AI</h2>'+personaHTML(L);
- var sa=[["?page="+encodeURIComponent(w),"This word article",0],[SPEC_SITE+"/specs.html?word="+encodeURIComponent(w),"Word patent for \u201C"+w+"\u201D (Spec Catalog)",1],[DICT_SITE+"/?w="+encodeURIComponent(w),"Full IWB Dictionary entry for \u201C"+w+"\u201D",1]];
+ var sa=[["?page="+encodeURIComponent(w),"This word article",0],[SPEC_SITE+"/specs.html?word="+encodeURIComponent(w),"Word patent for \u201C"+w+"\u201D (Spec Catalog)",1],[DICT_SITE+"/?w="+encodeURIComponent(w),"Full Signature Dictionary entry for \u201C"+w+"\u201D",1]];
  relS.slice(0,4).forEach(function(r){sa.push(["?page="+r[0],r[1]+" ("+r[0]+")",0])});
  relP.slice(0,4).forEach(function(p){sa.push(["?page=PAT:"+encodeURIComponent(p[0]),String(p[1]).replace(/&hellip;/g,"...")+" ("+p[0]+")",0])});
  h+=seeAlsoBlock(sa);
- h+=sec("refs","References",citeHTML(WMw)+'<p>[1] IWB Dictionary entry \u201C'+esc(w)+'\u201D ('+esc(de.st||"unstamped")+'), <a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">the IWB Dictionary</a> \u2014 original definitions.</p><p style="font-size:.85em;color:#5b6472">JAH Wiki word article generated from the IWB Dictionary entry and the word\u2019s own computed data. Cross-references checked against the live Spec and Patent catalog indexes.</p>');
- h+='<div class="note">Word article \u2014 the IWB Dictionary definition plus the JAH system\u2019s instruments. Definitions are original to the IWB Dictionary.</div></div></div></div>';
+ h+=sec("refs","References",citeHTML(WMw)+'<p>[1] The Signature Dictionary entry \u201C'+esc(w)+'\u201D ('+esc(de.st||"unstamped")+'), <a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">the Signature Dictionary</a> \u2014 original definitions.</p><p style="font-size:.85em;color:#5b6472">JAH Wiki word article generated from the Signature Dictionary entry and the word\u2019s own computed data. Cross-references checked against the live Spec and Patent catalog indexes.</p>');
+ h+='<div class="note">Word article \u2014 the Signature Dictionary definition plus the JAH system\u2019s instruments. Definitions are original to the Signature Dictionary.</div></div></div></div>';
  nav(h);wireToolbar("word",L,{rec:de,page_param:w});wirePersona(L);wirePronSpk();fillReport("word",{de:de,relS:relS,relP:relP});
  document.getElementById("rundemo").onclick=function(){var c=document.getElementById("democon");c.style.display="block";c.textContent=runDemo(L)};
  document.getElementById("copydemo").onclick=function(e){copyText(makeProgram(L),e.target)};
@@ -1310,20 +1310,20 @@ function pronHTML(w){var syl=syllabify(w);
 function wirePronSpk(){Array.prototype.forEach.call(document.querySelectorAll("a.spk"),function(a){a.onclick=function(e){e.preventDefault();var w=a.getAttribute("data-w");if(w)ttsSpeak(w)}})}
 async function dictPage(q){
  var key=String(q||"").toLowerCase().trim();
- nav('<div class="crumb"><a href="?">Home</a> &rsaquo; Dictionary</div><h1 class="at">'+esc(q)+'</h1><p style="font-family:Arial">Looking up the IWB Dictionary...</p>');
+ nav('<div class="crumb"><a href="?">Home</a> &rsaquo; Dictionary</div><h1 class="at">'+esc(q)+'</h1><p style="font-family:Arial">Looking up the Signature Dictionary...</p>');
  try{
   await dictIdxT(10000);var de=await dictEntryT(key,10000);
-  if(!de||de.k!=="w"){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Not in the dictionary</h1><p style="font-family:Arial">No word &ldquo;'+esc(q)+'&rdquo;. <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">Browse the full IWB Dictionary &rarr;</a></p>');return}
+  if(!de||de.k!=="w"){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Not in the dictionary</h1><p style="font-family:Arial">No word &ldquo;'+esc(q)+'&rdquo;. <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">Browse the full Signature Dictionary &rarr;</a></p>');return}
   var senses=(Array.isArray(de.d)?de.d:[de.d]).slice(0,5);
-  var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">IWB Dictionary</a> &rsaquo; '+esc(de.w)+'</div>';
-  h+='<h1 class="at">'+esc(de.w)+'</h1><div class="sub">From the IWB Dictionary <span class="stamp">'+esc(de.st)+'</span></div>';
+  var h='<div class="crumb"><a href="?">Home</a> &rsaquo; <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">The Signature Dictionary</a> &rsaquo; '+esc(de.w)+'</div>';
+  h+='<h1 class="at">'+esc(de.w)+'</h1><div class="sub">From the Signature Dictionary <span class="stamp">'+esc(de.st)+'</span></div>';
   h+='<p class="lead"><b>'+esc(de.w)+'</b>'+(de.pos?" ("+esc(de.pos)+")":"")+(senses.length?" is "+esc(dictLeadSense(senses[0])):"")+'</p>';
   h+='<div class="hatnote">Dictionary entry. <a href="?page='+encodeURIComponent(de.w)+'">Read the encyclopedia article for &ldquo;'+esc(de.w)+'&rdquo; &rarr;</a></div>';
   h+='<h2 class="sec">IWB definition</h2><ol>'+senses.map(function(s){return '<li>'+esc(String(s).replace(/^\d+\.\s*/,"").slice(0,400))+'</li>'}).join("")+'</ol>';
-  h+='<p style="font-family:Arial"><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener" style="display:inline-block;padding:8px 16px;background:#1a4d2e;color:#fff;border-radius:4px;font-weight:bold;text-decoration:none">Open the full entry in the IWB Dictionary &rarr;</a></p>';
+  h+='<p style="font-family:Arial"><a href="'+DICT_SITE+'/?w='+encodeURIComponent(de.w)+'" target="_blank" rel="noopener" style="display:inline-block;padding:8px 16px;background:#1a4d2e;color:#fff;border-radius:4px;font-weight:bold;text-decoration:none">Open the full entry in the Signature Dictionary &rarr;</a></p>';
   h+='<p class="note">The full entry adds the JAH deterministic definition, the official deterministic stamp (official within the Signature/JAH system), the program of the word, and a personal AI teacher.</p>';
-  nav(h);document.title=de.w+" — IWB Dictionary (via JAH Wiki)";
- }catch(e){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Dictionary unreachable</h1><p style="font-family:Arial">Couldn\'t reach the dictionary index. <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">Open the IWB Dictionary directly &rarr;</a></p>')}
+  nav(h);document.title=de.w+" — The Signature Dictionary (via JAH Wiki)";
+ }catch(e){nav('<div class="crumb"><a href="?">Home</a></div><h1 class="at">Dictionary unreachable</h1><p style="font-family:Arial">Couldn\'t reach the dictionary index. <a href="'+DICT_SITE+'/" target="_blank" rel="noopener">Open the Signature Dictionary directly &rarr;</a></p>')}
 }
 /* ================= collective report: the article lead as a synthesis of the whole network =================
    Manon: "wiki is a collective report of all website data on subject wrote in paragraph form
@@ -1449,7 +1449,7 @@ async function subReport(ctx){
 }
 async function wordReport(ctx){
  var de=ctx.de,w=de.w,words=sigWords(w),H=[];
- H.push('<b>'+esc(w)+'</b>'+(de.pos?' ('+esc(de.pos)+')':"")+' is entered in the IWB Dictionary under stamp <span class="stamp">'+esc(de.st||"\u2014")+'</span> — see the <a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">full dictionary entry</a>.');
+ H.push('<b>'+esc(w)+'</b>'+(de.pos?' ('+esc(de.pos)+')':"")+' is entered in the Signature Dictionary under stamp <span class="stamp">'+esc(de.st||"\u2014")+'</span> — see the <a href="'+DICT_SITE+'/?w='+encodeURIComponent(w)+'" target="_blank" rel="noopener">full dictionary entry</a>.');
  var wmap=await xrefWordAI();
  var wid=wmap?wmap[String(w).toLowerCase()]:null;
  if(wid){H.push('The Spec Catalog holds a <a href="'+SPEC_SITE+'/specs.html?word='+encodeURIComponent(w)+'" target="_blank" rel="noopener">full word patent and working program</a> for \u201C'+esc(w)+'\u201D, and the Telephone Book\u2019s <a href="'+PHONE_SITE+'/#wordai-'+wid+'" target="_blank" rel="noopener">word AI</a> talks as the word itself. Dial it for a live session.');}
@@ -1487,7 +1487,7 @@ function tabsHTML(pageId,tab){
 }
 function iconRowHTML(){
  return '<div class="iconrow"><span style="font-size:.8em;color:#5b6472;font-family:Arial">文A</span>'+
- '<a href="#" id="icon-dict" title="Look up in the IWB Dictionary" aria-label="Look up in the IWB Dictionary" style="font-size:1em" >\uD83D\uDCD6 Dictionary</a>'+
+ '<a href="#" id="icon-dict" title="Look up in the Signature Dictionary" aria-label="Look up in the Signature Dictionary" style="font-size:1em" >\uD83D\uDCD6 Dictionary</a>'+
  '<a href="#" id="icon-dl" title="Download article (.txt)" aria-label="Download article (.txt)">\u2B07</a>'+
  '<a href="#" id="icon-star" title="Watch this article" aria-label="Watch this article">\u2606</a>'+
  '<a href="#" id="icon-talk" title="Discuss / suggest edits" aria-label="Discuss / suggest edits">\u270E</a></div>';

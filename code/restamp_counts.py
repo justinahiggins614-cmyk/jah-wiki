@@ -72,7 +72,7 @@ def main():
         'as of ' + TODAY + '. What counts as a core article: one record — a spec-derived article '
         '(a Signature draft specification), a patent-derived article (a public patent record), or a subject article '
         '(a JAH-N subject file). Dictionary word articles (' + f(n_words) + ' as of ' + TODAY + ') resolve live from '
-        'the IWB Dictionary and are counted separately, never folded into the core total. '
+        'the Signature Dictionary and are counted separately, never folded into the core total. '
         'The numbers above are a snapshot; the live count refreshes from the catalog indexes every time this page loads.</p>'
     )
     s2, n1 = re.subn(
@@ -107,7 +107,7 @@ def main():
     a["records_as_of"] = TODAY
     a["note"] = ("Counts grow on automated schedules; re-read this file for the latest shape of the data. "
                  "Core count = spec + patent + subject articles live-indexed by the site's home page. "
-                 "Dictionary word articles resolve live from the IWB Dictionary index and are counted "
+                 "Dictionary word articles resolve live from the Signature Dictionary index and are counted "
                  "separately, never folded into the core total.")
     json.dump(a, open(ap, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
     open(ap, "a", encoding="utf-8").write("\n")
