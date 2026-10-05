@@ -35,7 +35,7 @@ const CANON = [
   ["https://justinahiggins614-cmyk.github.io/signature-ai-olypics/", "17 AI Olympics"],
   ["https://justinahiggins614-cmyk.github.io/signature-chip-maker/", "18 The Signature Computer Chip Maker and Archive"],
   ["https://justinahiggins614-cmyk.github.io/signature-app-archive/", "19 The Signature App Archive"],
-  ["https://justinahiggins614-cmyk.github.io/signature-ai-robot-matcher/", "20 The Signature AI Robot Matcher"],
+  ["https://justinahiggins614-cmyk.github.io/signature-ai-robot-matcher/", "20 The Signature AI to Robot Matcher"],
   ["https://justinahiggins614-cmyk.github.io/signature-experiment-solver/", "21 The Signature Experiment Solver"],
   ["https://justinahiggins614-cmyk.github.io/signature-ai-image-video-maker/", "22 Signature AI Pixel"],
   ["https://justinahiggins614-cmyk.github.io/signature-ai-song-maker/", "23 Signature Music Studio"],
