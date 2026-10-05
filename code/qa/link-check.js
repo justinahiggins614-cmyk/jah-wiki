@@ -1,6 +1,6 @@
 // code/qa/link-check.js — full link audit for JAH Wiki.
-// 1) Static: THE JAH NETWORK bar has the 27-site canonical links in canonical order
-//    (wiki's own entry is a "YOU ARE HERE: JAH WIKI" span, so 24 link elements).
+// 1) Static: THE JAH NETWORK bar has the 31-site canonical links in canonical order
+//    (wiki's own entry is a "YOU ARE HERE: JAH WIKI" span, so 30 link elements).
 // 2) Live: every external URL referenced by index.html / sitemap.xml / robots.txt /
 //    api.json is fetched (HEAD, GET fallback) and must return 2xx/3xx.
 // Usage: node code/qa/link-check.js [--static-only]
@@ -20,7 +20,7 @@ const CANON = [
   ["https://justinahiggins614-cmyk.github.io/jah-calculator/", "2 Signature Universal Paradox Immune Calculator"],
   ["https://justinahiggins614-cmyk.github.io/jah-dictionary/", "3 The Signature Dictionary"],
   ["https://justinahiggins614-cmyk.github.io/jah-wiki/", "4 JAH Wiki"],
-  ["https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/", "5 Wiki Leaks"],
+  ["https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/", "5 JAH-N Wiki Leaks"],
   ["https://justinahiggins614-cmyk.github.io/signature-llama/", "6 Signature Llama: The Fully Cyber Utilizable AI"],
   ["https://justinahiggins614-cmyk.github.io/jah-ai-models/", "7 The Signature AI Phone Book"],
   ["https://justinahiggins614-cmyk.github.io/cyber-patent-catalog/", "8 Globally Rejustered Patent Catalog"],
@@ -29,7 +29,7 @@ const CANON = [
   ["https://justinahiggins614-cmyk.github.io/signature-books/", "11 The Signature Book Depository"],
   ["https://justinahiggins614-cmyk.github.io/signature-comics/", "12 The Signature Comic Store"],
   ["https://justinahiggins614-cmyk.github.io/signature-newspapers/", "13 The Signature Global Newspaper Archive"],
-  ["https://justinahiggins614-cmyk.github.io/signature-backend/", "14 The Signature AI Mad Scientist Creation Lab"],
+  ["https://justinahiggins614-cmyk.github.io/signature-backend/", "14 The Signature AI Mix and Match Generator"],
   ["https://justinahiggins614-cmyk.github.io/signature-boundless-generators/", "15 The Signature Boundless Generator Archive"],
   ["https://justinahiggins614-cmyk.github.io/signature-ai-mixlab/", "16 The Signature AI Mix Lab"],
   ["https://justinahiggins614-cmyk.github.io/signature-ai-olypics/", "17 AI Olympics"],
@@ -43,6 +43,10 @@ const CANON = [
   ["https://justinahiggins614-cmyk.github.io/signature-university/", "25 The Signature University"],
   ["https://justinahiggins614-cmyk.github.io/signature-cyber-mega-mall/", "26 The Signature Cyber Mega-Mall"],
   ["https://justinahiggins614-cmyk.github.io/signature-3d-print/", "27 The Signature 3D Print Mega Mall"],
+  ["https://justinahiggins614-cmyk.github.io/signature-earth/", "28 Signature Earth"],
+  ["https://justinahiggins614-cmyk.github.io/signature-flight-school/", "29 The Signature Flight School"],
+  ["https://justinahiggins614-cmyk.github.io/signature-game-store/", "30 The Signature Game Store"],
+  ["https://justinahiggins614-cmyk.github.io/signature-website-creator/", "31 The Signature Website Creator"],
 ];
 console.log("[nav] THE JAH NETWORK bar");
 const navDiv = (INDEX_HTML.match(/<div class="jahnet">[\s\S]*?<\/div>/) || [""])[0];
@@ -58,7 +62,7 @@ else {
       fail("nav position " + (i + 1) + ": got [" + got[1] + "](" + got[0] + "), want [" + label + "](" + href + ")");
   });
   if (links.length === expect.length && expect.every(([h, l], i) => links[i][0] === h && links[i][1] === l))
-    ok("27-site canon in canonical order with canonical destinations (self = YOU ARE HERE span)");
+    ok("31-site canon in canonical order with canonical destinations (self = YOU ARE HERE span)");
   if (!/4 JAH Wiki — YOU ARE HERE/.test(navDiv)) fail("YOU ARE HERE marker missing from nav");
   else ok("4 JAH Wiki — YOU ARE HERE marker present");
 }
