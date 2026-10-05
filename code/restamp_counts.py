@@ -141,13 +141,13 @@ def main():
             ' Signature draft specifications), patent-derived (' + f(n_pat) +
             ' public patent records), subject files (' + f(n_sub) + ' JAH-N dossiers). '
             'Dictionary word articles (' + f(n_words) + ' as of ' + TODAY + ') are counted separately — '
-            '<a href="./?all=WORD">browse them A&ndash;Z</a>. '
+            'open a letter below to browse them A&ndash;Z. '
             'This snapshot refreshes daily; the live count below updates from the catalog indexes on every visit.</p>')
         bs2, m1 = re.subn(r'<p class="sub" id="browse-snap".*?</p>', new_snap, bs, count=1, flags=re.S)
         if m1 != 1:
             sys.exit("ABORT: browse-snap line not found in browse.html")
         bs = bs2
-        for bid, val in [("bn-spec", n_spec), ("bn-pat", n_pat), ("bn-sub", n_sub), ("bn-core", n_core)]:
+        for bid, val in [("bn-spec", n_spec), ("bn-pat", n_pat), ("bn-sub", n_sub), ("bn-core", n_core), ("bn-word", n_words)]:
             bs2, mn = re.subn(r'(<div class="stat"><div class="n" id="' + bid + r'">)[\d,]+(</div>)',
                               r'\g<1>' + f(val) + r'\g<2>', bs, count=1)
             if mn != 1:

@@ -4,7 +4,7 @@
   "creator": "Justin Addam Higgins (JAH)",
   "description": "Wikipedia-style encyclopedia over all of Manon's data: every spec, patent, subject file, and dictionary word as an article with definition, analysis lenses, patent draft, working program, and AI persona.",
   "for_bots": "Machine-readable manifest. Humans use the site above; bots, scrapers, and AI assistants should use the endpoints below — plain JSON/JSONL over HTTPS, no JavaScript needed.",
-  "records_approx": 970489,
+  "records_approx": 983973,
   "records_as_of": "2026-10-05",
   "note": "Counts grow on automated schedules; re-read this file for the latest shape of the data. Core count = spec + patent + subject articles live-indexed by the site's home page. Dictionary word articles resolve live from the Signature Dictionary index and are counted separately, never folded into the core total.",
   "endpoints": [
@@ -64,10 +64,10 @@
   "raw_example": "https://raw.githubusercontent.com/justinahiggins614-cmyk/jah-wiki/main/index.html",
   "sitemap": "https://justinahiggins614-cmyk.github.io/jah-wiki/sitemap.xml",
   "records_breakdown_2026_10_05": {
-    "core_encyclopedia_articles": 970489,
-    "spec_articles": 899194,
-    "patent_articles": 71175,
+    "core_encyclopedia_articles": 983973,
+    "spec_articles": 911661,
+    "patent_articles": 72192,
     "subject_files": 120,
-    "word_articles_separate": 1059615
+    "word_articles_separate": 1085821
   }
 }

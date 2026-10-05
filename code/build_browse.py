@@ -58,14 +58,14 @@ details.letter .lc{color:#5b6472;font-weight:normal;font-size:.85em}
 
 HEAD_META = """<link rel="canonical" href="https://justinahiggins614-cmyk.github.io/jah-wiki/browse.html">
 <meta property="og:title" content="Browse the archive — JAH Wiki">
-<meta property="og:description" content="The full JAH Wiki article catalog: every spec-derived article, every patent-derived article, and every subject file as A–Z collapsible lists with direct article links.">
+<meta property="og:description" content="The full JAH Wiki article catalog: every spec-derived article, every patent-derived article, every subject file, and every word article as A–Z collapsible lists with direct article links.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://justinahiggins614-cmyk.github.io/jah-wiki/browse.html">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Browse the archive — JAH Wiki">
 <meta name="twitter:description" content="The full JAH Wiki article catalog as A–Z collapsible lists — every article, one click away.">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"CollectionPage","name":"Browse the archive — JAH Wiki","url":"https://justinahiggins614-cmyk.github.io/jah-wiki/browse.html","description":"The full JAH Wiki article catalog: every spec-derived article, every patent-derived article, and every subject file as A–Z collapsible lists.","isPartOf":{"@type":"WebSite","name":"JAH Wiki","url":"https://justinahiggins614-cmyk.github.io/jah-wiki/"},"creator":{"@type":"Person","name":"Justin Addam Higgins"}}
+{"@context":"https://schema.org","@type":"CollectionPage","name":"Browse the archive — JAH Wiki","url":"https://justinahiggins614-cmyk.github.io/jah-wiki/browse.html","description":"The full JAH Wiki article catalog: every spec-derived article, every patent-derived article, every subject file, and every word article as A–Z collapsible lists.","isPartOf":{"@type":"WebSite","name":"JAH Wiki","url":"https://justinahiggins614-cmyk.github.io/jah-wiki/"},"creator":{"@type":"Person","name":"Justin Addam Higgins"}}
 </script>
 """
 
@@ -79,12 +79,13 @@ BROWSE_JS = r"""
 var SPEC_SITE="https://justinahiggins614-cmyk.github.io/signature-one-archive";
 var PAT_SITE="https://justinahiggins614-cmyk.github.io/cyber-patent-catalog";
 var LEAK_SITE="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks";
+var DICT_SITE="https://justinahiggins614-cmyk.github.io/jah-dictionary";
 var AZ="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 var PAGE=200;
-var KINDN={SPEC:"Spec-derived articles",PAT:"Patent-derived articles",SUB:"Subject files"};
-var KINDB={SPEC:"SPECIFICATION",PAT:"PUBLIC PATENT RECORD",SUB:"SUBJECT FILE"};
-var KINDS=["SPEC","PAT","SUB"];
-var BK={SPEC:{},PAT:{},SUB:{}}, TOT={SPEC:0,PAT:0,SUB:0};
+var KINDN={SPEC:"Spec-derived articles",PAT:"Patent-derived articles",SUB:"Subject files",WORD:"Word articles"};
+var KINDB={SPEC:"SPECIFICATION",PAT:"PUBLIC PATENT RECORD",SUB:"SUBJECT FILE",WORD:"DICTIONARY RECORD"};
+var KINDS=["SPEC","PAT","SUB","WORD"];
+var BK={SPEC:{},PAT:{},SUB:{},WORD:{}}, TOT={SPEC:0,PAT:0,SUB:0,WORD:0};
 var loaded=false, failed=[], rendered={};
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
@@ -96,24 +97,28 @@ function status(m){var e=$("bstatus");if(e)e.textContent=m}
 async function fetchGz(url){var r=await fetch(url);if(!r.ok)throw new Error("HTTP "+r.status+" "+url);return await new Response(r.body.pipeThrough(new DecompressionStream("gzip"))).text()}
 async function loadAll(){
  try{
-  status("Loading spec article titles (1 of 3)...");
+  status("Loading spec article titles (1 of 4)...");
   var a=(await fetchGz(SPEC_SITE+"/data/index/specs.search.json.gz")).trim().split("\n");
   for(var i=0;i<a.length;i++){try{var r=JSON.parse(a[i]);add("SPEC",r[1],"./?page="+encodeURIComponent(r[0]),r[0])}catch(e){}}
-  status("Loading patent article titles (2 of 3)...");
+  status("Loading patent article titles (2 of 4)...");
   var b=JSON.parse(await fetchGz(PAT_SITE+"/data/patents.idx.json.gz"));
   for(var j=0;j<b.length;j++){var p=b[j];add("PAT",String(p[1]).replace(/&hellip;/g,"..."),"./?page=PAT:"+encodeURIComponent(p[0]),p[0])}
-  status("Loading subject files (3 of 3)...");
+  status("Loading subject files (3 of 4)...");
   var c=await(await fetch(LEAK_SITE+"/data/bizarre.json")).json();
   for(var k=0;k<c.length;k++){var d=c[k];if(d&&d.subject)add("SUB",d.subject,"./?page=SUB:"+encodeURIComponent(d.subject),d.category||"")}
+  status("Loading word articles (4 of 4)...");
+  var wdx=JSON.parse(await fetchGz(DICT_SITE+"/data/index/dict.idx.json.gz"));
+  for(var wi=0;wi<wdx.length;wi++){var w=String(wdx[wi][0]);if(/^[a-z][a-z'-]{0,40}$/i.test(w))add("WORD",w,"./?page="+encodeURIComponent(w),"")}
  }catch(e){failed.push(String((e&&e.message)||e))}
  loaded=true;
  var nCore=TOT.SPEC+TOT.PAT+TOT.SUB;
  $("bn-spec").textContent=fmt(TOT.SPEC);$("bn-pat").textContent=fmt(TOT.PAT);
  $("bn-sub").textContent=fmt(TOT.SUB);$("bn-core").textContent=fmt(nCore);
+ $("bn-word").textContent=fmt(TOT.WORD);
  var sn=$("browse-snap");
  if(sn)sn.innerHTML="<strong>"+fmt(nCore)+" core encyclopedia articles</strong> — live count from the catalog indexes just now. "+(failed.length?'<span style="color:#a00">Note: '+esc(failed.join("; "))+'</span>':"");
  AZ.concat(["#"]).forEach(function(L){
-  var n=(BK.SPEC[L]||[]).length+(BK.PAT[L]||[]).length+(BK.SUB[L]||[]).length;
+  var n=(BK.SPEC[L]||[]).length+(BK.PAT[L]||[]).length+(BK.SUB[L]||[]).length+(BK.WORD[L]||[]).length;
   var s=document.querySelector('[data-lc="'+L+'"]');
   if(s)s.textContent=n?fmt(n)+" articles":"no articles";
  });
@@ -191,7 +196,7 @@ loadAll();
 TOPBAR = """<div class="topbar">
   <a href="./" style="text-decoration:none"><div class="brand">JAH WIKI<small>THE ENCYCLOPEDIA OF THE JAH SYSTEM</small></div></a>
   <div class="navlinks" role="navigation" aria-label="Wiki sections">
-    <a href="./">Home</a><a href="browse.html" aria-current="page"><b>Browse the archive</b></a><a href="./?all=SPEC">All pages</a><a href="./?all=WORD">Word articles</a><a href="#" id="randlink">Random article</a>
+    <a href="./">Home</a><a href="browse.html" aria-current="page"><b>Browse the archive</b></a><a href="browse.html">All pages</a><a href="browse.html">Word articles</a><a href="#" id="randlink">Random article</a>
     <a href="https://justinahiggins614-cmyk.github.io/jah-dictionary/" target="_blank" rel="noopener">The Signature Dictionary</a>
     <a href="https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/" target="_blank" rel="noopener">Wiki Leaks</a>
     <a href="https://justinahiggins614-cmyk.github.io/signature-one-archive/specs.html" target="_blank" rel="noopener">Signature Spec Catalog Pending Patents</a>
@@ -414,13 +419,12 @@ def build():
         '     below with the live catalog count on load. Snapshot stamped by code/restamp_counts.py. -->\n'
         '<div class="crumb"><a href="./">Home</a> &rsaquo; Browse the archive</div>\n'
         '<h1 class="at">Browse the archive</h1>\n'
-        '<p class="sub">Every article in the encyclopedia — every spec, every patent record, every subject file — '
+        '<p class="sub">Every article in the encyclopedia — every spec, every patent record, every subject file, every word article — '
         "as A&ndash;Z collapsible lists. Open a letter, pick an article, read the full wiki entry.</p>\n"
         '<p class="sub" id="browse-snap" style="color:#1a4d2e"><strong>%%N_CORE%% core encyclopedia articles</strong>, '
         "as of %%DATE%%. What counts: one article per record — spec-derived (%%N_SPEC%% Signature draft specifications), "
         "patent-derived (%%N_PAT%% public patent records), subject files (%%N_SUB%% JAH-N dossiers). "
-        'Dictionary word articles (%%N_WORDS%% as of %%DATE%%) are counted separately — '
-        '<a href="./?all=WORD">browse them A&ndash;Z</a>. '
+        'Dictionary word articles (%%N_WORDS%% as of %%DATE%%) are counted separately — open a letter below to browse them A&ndash;Z. '
         "This snapshot refreshes daily; the live count below updates from the catalog indexes on every visit.</p>\n"
         '<details class="statdrawer" open><summary>Article counts <span class="bstate" id="bstate"></span></summary>\n'
         '<div class="stats">\n'
@@ -428,9 +432,10 @@ def build():
         '<div class="stat"><div class="n" id="bn-pat">%%N_PAT%%</div><div class="l">patent-derived articles</div></div>\n'
         '<div class="stat"><div class="n" id="bn-sub">%%N_SUB%%</div><div class="l">subject articles</div></div>\n'
         '<div class="stat"><div class="n" id="bn-core">%%N_CORE%%</div><div class="l">core articles total</div></div>\n'
+        '<div class="stat"><div class="n" id="bn-word">%%N_WORDS%%</div><div class="l">word articles</div></div>\n'
         "</div></details>\n"
         '<h2 class="sec">Search the catalog</h2>\n'
-        '<p class="sub">Search every article title at once — spec articles, patent articles, and subject files.</p>\n'
+        '<p class="sub">Search every article title at once — spec articles, patent articles, subject files, and word articles.</p>\n'
         '<div class="bsearch"><label class="vh" for="bsq">Search the article catalog</label>'
         '<input id="bsq" placeholder="Type an article title or keyword&hellip;" aria-label="Search the article catalog">'
         '<button id="bsgo" type="button">Search</button></div>\n'
@@ -440,7 +445,7 @@ def build():
         '<div class="bstrip" id="bstrip" role="navigation" aria-label="Article lists by letter">\n' + strip + "\n</div>\n"
         '<div id="bletters">\n' + letters + "\n</div>\n"
         '<p class="sub" style="margin-top:14px">Looking for a dictionary word as an encyclopedia article? '
-        '<a href="./?all=WORD"><b>Browse all word articles A&ndash;Z</b></a> — every Signature Dictionary entry has one.</p>\n'
+        'Open any letter above — word articles sit under <b>Word articles</b> alongside the spec, patent, and subject lists.</p>\n'
         "</div></div>\n"
     )
 
@@ -451,7 +456,8 @@ def build():
         '<ul class="pgln"><li><b>Article lists.</b> The lists on this page are built live in your browser from the '
         "same catalog indexes the wiki itself reads: the Spec Catalog's compact search index "
         "(<code>data/index/specs.search.json.gz</code>), the Patent Catalog's record index "
-        "(<code>data/patents.idx.json.gz</code>), and the JAH-N subject file list. "
+        "(<code>data/patents.idx.json.gz</code>), the JAH-N subject file list, and the Signature Dictionary's "
+        "word index (<code>data/index/dict.idx.json.gz</code>). "
         "Nothing is loaded until you visit this page, and each letter's list renders only when you open it — "
         "the page stays fast on phones. Every entry links to its full article via <code>?page=</code>.</li>"
         '<li><b>Counts.</b> The snapshot counts above are stamped daily by <code>code/restamp_counts.py</code> '
