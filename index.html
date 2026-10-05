@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script>try{if(localStorage.getItem('jah-theme')==='dark'){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}</script>
+<script src="js/signin.js"></script>
+<script>/* profile-aware storage wrapper: signed out = plain localStorage (unchanged); signed in = per-profile namespace */
+var PS=(typeof JAHProfile!=="undefined"&&JAHProfile)?JAHProfile.store:{get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}},remove:function(k){try{localStorage.removeItem(k)}catch(e){}}};
+function jahChatKey(base){return (typeof JAHProfile!=="undefined"&&JAHProfile)?JAHProfile.chatKey(base):base;}</script>
+<script>try{if(PS.get('jah-theme')==='dark'){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}</script>
 <style>
 html[data-theme="dark"]{filter:invert(1) hue-rotate(180deg)}
 html[data-theme="dark"] img,html[data-theme="dark"] video,html[data-theme="dark"] canvas,html[data-theme="dark"] svg{filter:invert(1) hue-rotate(180deg)}
@@ -435,15 +439,15 @@ function citeHTML(meta){
  '<br><span style="color:#5b6472">Versions recorded on this device: <b>'+vs.length+'</b></span> '+
  '<button id="snapver" onclick="snapWikiVersion()">Record this version</button></div>';
 }
-function getVersions(id){try{return JSON.parse(localStorage.getItem("jahwiki-versions:"+id)||"[]")}catch(e){return[]}}
+function getVersions(id){try{return JSON.parse(PS.get("jahwiki-versions:"+id)||"[]")}catch(e){return[]}}
 function snapWikiVersion(){var m=window.__wikiMeta;if(!m)return;var v=getVersions(m.article_id);
  if(!(v.length&&v[v.length-1].version===m.version)){v.push({version:m.version,at:new Date().toISOString(),title:m.title});
-  try{localStorage.setItem("jahwiki-versions:"+m.article_id,JSON.stringify(v.slice(-25)))}catch(e){}}
+  try{PS.set("jahwiki-versions:"+m.article_id,JSON.stringify(v.slice(-25)))}catch(e){}}
  var b=document.getElementById("snapver");if(b)b.textContent="Recorded ("+v.length+")"}
 /* retired / redirected article IDs: removed or renamed IDs resolve here, never to a dead link */
-function getRetired(){try{return JSON.parse(localStorage.getItem("jahwiki-retired")||"{}")}catch(e){return{}}}
+function getRetired(){try{return JSON.parse(PS.get("jahwiki-retired")||"{}")}catch(e){return{}}}
 function retireWikiId(oldId,note){var r=getRetired();r[String(oldId)]={note:String(note||"retired"),at:new Date().toISOString()};
- try{localStorage.setItem("jahwiki-retired",JSON.stringify(r))}catch(e){}}
+ try{PS.set("jahwiki-retired",JSON.stringify(r))}catch(e){}}
 window.retireWikiId=retireWikiId;
 /* ==== JAH global read-aloud controller (one per page): no stacked voices, no orphan audio ==== */
 (function(){
@@ -1028,7 +1032,7 @@ function wirePersona(L){
 function personaReply(L,q){
  var t=q.toLowerCase(),intro="As "+esc(L.title)+", ";
  function has(){for(var i=0;i<arguments.length;i++)if(t.indexOf(arguments[i])>=0)return true;return false}
- if(window.JAHtalk&&has("your duties","what do you do","what can you do","your job","your role","your abilities","explain your duties"))return jahHtml(JAHtalk.chatFor(jahProfile(L),'article:'+(L.id||'')).reply(q));
+ if(window.JAHtalk&&has("your duties","what do you do","what can you do","your job","your role","your abilities","explain your duties"))return jahHtml(JAHtalk.chatFor(jahProfile(L),jahChatKey('article:'+(L.id||''))).reply(q));
  if(has("what are you","who are you","define","definition","what is"))return intro+"in short: "+esc(L.blurb||"everything this article describes.").slice(0,420);
  if(has("history","origin","when","invent","discover"))return intro+"my history: "+esc(L.history||"recorded in this article's History section.").slice(0,420);
  if(has("how","work","mechanism","function")){var s=(L.steps||[]).slice(0,3).map(function(x,i){return (i+1)+". "+x}).join(" ");return intro+"how I work: "+esc(s||L.how||"see the How-it-works section.").slice(0,480)}
@@ -1037,13 +1041,13 @@ function personaReply(L,q){
  if(has("program","code","demo","download","app"))return intro+"you can download my working program from the Program section — a Python demo you can run on PC or phone, plus an in-browser run right here.";
  if(has("lens","determin","probab","geometr","swarm","hybrid","neural"))return intro+"my eleven analysis lenses are computed live from this article's data — deterministic rules, probabilities, geometry, swarm consensus, and the hybrid fusion. Read the Analysis lenses section, or ask about one by name.";
  if(has("leak","classified","dossier","secret"))return intro+"my classified partner file lives on Wiki Leaks — follow the partner link in See also.";
- if(window.JAHtalk&&(/\b(hi|hii+|hello|hey|yo|howdy|greetings|sup|thanks|thank you|bye|goodbye|good night)\b/.test(t)||has("how are you","how is it going")))return jahHtml(JAHtalk.chatFor(jahProfile(L),'article:'+(L.id||'')).reply(q));
+ if(window.JAHtalk&&(/\b(hi|hii+|hello|hey|yo|howdy|greetings|sup|thanks|thank you|bye|goodbye|good night)\b/.test(t)||has("how are you","how is it going")))return jahHtml(JAHtalk.chatFor(jahProfile(L),jahChatKey('article:'+(L.id||''))).reply(q));
  if(has("hello","hi","hey"))return intro+"hello. Ask me anything on this page — what I am, how I work, my numbers.";
  if(has("thank"))return "You're welcome — "+esc(L.title)+" at your service.";
  var keys=t.split(/\s+/).filter(function(w){return w.length>4});
  var blob=((L.blurb||"")+" "+(L.how||"")+" "+(L.history||"")).toLowerCase();
  for(var i=0;i<keys.length;i++){var ix=blob.indexOf(keys[i]);if(ix>=0)return intro+"on \""+esc(keys[i])+"\": ..."+esc(blob.slice(Math.max(0,ix-60),ix+180)).slice(0,400)+"..."}
- if(window.JAHtalk)return jahHtml(JAHtalk.chatFor(jahProfile(L),'article:'+(L.id||'')).reply(q));
+ if(window.JAHtalk)return jahHtml(JAHtalk.chatFor(jahProfile(L),jahChatKey('article:'+(L.id||''))).reply(q));
  return intro+"I answer from this article — try asking what I am, how I work, my history, or my numbers.";
 }
 /* ================= toolbar / article text ================= */
@@ -1589,8 +1593,8 @@ function talkArticle(L,pageId,crumb,kind){
  nav(h);wirePersona(L);
  document.title="Talk:"+L.title+" — JAH Wiki";if(window.__wikiMeta)setArticleHead(window.__wikiMeta,"Discussion notes on the JAH Wiki article: "+L.title);
 }
-function getWatch(){try{return JSON.parse(localStorage.getItem("jahwiki-watch")||"[]")}catch(e){return[]}}
-function toggleWatch(id){var w=getWatch(),i=w.indexOf(id);if(i>=0)w.splice(i,1);else w.push(id);try{localStorage.setItem("jahwiki-watch",JSON.stringify(w))}catch(e){}}
+function getWatch(){try{return JSON.parse(PS.get("jahwiki-watch")||"[]")}catch(e){return[]}}
+function toggleWatch(id){var w=getWatch(),i=w.indexOf(id);if(i>=0)w.splice(i,1);else w.push(id);try{PS.set("jahwiki-watch",JSON.stringify(w))}catch(e){}}
 function wireIcons(pageId){
  var dl=document.getElementById("icon-dl");if(dl)dl.onclick=function(e){e.preventDefault();var b=document.getElementById("dlart");if(b)b.click()};
  var dc=document.getElementById("icon-dict");if(dc)dc.onclick=function(e){e.preventDefault();setQ("dict",dictWordFor(document.title.replace(/ — JAH Wiki$/,""))||"")};
@@ -1681,29 +1685,39 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
 
 <button id="jah-theme-toggle" title="Toggle dark mode" aria-label="Toggle dark mode">&#9681;</button>
 <script>
-(function(){try{var b=document.getElementById('jah-theme-toggle');if(!b)return;function upd(){b.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'\u2600':'\u25d0';}upd();b.addEventListener('click',function(){var dark=document.documentElement.getAttribute('data-theme')!=='dark';document.documentElement.setAttribute('data-theme',dark?'dark':'');try{localStorage.setItem('jah-theme',dark?'dark':'');}catch(e){}upd();});}catch(e){}})();
+(function(){try{var b=document.getElementById('jah-theme-toggle');if(!b)return;function upd(){b.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'\u2600':'\u25d0';}upd();b.addEventListener('click',function(){var dark=document.documentElement.getAttribute('data-theme')!=='dark';document.documentElement.setAttribute('data-theme',dark?'dark':'');try{PS.set('jah-theme',dark?'dark':'');}catch(e){}upd();});}catch(e){}})();
 </script>
 <script>
 /* JAH session restore: scroll + tabs + last record. localStorage only, nothing leaves the device. */
 (function(){try{
 var path=location.pathname.replace(/\/$/,'')||'/';
 var KEY='jah-session:'+path;
-var state={};try{state=JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){state={};}
+var state={};try{state=JSON.parse(PS.get(KEY)||'{}');}catch(e){state={};}
 var deep=/[?&](spec|patent|dossier|w|id|dial|q|query|term|word)=/i.test(location.search||'')||location.hash.length>1;
 if(state.y&&!deep){addEventListener('load',function(){setTimeout(function(){try{window.scrollTo(0,state.y);}catch(e){}},60);});}
-var t=null;addEventListener('scroll',function(){if(t)return;t=setTimeout(function(){t=null;try{state.y=window.scrollY||window.pageYOffset;localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}},600);},{passive:true});
+var t=null;addEventListener('scroll',function(){if(t)return;t=setTimeout(function(){t=null;try{state.y=window.scrollY||window.pageYOffset;PS.set(KEY,JSON.stringify(state));}catch(e){}},600);},{passive:true});
 var tabs=[],sels=['[role="tab"]','.tab-button','.tabbtn','button.tab','a.tab','.wikitabs button'];
 for(var si=0;si<sels.length;si++){var n=document.querySelectorAll(sels[si]);for(var i=0;i<n.length;i++){if(tabs.indexOf(n[i])<0)tabs.push(n[i]);}}
 if(tabs.length){if(state.tab!=null&&tabs[state.tab]){addEventListener('load',function(){setTimeout(function(){try{tabs[state.tab].click();}catch(e){}},150);});}
-for(var k=0;k<tabs.length;k++){(function(el,i){el.addEventListener('click',function(){try{state.tab=i;localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}});})(tabs[k],k);}}
+for(var k=0;k<tabs.length;k++){(function(el,i){el.addEventListener('click',function(){try{state.tab=i;PS.set(KEY,JSON.stringify(state));}catch(e){}});})(tabs[k],k);}}
 var RP=/[?&](spec|patent|dossier|w|id|dial)=([^&#]+)/i.exec(location.search||'');
-if(RP){try{localStorage.setItem('jah-last-record',decodeURIComponent(RP[2]));}catch(e){}}
-document.addEventListener('click',function(ev){var a=ev.target&&ev.target.closest?ev.target.closest('a[href]'):null;if(!a)return;var m=/[?&](spec|patent|dossier|w|id|dial)=([^&#]+)/i.exec(a.getAttribute('href')||'');if(m){try{localStorage.setItem('jah-last-record',decodeURIComponent(m[2]));}catch(e){}}},true);
-if(!deep){var last=null;try{last=localStorage.getItem('jah-last-record');}catch(e){}
+if(RP){try{PS.set('jah-last-record',decodeURIComponent(RP[2]));}catch(e){}}
+document.addEventListener('click',function(ev){var a=ev.target&&ev.target.closest?ev.target.closest('a[href]'):null;if(!a)return;var m=/[?&](spec|patent|dossier|w|id|dial)=([^&#]+)/i.exec(a.getAttribute('href')||'');if(m){try{PS.set('jah-last-record',decodeURIComponent(m[2]));}catch(e){}}},true);
+if(!deep){var last=null;try{last=PS.get('jah-last-record');}catch(e){}
 if(last){addEventListener('load',function(){setTimeout(function(){try{var el=document.querySelector('[data-id="'+last+'"],[id*="'+last+'"],a[href*="'+last+'"]');if(el)el.scrollIntoView({block:'center'});}catch(e){}},300);});}}
 }catch(e){}})();
 </script>
 
 <script src="js/wiki-guide.js"></script>
+<script>
+(function () {
+  var mount = document.querySelector("header .booksearch") ||
+              document.querySelector("nav.jtabbar") ||
+              document.querySelector("header nav") ||
+              document.querySelector("header") ||
+              document.body;
+  if (window.JAHProfile && JAHProfile.ui) JAHProfile.ui.renderButton(mount);
+})();
+</script>
 </body>
 </html>

@@ -106,7 +106,8 @@ document.body.appendChild(wrap);
 
 /* ---------- welcome overlay: open / close (NO scroll, NO spotlight, NO page jumps) ---------- */
 function $(id){return document.getElementById(id)}
-function markSeen(){try{localStorage.setItem(SEEN,"1")}catch(e){}}
+function _jps(){if(typeof JAHProfile!=="undefined"&&JAHProfile&&JAHProfile.store)return JAHProfile.store;return{get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}}}
+function markSeen(){try{_jps().set(SEEN,"1")}catch(e){}}
 function openWelcome(){$("jah-welcome").hidden=false;try{$("jah-welcome-ok").focus({preventScroll:true})}catch(e){}}
 function closeWelcome(){$("jah-welcome").hidden=true;markSeen()}
 $("jah-welcome-ok").onclick=closeWelcome;
@@ -130,11 +131,11 @@ document.addEventListener("keydown",function(e){
 function homeNow(){var s=location.search||"";return s===""||s==="?"}
 function guideBoot(){
  var seen=false;
- try{seen=!!localStorage.getItem(SEEN)}catch(e){}
+ try{seen=!!_jps().get(SEEN)}catch(e){}
  if(seen)return;
  if(!homeNow())return; /* never auto-prompt inside a record, search, or browse view */
  setTimeout(function(){
-  try{if(localStorage.getItem(SEEN))return}catch(e){}
+  try{if(_jps().get(SEEN))return}catch(e){}
   openWelcome();
  },1200);
 }
