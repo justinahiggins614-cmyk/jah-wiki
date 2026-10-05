@@ -1028,7 +1028,7 @@ function wirePersona(L){
 function personaReply(L,q){
  var t=q.toLowerCase(),intro="As "+esc(L.title)+", ";
  function has(){for(var i=0;i<arguments.length;i++)if(t.indexOf(arguments[i])>=0)return true;return false}
- if(window.JAHtalk&&has("your duties","what do you do","what can you do","your job","your role","your abilities","explain your duties"))return jahHtml(JAHtalk.reply(jahProfile(L),q));
+ if(window.JAHtalk&&has("your duties","what do you do","what can you do","your job","your role","your abilities","explain your duties"))return jahHtml(JAHtalk.chatFor(jahProfile(L),'article:'+(L.id||'')).reply(q));
  if(has("what are you","who are you","define","definition","what is"))return intro+"in short: "+esc(L.blurb||"everything this article describes.").slice(0,420);
  if(has("history","origin","when","invent","discover"))return intro+"my history: "+esc(L.history||"recorded in this article's History section.").slice(0,420);
  if(has("how","work","mechanism","function")){var s=(L.steps||[]).slice(0,3).map(function(x,i){return (i+1)+". "+x}).join(" ");return intro+"how I work: "+esc(s||L.how||"see the How-it-works section.").slice(0,480)}
@@ -1037,13 +1037,13 @@ function personaReply(L,q){
  if(has("program","code","demo","download","app"))return intro+"you can download my working program from the Program section — a Python demo you can run on PC or phone, plus an in-browser run right here.";
  if(has("lens","determin","probab","geometr","swarm","hybrid","neural"))return intro+"my eleven analysis lenses are computed live from this article's data — deterministic rules, probabilities, geometry, swarm consensus, and the hybrid fusion. Read the Analysis lenses section, or ask about one by name.";
  if(has("leak","classified","dossier","secret"))return intro+"my classified partner file lives on Wiki Leaks — follow the partner link in See also.";
- if(window.JAHtalk&&(/\b(hi|hii+|hello|hey|yo|howdy|greetings|sup|thanks|thank you|bye|goodbye|good night)\b/.test(t)||has("how are you","how is it going")))return jahHtml(JAHtalk.reply(jahProfile(L),q));
+ if(window.JAHtalk&&(/\b(hi|hii+|hello|hey|yo|howdy|greetings|sup|thanks|thank you|bye|goodbye|good night)\b/.test(t)||has("how are you","how is it going")))return jahHtml(JAHtalk.chatFor(jahProfile(L),'article:'+(L.id||'')).reply(q));
  if(has("hello","hi","hey"))return intro+"hello. Ask me anything on this page — what I am, how I work, my numbers.";
  if(has("thank"))return "You're welcome — "+esc(L.title)+" at your service.";
  var keys=t.split(/\s+/).filter(function(w){return w.length>4});
  var blob=((L.blurb||"")+" "+(L.how||"")+" "+(L.history||"")).toLowerCase();
  for(var i=0;i<keys.length;i++){var ix=blob.indexOf(keys[i]);if(ix>=0)return intro+"on \""+esc(keys[i])+"\": ..."+esc(blob.slice(Math.max(0,ix-60),ix+180)).slice(0,400)+"..."}
- if(window.JAHtalk)return jahHtml(JAHtalk.reply(jahProfile(L),q));
+ if(window.JAHtalk)return jahHtml(JAHtalk.chatFor(jahProfile(L),'article:'+(L.id||'')).reply(q));
  return intro+"I answer from this article — try asking what I am, how I work, my history, or my numbers.";
 }
 /* ================= toolbar / article text ================= */
