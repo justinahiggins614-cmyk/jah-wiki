@@ -224,6 +224,14 @@ nav.crumb{margin-bottom:8px}
      keeps the count live from the same catalog indexes. Snapshot refreshed 2026-10-01. -->
 <div class="crumb">Main page</div>
 <h1 class="at">Welcome to JAH-N Wiki</h1>
+<div style="margin:8px 0"><button type="button" onclick="readPageAloud()" style="padding:8px 16px;cursor:pointer;font:inherit">🔊 Read page aloud</button> <button type="button" onclick="if(window.speechSynthesis)window.speechSynthesis.cancel()" style="padding:8px 16px;cursor:pointer;font:inherit">⏹ Stop</button></div>
+<script>
+function readPageAloud(){
+  var txt=(document.body.innerText||'').replace(/\s+/g,' ').trim().slice(0,5000);
+  if(!txt)return;
+  try{if(window.speechSynthesis){window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(txt);u.rate=1;u.lang='en-US';window.speechSynthesis.speak(u);}}catch(e){}
+}
+</script>
 <p class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</p>
 <p class="sub" style="color:#1a4d2e"><strong>1,010,114 core encyclopedia articles indexed</strong>, as of 2026-10-05. What counts as a core article: one record — a spec-derived article (a Signature draft specification), a patent-derived article (a public patent record), or a subject article (a JAH-N subject file). Dictionary word articles (1,111,962 as of 2026-10-05) resolve live from the Signature Dictionary and are counted separately, never folded into the core total. The numbers above are a snapshot; the live count refreshes from the catalog indexes every time this page loads.</p>
 <details class="statdrawer" open><summary>Article counts</summary>
@@ -651,7 +659,15 @@ function homeHTML(){
  var ns=DB.specIdx.length,np=DB.patIdx.length,nb=DB.subjects.length;
  var feat=DB.subjects.length?DB.subjects[hashStr(String(Date.now()).slice(0,8))%DB.subjects.length]:null;
  var h='<div class="crumb">Main page</div>';
- h+='<h1 class="at">Welcome to JAH-N Wiki</h1><div class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</div>';
+ h+='<h1 class="at">Welcome to JAH-N Wiki</h1>
+<div style="margin:8px 0"><button type="button" onclick="readPageAloud()" style="padding:8px 16px;cursor:pointer;font:inherit">🔊 Read page aloud</button> <button type="button" onclick="if(window.speechSynthesis)window.speechSynthesis.cancel()" style="padding:8px 16px;cursor:pointer;font:inherit">⏹ Stop</button></div>
+<script>
+function readPageAloud(){
+  var txt=(document.body.innerText||'').replace(/\s+/g,' ').trim().slice(0,5000);
+  if(!txt)return;
+  try{if(window.speechSynthesis){window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(txt);u.rate=1;u.lang='en-US';window.speechSynthesis.speak(u);}}catch(e){}
+}
+</script><div class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</div>';
  h+='<p class="sub" style="color:#1a4d2e">Encyclopedia ready — '+(ns+np+nb).toLocaleString()+' core articles indexed.</p>';
  h+='<p class="sub" style="color:#5b6472">Core articles: one per spec, patent record, or subject file. Word articles ('+(DB.wordCount?DB.wordCount.toLocaleString():"—")+' dictionary entries, counted separately) resolve live from the Signature Dictionary.</p>';
  if(DB.failUrls&&DB.failUrls.length)h+='<p class="sub" style="color:#a00"><b>Some source indexes failed to load</b> — the exact affected sources:<br>'+DB.failUrls.map(function(f){return '&bull; '+esc(f.label)+' (<span style="font-family:monospace">'+esc(f.url)+'</span>)'}).join('<br>')+'<br>Counts below may be incomplete. <a href="?">Reload to retry</a>.</p>';
