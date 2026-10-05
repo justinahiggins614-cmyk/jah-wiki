@@ -19,7 +19,7 @@ const CANON = [
   ["https://justinahiggins614-cmyk.github.io/signature-math/", "1 Signature Math"],
   ["https://justinahiggins614-cmyk.github.io/jah-calculator/", "2 Signature Universal Paradox Immune Calculator"],
   ["https://justinahiggins614-cmyk.github.io/jah-dictionary/", "3 The Signature Dictionary"],
-  ["https://justinahiggins614-cmyk.github.io/jah-wiki/", "4 JAH Wiki"],
+  ["https://justinahiggins614-cmyk.github.io/jah-wiki/", "4 JAH-N Wiki"],
   ["https://justinahiggins614-cmyk.github.io/jah-n-wiki-leaks/", "5 JAH-N Wiki Leaks"],
   ["https://justinahiggins614-cmyk.github.io/signature-llama/", "6 Signature Llama: The Fully Cyber Utilizable AI"],
   ["https://justinahiggins614-cmyk.github.io/jah-ai-models/", "7 The Signature AI Phone Book"],
@@ -63,8 +63,8 @@ else {
   });
   if (links.length === expect.length && expect.every(([h, l], i) => links[i][0] === h && links[i][1] === l))
     ok("31-site canon in canonical order with canonical destinations (self = YOU ARE HERE span)");
-  if (!/4 JAH Wiki — YOU ARE HERE/.test(navDiv)) fail("YOU ARE HERE marker missing from nav");
-  else ok("4 JAH Wiki — YOU ARE HERE marker present");
+  if (!/4 JAH-N Wiki — YOU ARE HERE/.test(navDiv)) fail("YOU ARE HERE marker missing from nav");
+  else ok("4 JAH-N Wiki — YOU ARE HERE marker present");
 }
 
 // ---- 2) collect URLs ----
