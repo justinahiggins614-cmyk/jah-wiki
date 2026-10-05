@@ -16,7 +16,7 @@ html[data-theme="dark"] img,html[data-theme="dark"] video,html[data-theme="dark"
 
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="JAH-N Wiki — the encyclopedia of the JAH system: every Signature spec, public patent record, and JAH-N subject file as a full article with definition, analysis lenses, patent draft, working program, and AI persona.">
-<title>JAH-N Wiki — The Encyclopedia of the JAH-N System</title>
+<title>JAH Wiki — The Encyclopedia of the JAH System</title>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"Dataset","name":"JAH-N Wiki","creator":{"@type":"Person","name":"Justin Addam Higgins"}}
 </script>
@@ -223,7 +223,7 @@ nav.crumb{margin-bottom:8px}
 <!-- STATIC CRAWLABLE FALLBACK (no-JS / crawler view). The live app replaces this on load and
      keeps the count live from the same catalog indexes. Snapshot refreshed 2026-10-01. -->
 <div class="crumb">Main page</div>
-<h1 class="at">Welcome to JAH-N Wiki</h1>
+<h1 class="at">Welcome to JAH Wiki</h1>
 <div style="margin:8px 0"><button type="button" onclick="readPageAloud()" style="padding:8px 16px;cursor:pointer;font:inherit">🔊 Read page aloud</button> <button type="button" onclick="if(window.speechSynthesis)window.speechSynthesis.cancel()" style="padding:8px 16px;cursor:pointer;font:inherit">⏹ Stop</button></div>
 <script>
 function readPageAloud(){
@@ -659,7 +659,7 @@ function homeHTML(){
  var ns=DB.specIdx.length,np=DB.patIdx.length,nb=DB.subjects.length;
  var feat=DB.subjects.length?DB.subjects[hashStr(String(Date.now()).slice(0,8))%DB.subjects.length]:null;
  var h='<div class="crumb">Main page</div>';
- h+='<h1 class="at">Welcome to JAH-N Wiki</h1>
+ h+='<h1 class="at">Welcome to JAH Wiki</h1>
 <div style="margin:8px 0"><button type="button" onclick="readPageAloud()" style="padding:8px 16px;cursor:pointer;font:inherit">🔊 Read page aloud</button> <button type="button" onclick="if(window.speechSynthesis)window.speechSynthesis.cancel()" style="padding:8px 16px;cursor:pointer;font:inherit">⏹ Stop</button></div>
 <script>
 function readPageAloud(){
