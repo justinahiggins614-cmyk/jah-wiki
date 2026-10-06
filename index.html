@@ -224,7 +224,7 @@ nav.crumb{margin-bottom:8px}
      keeps the count live from the same catalog indexes. Snapshot refreshed 2026-10-01. -->
 <div class="crumb">Main page</div>
 <h1 class="at">Welcome to JAH Wiki</h1>
-<div style="margin:8px 0"><button type="button" onclick="readPageAloud()" style="padding:8px 16px;cursor:pointer;font:inherit">🔊 Read page aloud</button> <button type="button" onclick="if(window.speechSynthesis)window.speechSynthesis.cancel()" style="padding:8px 16px;cursor:pointer;font:inherit">⏹ Stop</button></div>
+<div style="margin:8px 0"><button type="button" id="ttsbtn" onclick="ttsSpeak(document.body.innerText.slice(0,12000))" style="padding:8px 16px;cursor:pointer;font:inherit">🔊 Read page aloud</button> <button type="button" onclick="ttsStop()" style="padding:8px 16px;cursor:pointer;font:inherit">⏹ Stop</button></div>
 <script>
 function readPageAloud(){
   var txt=(document.body.innerText||'').replace(/\s+/g,' ').trim().slice(0,5000);
@@ -660,7 +660,7 @@ function homeHTML(){
  var feat=DB.subjects.length?DB.subjects[hashStr(String(Date.now()).slice(0,8))%DB.subjects.length]:null;
  var h='<div class="crumb">Main page</div>';
  h+='<h1 class="at">Welcome to JAH Wiki</h1>
-<div style="margin:8px 0"><button type="button" onclick="readPageAloud()" style="padding:8px 16px;cursor:pointer;font:inherit">🔊 Read page aloud</button> <button type="button" onclick="if(window.speechSynthesis)window.speechSynthesis.cancel()" style="padding:8px 16px;cursor:pointer;font:inherit">⏹ Stop</button></div>
+<div style="margin:8px 0"><button type="button" id="ttsbtn" onclick="ttsSpeak(document.body.innerText.slice(0,12000))" style="padding:8px 16px;cursor:pointer;font:inherit">🔊 Read page aloud</button> <button type="button" onclick="ttsStop()" style="padding:8px 16px;cursor:pointer;font:inherit">⏹ Stop</button></div>
 <script>
 function readPageAloud(){
   var txt=(document.body.innerText||'').replace(/\s+/g,' ').trim().slice(0,5000);
