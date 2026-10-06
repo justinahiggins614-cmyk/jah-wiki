@@ -524,8 +524,7 @@ function ttsSpeak(text){
   a.onerror=function(){onlineChunk(tier+1,i)};
   try{a.src=TTS_TIERS[tier](TTS.queue[i]);var p=a.play();if(p&&p.catch)p.catch(function(){onlineChunk(tier+1,i)})}catch(e){onlineChunk(tier+1,i)}
  }
- if(hasSS){try{var vs=speechSynthesis.getVoices();synthChunk(0);if(speechSynthesis.onvoiceschanged!==undefined)speechSynthesis.onvoiceschanged=function(){}}catch(e){onlineChunk(0,0)}}
- else onlineChunk(0,0);
+ onlineChunk(0,0); /* Audio-only: speechSynthesis fails silently on Android/FB WebView */
 }
 function articleSpeechText(){var el=document.getElementById("articlebody");if(!el)return document.title;
  var t="";el.querySelectorAll("h1,h2,h3,p,li,td").forEach(function(n){if(n.closest(".chat")||n.closest(".toolbar")||n.closest(".toc"))return;var s=n.textContent.trim();if(s.length>2)t+=s+". "});
