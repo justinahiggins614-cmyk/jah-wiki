@@ -225,13 +225,6 @@ nav.crumb{margin-bottom:8px}
 <div class="crumb">Main page</div>
 <h1 class="at">Welcome to JAH Wiki</h1>
 <div style="margin:8px 0"><button type="button" id="ttsbtn" onclick="ttsSpeak(document.body.innerText.slice(0,12000))" style="padding:8px 16px;cursor:pointer;font:inherit">🔊 Read page aloud</button> <button type="button" onclick="ttsStop()" style="padding:8px 16px;cursor:pointer;font:inherit">⏹ Stop</button></div>
-<script>
-function readPageAloud(){
-  var txt=(document.body.innerText||'').replace(/\s+/g,' ').trim().slice(0,5000);
-  if(!txt)return;
-  try{if(window.speechSynthesis){window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(txt);u.rate=1;u.lang='en-US';window.speechSynthesis.speak(u);}}catch(e){}
-}
-</script>
 <p class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</p>
 <p class="sub" style="color:#1a4d2e"><strong>1,038,990 core encyclopedia articles indexed</strong>, as of 2026-10-06. What counts as a core article: one record — a spec-derived article (a Signature draft specification), a patent-derived article (a public patent record), or a subject article (a JAH-N subject file). Dictionary word articles (1,127,335 as of 2026-10-06) resolve live from the Signature Dictionary and are counted separately, never folded into the core total. The numbers above are a snapshot; the live count refreshes from the catalog indexes every time this page loads.</p>
 <details class="statdrawer" open><summary>Article counts</summary>
@@ -505,15 +498,6 @@ function ttsSpeak(text){
  ttsStop();TTS.stopped=false;
  var btn=document.getElementById("ttsbtn");if(btn)btn.textContent="\u23F9 Stop";
  var chunks=ttsChunks(text);TTS.queue=chunks;
- var hasSS=("speechSynthesis" in window);
- function synthChunk(i){
-  if(TTS.stopped||i>=TTS.queue.length){ttsStop();return}
-  TTS.speaking=true;
-  var u=new SpeechSynthesisUtterance(TTS.queue[i]);
-  var v=auVoice();if(v)u.voice=v;u.rate=parseFloat((document.getElementById("ttsspd")||{value:"1"}).value)||1;
-  u.onend=function(){synthChunk(i+1)};u.onerror=function(){onlineChunk(0,i)};
-  try{speechSynthesis.speak(u)}catch(e){onlineChunk(0,i)}
- }
  function onlineChunk(tier,i){
   if(TTS.stopped)return;
   if(i>=TTS.queue.length){ttsStop();return}
@@ -658,15 +642,9 @@ function homeHTML(){
  var ns=DB.specIdx.length,np=DB.patIdx.length,nb=DB.subjects.length;
  var feat=DB.subjects.length?DB.subjects[hashStr(String(Date.now()).slice(0,8))%DB.subjects.length]:null;
  var h='<div class="crumb">Main page</div>';
- h+='<h1 class="at">Welcome to JAH Wiki</h1>
-<div style="margin:8px 0"><button type="button" id="ttsbtn" onclick="ttsSpeak(document.body.innerText.slice(0,12000))" style="padding:8px 16px;cursor:pointer;font:inherit">🔊 Read page aloud</button> <button type="button" onclick="ttsStop()" style="padding:8px 16px;cursor:pointer;font:inherit">⏹ Stop</button></div>
-<script>
-function readPageAloud(){
-  var txt=(document.body.innerText||'').replace(/\s+/g,' ').trim().slice(0,5000);
-  if(!txt)return;
-  try{if(window.speechSynthesis){window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(txt);u.rate=1;u.lang='en-US';window.speechSynthesis.speak(u);}}catch(e){}
-}
-</script><div class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</div>';
+ h+='<h1 class="at">Welcome to JAH Wiki</h1>';
+ h+='<div style="margin:8px 0"><button type="button" id="ttsbtn" onclick="ttsSpeak(document.body.innerText.slice(0,12000))" style="padding:8px 16px;cursor:pointer;font:inherit">🔊 Read page aloud</button> <button type="button" onclick="ttsStop()" style="padding:8px 16px;cursor:pointer;font:inherit">⏹ Stop</button></div>';
+ h+='<div class="sub">The encyclopedia of the JAH system — every spec, every patent, every subject file, one wiki.</div>';
  h+='<p class="sub" style="color:#1a4d2e">Encyclopedia ready — '+(ns+np+nb).toLocaleString()+' core articles indexed.</p>';
  h+='<p class="sub" style="color:#5b6472">Core articles: one per spec, patent record, or subject file. Word articles ('+(DB.wordCount?DB.wordCount.toLocaleString():"—")+' dictionary entries, counted separately) resolve live from the Signature Dictionary.</p>';
  if(DB.failUrls&&DB.failUrls.length)h+='<p class="sub" style="color:#a00"><b>Some source indexes failed to load</b> — the exact affected sources:<br>'+DB.failUrls.map(function(f){return '&bull; '+esc(f.label)+' (<span style="font-family:monospace">'+esc(f.url)+'</span>)'}).join('<br>')+'<br>Counts below may be incomplete. <a href="?">Reload to retry</a>.</p>';
@@ -687,6 +665,7 @@ function readPageAloud(){
  h+='<div class="card"><h3>Browse the archive</h3><p>The full article catalog as A&ndash;Z collapsible lists — every spec, patent record, subject file, and word article, one click from its entry, with catalog-wide search.</p><p><a href="browse.html">Open the archive &rarr;</a></p></div>';
  h+='<div class="card"><h3>Partner site</h3><p><b>Wiki Leaks</b> is the classified partner archive — every wiki article links to its full dossier and back.</p><p><a href="'+LEAK_SITE+'/" target="_blank" rel="noopener">Open Wiki Leaks &rarr;</a></p></div>';
  h+='</div>';
+ h+=finderBarHTML();
  h+='<h2 class="sec">About this wiki</h2><p>Just like a normal encyclopedia, each article carries a <b>definition</b>, <b>history</b>, how-it-works, data tables, and references. On top of that, every JAH-N Wiki article carries the system\'s own instruments: <b>eleven analysis lenses</b> (deterministic, probabilistic, geometric, hash, neural, evolutionary, fuzzy, swarm, decision-tree, cellular-automata, and a hybrid of them all), a <b>patent draft</b>, a downloadable <b>working program</b> with an in-browser demo, and a <b>personal AI persona</b> of the item that answers questions. Use <b>Copy article</b> to paste anywhere, or <b>Read aloud</b> to listen.</p>';
  return h;
 }
